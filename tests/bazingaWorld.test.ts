@@ -1,7 +1,7 @@
-import { describe,expect,it } from 'vitest';
+import { describe,expect,it,vi } from 'vitest';
 import { rooms, roomCases, roomRules, roomSolutions, validateRoomWorld, holdsRoomRule, dailyRoomCase, practiceRoomCase, roomRuleText } from '../src/data/bazingaWorld';
 import { newWorldRound,placeWorldGuest,selectWorldGuest,checkWorld,hintWorld,untouchedWorldRound,worldOrder,creditWorldRound,worldHints,worldAttempts } from '../src/lib/bazingaWorld';
-import { initialBazingaProgress } from '../src/lib/bazinga';
+import { initialBazingaProgress,readBazingaProgress,writeBazingaProgress } from '../src/lib/bazinga';
 
 describe('Eight original sitcom-inspired room maps',()=>{
   it('provides eight different furniture maps and 18 authored levels',()=>{
@@ -92,5 +92,29 @@ describe('Room adventure scoring, hints and preservation',()=>{
     expect(once.stats.stars).toBe(192);
     expect(twice.stats.stars).toBe(192);
     expect(twice.bestAwards['movie-sofa']).toBe(90);
+  });
+});
+
+describe('Legacy score and room save migrations',()=>{
+  it('reads old v1 Classic Lab saves and adds empty optional room-game fields',()=>{
+    const memory=new Map<string,string>();
+    const storage={getItem:(k:string)=>memory.get(k)??null,setItem:(k:string,v:string)=>{memory.set(k,v)},removeItem:(k:string)=>{memory.delete(k)}};
+    vi.stubGlobal('localStorage',storage);
+    try{
+      const old=initialBazingaProgress();
+      old.stats.stars=415;old.stats.solved=4;
+      delete old.worldDaily;delete old.worldPractice;delete old.worldRecent;
+      storage.setItem('mollys-bazinga-v1',JSON.stringify(old));
+      const restored=readBazingaProgress();
+      expect(restored.stats.stars).toBe(415);
+      expect(restored.stats.solved).toBe(4);
+      expect(restored.worldDaily).toEqual({});
+      expect(restored.worldPractice).toBe(null);
+      expect(restored.worldRecent).toEqual([]);
+      const c=roomCases.find(p=>p.difficulty==='hard')!;
+      restored.worldPractice=newWorldRound(c);
+      writeBazingaProgress(restored);
+      expect(readBazingaProgress().worldPractice?.caseId).toBe(c.id);
+    }finally{vi.unstubAllGlobals()}
   });
 });
