@@ -9,7 +9,7 @@ import { readConnections, writeConnections, type ConnectionStats } from './lib/c
 import type { ConnectionProgress } from './lib/connections';
 import { dailyRiddle, localDateKey, practiceRiddles, riddles, matchesRiddle, type Riddle } from './data/questions';
 import {
-  addClue, maxCluesForDifficulty, maxGuessesForDifficulty, scoreRound, newRound,
+  addClue, MAX_CLUES, maxCluesForDifficulty, maxGuessesForDifficulty, scoreRound, newRound,
   readProgress, registerResult, skipRound, submitGuess, writeProgress,
   type Progress, type Round,
 } from './lib/game';
