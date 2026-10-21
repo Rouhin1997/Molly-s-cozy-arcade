@@ -37,7 +37,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('desk','Desk chair',77,76,['chair','desk','partial-view','uncomfortable']),
       seat('stool','Kitchen stool',14,77,['chair','kitchen','snacks','uncomfortable']),
     ],
-    props:[prop('📺','Television',46,13),prop('🪟','Window',12,27),prop('🚪','Door',89,23),prop('🍜','Kitchen',13,90),prop('📚','Shelves',47,90)],
+    props:[prop('📺','Television',46,13),prop('🪟','Window',12,27),prop('🚪','Door',89,23),prop('🍜','Kitchen',9,94),prop('📚','Shelves',47,90)],
   },
   'four-b': {id:'four-b',name:"Penny's Apartment 4B",subtitle:'A smaller, homier living room',theme:'penny',
     seats:[
@@ -48,7 +48,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('counter','Counter stool',13,79,['chair','kitchen','snacks','uncomfortable']),
       seat('entry','Entry stool',84,28,['chair','door','uncomfortable','far-corner']),
     ],
-    props:[prop('📺','Television',50,13),prop('🪟','Window',11,28),prop('🚪','Door',89,19),prop('🥧','Kitchen',12,94)],
+    props:[prop('📺','Television',50,13),prop('🪟','Window',11,7),prop('🚪','Door',91,7),prop('🥧','Kitchen',38,89)],
   },
   wolowitz:{id:'wolowitz',name:"Howard & Bernadette's House",subtitle:'Family dining room with kitchen access',theme:'dinner',
     seats:[
@@ -70,7 +70,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('window','Window corner',55,25,['chair','window','draft']),
       seat('entry','Entry stool',84,29,['chair','door','uncomfortable','far-corner']),
     ],
-    props:[prop('🕵️','Mystery board',51,10),prop('🥨','Snacks',12,20),prop('🪟','Window',54,11),prop('🚪','Door',92,13)],
+    props:[prop('🕵️','Mystery board',36,7),prop('🥨','Snacks',12,12),prop('🪟','Window',64,7),prop('🚪','Door',93,7)],
   },
   cafeteria:{id:'cafeteria',name:'Caltech Cafeteria',subtitle:'The usual lunch table, but with more equations',theme:'caltech',
     seats:[
@@ -92,7 +92,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('vent','Air-vent stool',50,75,['chair','draft','uncomfortable']),
       seat('exit','Exit workstation',83,74,['desk','door','lab-safe']),
     ],
-    props:[prop('🔭','Telescope',49,8),prop('🧯','Safety shower',11,10),prop('💻','Terminal',17,88),prop('🚪','Exit',92,85)],
+    props:[prop('🔭','Telescope',49,8),prop('🧯','Safety shower',11,10),prop('💻','Terminal',17,88),prop('🚪','Exit',95,92)],
   },
   comic:{id:'comic',name:"Stuart's Comic Book Store",subtitle:'Fresh issues, awkward queues and an ill-fated stool',theme:'comic',
     seats:[
@@ -103,7 +103,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('beanbag','Cosplay beanbag',40,69,['chair','comic','warm']),
       seat('rickety','Rickety stool',14,75,['chair','uncomfortable','far-corner']),
     ],
-    props:[prop('📚','New comics',49,11),prop('🦸','Hero posters',89,42),prop('🚪','Entrance',90,86),prop('🎲','Game table',54,91)],
+    props:[prop('📚','New comics',49,5),prop('🦸','Hero posters',89,42),prop('🚪','Entrance',90,86),prop('🎲','Game table',54,91)],
   },
   cinema:{id:'cinema',name:'Pasadena Movie Theatre',subtitle:'A Star Wars screening with aisle-seat politics',theme:'cinema',
     seats:[
