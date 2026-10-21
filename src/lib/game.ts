@@ -1,4 +1,4 @@
-import { matchesRiddle, type Riddle } from '../data/questions';
+import { dailyRiddle, matchesRiddle, type Riddle } from '../data/questions';
 import { scoreWithDifficulty, type Difficulty } from './passport';
 
 export const MAX_GUESSES = 4;
@@ -122,7 +122,18 @@ export function readProgress(): Progress {
     if (!saved || typeof saved !== 'object' || !('version' in saved) || saved.version !== 1) return initialProgress();
     const state = saved as Progress;
     if (!state.stats || !state.daily || typeof state.stats.played !== 'number') return initialProgress();
-    return state;
+    if (state.bestAwards) return state;
+    const awards: Record<string,number> = {};
+    for (const [date,round] of Object.entries(state.daily)) {
+      if (round.status === 'won') {
+        const id = dailyRiddle(date).id;
+        awards[id] = Math.max(awards[id] ?? 0, round.score);
+      }
+    }
+    for(const [id,round] of Object.entries(state.practice?.rounds ?? {})) {
+      if (round.status==='won') awards[id] = Math.max(awards[id] ?? 0, round.score);
+    }
+    return {...state,bestAwards:awards};
   } catch {
     return initialProgress();
   }
