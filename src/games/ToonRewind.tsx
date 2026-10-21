@@ -1,12 +1,14 @@
-import { useMemo, useState, type CSSProperties, type Dispatch, type SetStateAction } from 'react';
+import { useMemo, useState, type CSSProperties, type Dispatch, type SetStateAction, type FormEvent } from 'react';
 import {
-  optionsForShow, toonShows, type ToonShow, type ToonPack,
+  optionsForShow, toonShows, toonMysteryClues, type ToonShow, type ToonPack,
 } from '../data/toon';
 import {
   advanceToonSession, currentToonRound, guessToonShow,
   newToonSession, registerToonScore, tuneToonSignal, MAX_TUNES,
-  MAX_WRONG_CHANNELS, type ToonProgress, type ToonRound, type ToonSession,
+  toonWrongLimit, type ToonProgress, type ToonRound, type ToonSession,
 } from '../lib/toon';
+import { bestAward, readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
+import DifficultyPicker from '../components/DifficultyPicker';
 
 type Props = {
   today: string;
@@ -14,6 +16,16 @@ type Props = {
   setProgress: Dispatch<SetStateAction<ToonProgress>>;
   onHome: () => void;
 };
+
+function ToonPoster({ show }: { show: ToonShow }) {
+  return <div className="toon-poster" style={{'--toon-colour-a':show.palette[0],'--toon-colour-b':show.palette[1]} as CSSProperties}>
+    <span className="toon-poster-spark" aria-hidden="true">✳</span>
+    <div className="toon-poster-art" aria-hidden="true">
+      <span>{show.signal[0]}</span><span>{show.signal[1]}</span><span>{show.signal[2]}</span>
+    </div>
+    <strong>{show.title}</strong><small>THE MYSTERY CHANNEL ✦</small>
+  </div>;
+}
 
 function Television({ show, round, number }: { show: ToonShow; round: ToonRound; number: number }) {
   const revealed = round.status !== 'playing';
@@ -23,12 +35,19 @@ function Television({ show, round, number }: { show: ToonShow; round: ToonRound;
       <div className="toon-glass" style={{ '--toon-colour-a': show.palette[0], '--toon-colour-b': show.palette[1] } as CSSProperties}>
         <div className="toon-scanlines" aria-hidden="true"/>
         <div className="toon-screen-header"><span><i/> ON AIR</span><span>CN INDIA • 2000s</span></div>
-        <div className="toon-screen-picture">
+        {revealed ? <div className={`toon-finale-screen ${round.status === 'lost' ? 'toon-screen-static' : 'toon-screen-won'}`}>
+          {round.status === 'lost' && <div className="toon-no-signal" aria-hidden="true">NO SIGNAL <span>📡</span></div>}
+          <ToonPoster show={show}/>
+        </div> : round.difficulty === 'hard' ? <div className="toon-hard-screen">
+          <span>CLASSIFIED BROADCAST • DECODE THE STORY</span>
+          {(toonMysteryClues[show.id] ?? show.descriptions).map((clue,i) => <div key={i} className={i < visible ? 'toon-hard-clue is-visible' : 'toon-hard-clue'}>
+            <strong>{i < visible ? `SIGNAL ${i+1}` : '???'}</strong><p>{i < visible ? clue : 'Transmission encrypted...'}</p></div>)}
+        </div> : <div className={`toon-screen-picture ${round.difficulty === 'medium' ? 'toon-medium-picture' : ''}`}>
           {show.signal.map((symbol, i) => <div key={i} className={`toon-clue ${i < visible ? 'toon-clue-ready' : 'toon-clue-static'}`}>
-            <span className="toon-clue-symbol" aria-hidden="true">{i < visible ? symbol : '▨'}</span>
-            <span className="toon-clue-text">{i < visible ? show.descriptions[i] : 'SIGNAL LOST'}</span>
+            <span className="toon-clue-symbol" aria-hidden="true">{i < visible && round.difficulty !== 'medium' ? symbol : '▨'}</span>
+            <span className="toon-clue-text">{i < visible ? (round.difficulty === 'medium' ? (toonMysteryClues[show.id] ?? show.descriptions)[i] : show.descriptions[i]) : 'SIGNAL LOST'}</span>
           </div>)}
-        </div>
+        </div>}
         <div className="toon-screen-footer"><span>CH {String(number).padStart(2,'0')}</span><span>{revealed ? 'SIGNAL IDENTIFIED' : `RECEPTION ${round.tuneLevel} / 3`}</span></div>
       </div>
     </div>
@@ -43,20 +62,24 @@ function Television({ show, round, number }: { show: ToonShow; round: ToonRound;
 export default function ToonRewind({ today, progress, setProgress, onHome }: Props) {
   const [mode, setMode] = useState<'daily' | 'practice'>('daily');
   const [chosenPack, setChosenPack] = useState<ToonPack>('all');
-  const dailySession = progress.daily[today] ?? newToonSession(`toon-daily-${today}`, 'all');
+  const [difficulty, setDifficulty] = useState<Difficulty>(()=>readPreferredDifficulty('toon'));
+  const [typedAnswer, setTypedAnswer] = useState('');
+  const dailySession = progress.daily[today] ?? newToonSession(`toon-daily-${today}`, 'all', difficulty);
   const session: ToonSession | null = mode === 'daily' ? dailySession : progress.practice;
   const finished = !!session && session.index >= session.ids.length;
   const activeShow = session && !finished ? toonShows.find(s => s.id === session.ids[session.index]) : undefined;
   const round = session && activeShow ? currentToonRound(session) : undefined;
-  const choices = useMemo(() => activeShow && session ? optionsForShow(activeShow.id, session.seed) : [],
-    [activeShow, session?.seed]);
+  const effectiveDifficulty = session?.difficulty ?? 'easy';
+  const choices = useMemo(() => activeShow && session ? optionsForShow(activeShow.id, session.seed, effectiveDifficulty === 'medium' ? 6 : 4) : [],
+    [activeShow, session?.seed, effectiveDifficulty]); 
+  const difficultyLocked = !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.tuneLevel>1 || r.attempts.length>0 || r.status !== 'playing'));
   const sessionStars = session ? Object.values(session.rounds).reduce((n, r) => n + r.score, 0) : 0;
   const identified = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
   function updateRound(transform: (round: ToonRound, show: ToonShow) => ToonRound) {
     setProgress(prev => {
       if (mode === 'daily') {
-        const current = prev.daily[today] ?? newToonSession(`toon-daily-${today}`, 'all');
+        const current = prev.daily[today] ?? newToonSession(`toon-daily-${today}`, 'all', difficulty);
         const show = toonShows.find(s => s.id === current.ids[current.index]);
         if (!show) return prev;
         const before = currentToonRound(current);
@@ -64,7 +87,16 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
         if (before === after) return prev;
         const ended = before.status === 'playing' && after.status !== 'playing';
         return { ...prev, daily: { ...prev.daily, [today]: { ...current, rounds: { ...current.rounds, [show.id]: after } } },
-          stats: ended ? registerToonScore(prev.stats, after) : prev.stats };
+          ...(!ended ? { stats: prev.stats } : (() => {
+            const award = bestAward(prev.bestAwards, show.id, after.score);
+            const score = registerToonScore(prev.stats, after);
+            const prior = prev.bestAwards?.[show.id] ?? 0;
+            return { bestAwards: award.awards, stats: {
+              ...score, stars: prev.stats.stars + award.delta,
+              solved: prev.stats.solved + (after.status==='won' && prior===0 ? 1 : 0),
+              perfectSignals: prev.stats.perfectSignals + (after.status==='won' && after.tuneLevel===1 && after.attempts.length===1 && prior===0 ? 1 : 0)
+            } };
+          })()) };
       }
       const current = prev.practice;
       if (!current) return prev;
@@ -75,20 +107,46 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
       if (before === after) return prev;
       const ended = before.status === 'playing' && after.status !== 'playing';
       return { ...prev, practice: { ...current, rounds: { ...current.rounds, [show.id]: after } },
-        stats: ended ? registerToonScore(prev.stats, after) : prev.stats };
+        ...(!ended ? { stats: prev.stats } : (() => {
+          const award = bestAward(prev.bestAwards, show.id, after.score);
+          const score = registerToonScore(prev.stats, after);
+          const prior = prev.bestAwards?.[show.id] ?? 0;
+          return { bestAwards: award.awards, stats: {
+            ...score, stars: prev.stats.stars + award.delta,
+            solved: prev.stats.solved + (after.status==='won' && prior===0 ? 1 : 0),
+            perfectSignals: prev.stats.perfectSignals + (after.status==='won' && after.tuneLevel===1 && after.attempts.length===1 && prior===0 ? 1 : 0)
+          } };
+        })()) };
     });
   }
 
   function nextChannel() {
+    setTypedAnswer('');
     setProgress(prev => mode === 'daily'
       ? { ...prev, daily: { ...prev.daily, [today]: advanceToonSession(prev.daily[today] ?? newToonSession(`toon-daily-${today}`)) } }
       : prev.practice ? { ...prev, practice: advanceToonSession(prev.practice) } : prev);
   }
   function startPractice(pack: ToonPack) {
     setChosenPack(pack);
+    setTypedAnswer('');
     setProgress(prev => ({ ...prev,
-      practice: newToonSession(`toon-practice-${Date.now()}-${Math.random()}`, pack) }));
+      practice: newToonSession(`toon-practice-${Date.now()}-${Math.random()}`, pack, difficulty) }));
     setMode('practice');
+  }
+
+  function chooseDifficulty(next: Difficulty) {
+    if (difficultyLocked && !finished) return;
+    setDifficulty(next);
+    savePreferredDifficulty('toon', next);
+    if (mode === 'daily') setProgress(prev => ({ ...prev,
+      daily: { ...prev.daily, [today]: newToonSession(`toon-daily-${today}`, 'all', next) } }));
+  }
+  function submitTyped(event: FormEvent) {
+    event.preventDefault();
+    if (!typedAnswer.trim()) return;
+    const answer = typedAnswer.trim();
+    updateRound((r, show) => guessToonShow(r, show, answer));
+    setTypedAnswer('');
   }
 
   return <main className="game-page toon-page">
@@ -103,7 +161,9 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
       <button aria-pressed={mode === 'daily'} className={mode === 'daily' ? 'selected' : ''} onClick={() => setMode('daily')}>☀ Daily broadcast</button>
       <button aria-pressed={mode === 'practice'} className={mode === 'practice' ? 'selected' : ''} onClick={() => setMode('practice')}>✿ Free channel surfing</button>
     </div>
-    <div className="mode-intro"><span>📡</span><p><strong>Six mystery transmissions.</strong> Recognise each old CN India show from its picture clues. Turn the tuning dial for a clearer signal, but fewer hints earn more stars. You get two guesses per channel.</p></div>
+    <DifficultyPicker value={effectiveDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && !finished}
+      lockedMessage="Difficulty is locked for this broadcast. Start a new practice session to change it."/>
+    <div className="mode-intro"><span>📡</span><p><strong>Six mystery transmissions.</strong> Cozy shows familiar symbols and four choices; Clever uses subtler clues and six choices; Expert hides the picture and asks you to type the title. Tune for more hints, but fewer clues earn more stars.</p></div>
 
     {mode === 'practice' && !session && <div className="toon-intro">
       <span className="toon-big-antenna" aria-hidden="true">📺</span>
@@ -148,10 +208,10 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
               <span>Signal strength</span><div>{Array.from({length:3}, (_, i)=><i key={i} className={i < round.tuneLevel ? 'active' : ''}/>)}</div>
             </div>
             <button className="toon-tune-button" disabled={round.tuneLevel >= MAX_TUNES} onClick={() => updateRound(tuneToonSignal)}>
-              <span aria-hidden="true">✦</span>{round.tuneLevel === MAX_TUNES ? 'FULL SIGNAL' : 'TUNE +'}<small>{round.tuneLevel === MAX_TUNES ? 'All clues revealed' : 'Reveal another picture clue'}</small>
+              <span aria-hidden="true">✦</span>{round.tuneLevel === MAX_TUNES ? 'FULL SIGNAL' : 'TUNE +'}<small>{round.tuneLevel === MAX_TUNES ? 'All clues revealed' : 'Reveal another clue'}</small>
             </button>
             <p className="toon-remote-instruction">Recognise the show? Choose it below. The earlier you answer, the more stars you earn.</p>
-            <div className="toon-chances"><span>Wrong guesses remaining</span><strong>{MAX_WRONG_CHANNELS - round.attempts.length}</strong></div>
+            <div className="toon-chances"><span>Wrong guesses remaining</span><strong>{toonWrongLimit(round.difficulty) - round.attempts.length}</strong></div>
           </> : <>
             <div className="toon-remote-done"><span>{round.status === 'won' ? '📺✨' : '📼'}</span><strong>{round.status === 'won' ? 'Signal found!' : 'Transmission missed!'}</strong><small>{round.status === 'won' ? `+${round.score} stars` : 'The answer is revealed below'}</small></div>
             <button className="toon-tune-button" onClick={nextChannel}>{session.index === session.ids.length-1 ? 'WATCH CREDITS ↗' : 'NEXT CHANNEL ↗'}<small>Keep channel surfing</small></button>
@@ -160,12 +220,16 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
       </div>
 
       {round.status === 'playing' ? <div className="toon-choice-section">
-        <div className="toon-choice-heading"><strong>Which show is this?</strong><span>Pick one broadcast • {round.attempts.length ? 'One more chance' : 'Two chances'}</span></div>
-        <div className="toon-choice-grid">
+        <div className="toon-choice-heading"><strong>Which show is this?</strong><span>{effectiveDifficulty === 'hard' ? 'Expert: type the show title' : `${choices.length} choices · ${toonWrongLimit(round.difficulty)-round.attempts.length} chances`}</span></div>
+        {effectiveDifficulty === 'hard' ? <form className="toon-expert-form" onSubmit={submitTyped}>
+          <label htmlFor="toon-expert-answer">Name the cartoon</label>
+          <input id="toon-expert-answer" value={typedAnswer} maxLength={80} autoComplete="off" spellCheck="false" onChange={e=>setTypedAnswer(e.target.value)} placeholder="Type the show’s name…"/>
+          <button className="btn btn-primary" type="submit" disabled={!typedAnswer.trim()}>Lock in answer ↗</button>
+        </form> : <div className="toon-choice-grid">
           {choices.map((id, i) => {const candidate=toonShows.find(show => show.id===id)!;const used=round.attempts.includes(id);
             return <button className={`toon-choice ${used ? 'toon-choice-used' : ''}`} key={id} disabled={used} onClick={() => updateRound((r,s)=>guessToonShow(r,s,id))}>
               <span>{String.fromCharCode(65+i)}</span><strong>{candidate.title}</strong>{used && <small>Not this one</small>}</button>})}
-        </div>
+        </div>}
       </div> : <div className={`toon-reveal-panel ${round.status === 'won' ? 'is-win' : 'is-loss'}`} role="status">
         <span className="toon-reveal-emoji">{round.status === 'won' ? '🎊' : '📼'}</span>
         <div><span className="overline">YOU WERE WATCHING...</span><h3>{activeShow.title}</h3><p>{activeShow.reveal}</p></div>

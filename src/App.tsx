@@ -1,17 +1,20 @@
 import { useEffect, useMemo, useState, type FormEvent, type Dispatch, type SetStateAction } from 'react';
 import Connections from './games/Connections';
 import ToonRewind from './games/ToonRewind';
+import Passport from './games/Passport';
+import DifficultyPicker from './components/DifficultyPicker';
+import { bestAward, readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from './lib/passport';
 import { readToonProgress, writeToonProgress, type ToonProgress, type ToonStats } from './lib/toon';
 import { readConnections, writeConnections, type ConnectionStats } from './lib/connections';
 import type { ConnectionProgress } from './lib/connections';
 import { dailyRiddle, localDateKey, practiceRiddles, riddles, matchesRiddle, type Riddle } from './data/questions';
 import {
-  addClue, MAX_CLUES, MAX_GUESSES, newRound,
+  addClue, maxCluesForDifficulty, maxGuessesForDifficulty, scoreRound, newRound,
   readProgress, registerResult, skipRound, submitGuess, writeProgress,
   type Progress, type Round,
 } from './lib/game';
 
-type View = 'home' | 'guess' | 'connections' | 'toon' | 'vault';
+type View = 'home' | 'guess' | 'connections' | 'toon' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
@@ -88,6 +91,10 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <div><span className="stats-icon">💝</span><span className="stats-number">{days === 0 ? 'Today!' : days}</span><span className="stats-label">{days === 0 ? 'happy birthday!' : 'days to birthday'}</span></div>
     </section>
 
+    <section className="passport-home-invite">
+      <div><span>📖</span><div><strong>Molly's Arcade Passport</strong><small>Your stamps, achievements, game records and saved stars.</small></div></div>
+      <button className="btn btn-soft" onClick={() => onNavigate('passport')}>Open Passport ↗</button>
+    </section>
     <section className="games-section" id="games">
       <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Three games ready, more magic in the making</span></div>
       <div className="game-grid">
@@ -159,6 +166,8 @@ function Puzzle({ riddle, round, onGuess, onHint, onSkip, onNext, nextText, mode
     setNotice('');
   }
   const wrong = round.guesses.filter(guess => !matchesRiddle(riddle, guess));
+  const allowedClues = maxCluesForDifficulty(round.difficulty);
+  const allowedGuesses = maxGuessesForDifficulty(round.difficulty);
   return <section className="puzzle-card">
     <div className="puzzle-meta"><span className="category-label"><span aria-hidden="true">❋</span> {riddle.category === 'food' ? 'Dish detective' : riddle.category === 'fruit' ? 'Fruity mystery' : 'Garden mystery'}</span><span className="round-label">{roundLabel}</span></div>
     <h2>Who am I<span className="question-mark">?</span></h2>
@@ -171,14 +180,14 @@ function Puzzle({ riddle, round, onGuess, onHint, onSkip, onNext, nextText, mode
       </div>)}
     </div>
     {round.status === 'playing' ? <>
-      <div className="puzzle-support"><span>{MAX_GUESSES - round.guesses.length} guesses left</span><span>{Math.max(30, 120 - (round.cluesShown - 1) * 20 - round.guesses.length * 10)} stars up for grabs</span></div>
+      <div className="puzzle-support"><span>{allowedGuesses - round.guesses.length} guesses left</span><span>{scoreRound(round.cluesShown, round.guesses.length, round.difficulty)} stars up for grabs</span></div>
       <form className="guess-form" onSubmit={handleSubmit}>
         <label htmlFor="guess-answer">Your best guess</label>
         <div className="guess-input-row"><input id="guess-answer" autoComplete="off" spellCheck="false" value={value} maxLength={60} onChange={e => setValue(e.target.value)} placeholder="Type a fruit, vegetable or dish…"/><button className="btn btn-primary" disabled={!value.trim()} type="submit">Guess ↗</button></div>
       </form>
       {round.guesses.length > 0 && <div className="guess-history"><span>Not quite yet:</span> {wrong.map((guess, i) => <span className="wrong-guess" key={`${guess}-${i}`}>{guess} <span aria-hidden="true">×</span></span>)}</div>}
       {notice && <p role="status">{notice}</p>}
-      <div className="puzzle-actions"><button className="btn btn-outline" onClick={() => { onHint(); if (round.cluesShown >= MAX_CLUES) setNotice('All clues are already showing. You’ve got this!'); }} disabled={round.cluesShown >= MAX_CLUES}>✧ Reveal another clue <span>({MAX_CLUES - round.cluesShown} left)</span></button><button className="text-button" onClick={onSkip}>Reveal answer instead →</button></div>
+      <div className="puzzle-actions"><button className="btn btn-outline" onClick={() => { onHint(); if (round.cluesShown >= allowedClues) setNotice('All clues are already showing. You’ve got this!'); }} disabled={round.cluesShown >= allowedClues}>✧ Reveal another clue <span>({allowedClues - round.cluesShown} left)</span></button><button className="text-button" onClick={onSkip}>Reveal answer instead →</button></div>
     </> : <RoundResult round={round} riddle={riddle} onNext={onNext} nextText={nextText}/>}
   </section>;
 }
@@ -191,39 +200,60 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   onHome: () => void;
 }) {
   const [mode, setMode] = useState<Mode>(initialMode);
+  const [difficulty, setDifficulty] = useState<Difficulty>(()=>readPreferredDifficulty('guess'));
   const daily = dailyRiddle(today);
-  const dailyRound = progress.daily[today] ?? newRound();
+  const dailyRound = progress.daily[today] ?? newRound(difficulty);
   const session = progress.practice;
   const finished = !!session && session.index >= session.ids.length;
   const practiceRiddle = session && !finished ? riddles.find(r => r.id === session.ids[session.index]) : undefined;
-  const practiceRound = practiceRiddle ? session?.rounds[practiceRiddle.id] ?? newRound() : null;
+  const practiceRound = practiceRiddle ? session?.rounds[practiceRiddle.id] ?? newRound(difficulty) : null;
   const playingRiddle = mode === 'daily' ? daily : practiceRiddle;
   const activeRound = mode === 'daily' ? dailyRound : practiceRound;
+  const currentDifficulty = activeRound?.difficulty ?? (mode === 'daily' && !!progress.daily[today] ? 'easy' : difficulty);
+  const difficultyLocked = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
   const earned = session ? Object.values(session.rounds).reduce((total, r) => total + r.score, 0) : 0;
   const solved = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
-  function newPractice() {
-    const ids = practiceRiddles(5).map(r => r.id);
+  function newPractice(level: Difficulty = difficulty) {
+    const ids = practiceRiddles(5, level).map(r => r.id);
     setProgress(prev => ({ ...prev, practice: { ids, rounds: {}, index: 0, sessionNumber: (prev.practice?.sessionNumber ?? 0) + 1 } }));
+  }
+
+  function chooseDifficulty(level: Difficulty) {
+    if (difficultyLocked && activeRound?.status==='playing') return;
+    setDifficulty(level);
+    savePreferredDifficulty('guess', level);
+    if (mode==='daily' && !difficultyLocked) setProgress(prev=>({...prev,daily:{...prev.daily,[today]:newRound(level)}}));
+    if (mode==='practice' && activeRound?.status!=='playing') newPractice(level);
   }
 
   function updateRound(transform: (round: Round) => Round) {
     setProgress(prev => {
       if (mode === 'daily') {
-        const before = prev.daily[today] ?? newRound();
+        const before = prev.daily[today] ?? newRound(difficulty);
         const after = transform(before);
         if (after === before) return prev;
         const justFinished = before.status === 'playing' && after.status !== 'playing';
-        return { ...prev, daily: { ...prev.daily, [today]: after }, stats: justFinished ? registerResult(prev.stats, after, today) : prev.stats };
+        if (!justFinished) return {...prev, daily:{...prev.daily,[today]:after}};
+        const award = bestAward(prev.bestAwards, daily.id, after.score);
+        const stats = registerResult(prev.stats,after,today);
+        const earlier = prev.bestAwards?.[daily.id] ?? 0;
+        return {...prev,daily:{...prev.daily,[today]:after},bestAwards:award.awards,
+          stats:{...stats,points:prev.stats.points+award.delta,solved:prev.stats.solved+(after.status==='won' && earlier===0 ? 1 : 0)}};
       }
       const practice = prev.practice;
       if (!practice || practice.index >= practice.ids.length) return prev;
       const id = practice.ids[practice.index];
-      const before = practice.rounds[id] ?? newRound();
+      const before = practice.rounds[id] ?? newRound(difficulty);
       const after = transform(before);
       if (after === before) return prev;
       const justFinished = before.status === 'playing' && after.status !== 'playing';
-      return { ...prev, practice: { ...practice, rounds: { ...practice.rounds, [id]: after } }, stats: justFinished ? registerResult(prev.stats, after) : prev.stats };
+      if(!justFinished) return {...prev,practice:{...practice,rounds:{...practice.rounds,[id]:after}}};
+      const award = bestAward(prev.bestAwards,id,after.score);
+      const stats = registerResult(prev.stats,after);
+      const earlier = prev.bestAwards?.[id] ?? 0;
+      return {...prev,practice:{...practice,rounds:{...practice.rounds,[id]:after}},bestAwards:award.awards,
+        stats:{...stats,points:prev.stats.points+award.delta,solved:prev.stats.solved+(after.status==='won' && earlier===0 ? 1 : 0)}};
     });
   }
 
@@ -235,9 +265,11 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
     <button className="back-link" onClick={onHome}>← Back to the game shelf</button>
     <div className="game-head"><div><div className="overline">THE LITTLE PUZZLE CLUB / GAME 01</div><h1><span aria-hidden="true">🍓</span> Guess Who?</h1><p>For curious minds and adventurous taste buds.</p></div><span className="decorative-berry" aria-hidden="true">✿</span></div>
     <div className="mode-tabs" role="tablist" aria-label="Game mode"><button role="tab" aria-selected={mode === 'daily'} className={mode === 'daily' ? 'selected' : ''} onClick={() => setMode('daily')}>☀ Today's riddle</button><button role="tab" aria-selected={mode === 'practice'} className={mode === 'practice' ? 'selected' : ''} onClick={() => setMode('practice')}>✿ Practice picnic</button></div>
+    <DifficultyPicker value={currentDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && activeRound?.status==='playing'}
+      lockedMessage="Difficulty is locked for this mystery. Start another practice session to switch levels."/>
     {mode === 'daily' ? <div className="mode-intro"><span>🍯</span><p><strong>One mystery every day.</strong> The same puzzle waits for you all day, and your progress is saved automatically. Come back tomorrow for another!</p></div> : <div className="mode-intro"><span>🧺</span><p><strong>Five bites of fun.</strong> Play a little set of five randomly picked riddles. Collect stars and try to beat your score!</p></div>}
-    {mode === 'practice' && !session ? <div className="start-panel"><span>🧺</span><h2>Ready for a little picnic?</h2><p>Five mini mysteries, four guesses each. No pressure—just fun.</p><button className="btn btn-primary" onClick={newPractice}>Start a five-puzzle set ↗</button></div> : null}
-    {mode === 'practice' && finished ? <div className="start-panel summary-panel"><span>🌷</span><h2>Picnic complete!</h2><p>You solved {solved} out of 5 little mysteries and collected <strong>{earned} stars</strong>.</p><div className="summary-stars">{session?.ids.map((id, i) => <span key={id} title={`Puzzle ${i + 1}: ${session.rounds[id]?.status === 'won' ? 'solved' : 'missed'}`}>{session.rounds[id]?.status === 'won' ? '⭐' : '☆'}</span>)}</div><button className="btn btn-primary" onClick={newPractice}>Play a fresh set ↗</button></div> : null}
+    {mode === 'practice' && !session ? <div className="start-panel"><span>🧺</span><h2>Ready for a little picnic?</h2><p>Five mini mysteries, four guesses each. No pressure—just fun.</p><button className="btn btn-primary" onClick={()=>newPractice()}>Start a five-puzzle set ↗</button></div> : null}
+    {mode === 'practice' && finished ? <div className="start-panel summary-panel"><span>🌷</span><h2>Picnic complete!</h2><p>You solved {solved} out of 5 little mysteries and collected <strong>{earned} stars</strong>.</p><div className="summary-stars">{session?.ids.map((id, i) => <span key={id} title={`Puzzle ${i + 1}: ${session.rounds[id]?.status === 'won' ? 'solved' : 'missed'}`}>{session.rounds[id]?.status === 'won' ? '⭐' : '☆'}</span>)}</div><button className="btn btn-primary" onClick={()=>newPractice()}>Play a fresh set ↗</button></div> : null}
     {playingRiddle && activeRound && <>
       {mode === 'practice' && session && <div className="progress-pebbles" aria-label={`Puzzle ${session.index + 1} of 5`}>{session.ids.map((_, index) => <span key={index} className={index < session.index ? 'completed' : index === session.index ? 'active' : ''}/>)}</div>}
       <Puzzle key={`${mode}-${playingRiddle.id}`} riddle={playingRiddle} round={activeRound} mode={mode} roundLabel={mode === 'daily' ? 'DAILY CHALLENGE' : `ROUND ${(session?.index ?? 0) + 1} / 5`} onGuess={guess => updateRound(round => submitGuess(round, playingRiddle, guess))} onHint={() => updateRound(addClue)} onSkip={() => updateRound(skipRound)} onNext={mode === 'practice' ? nextPractice : undefined} nextText={mode === 'practice' ? (session && session.index === 4 ? 'See picnic results' : 'Next little mystery') : undefined}/>
@@ -275,8 +307,8 @@ function App() {
     setView(next); setMode(nextMode); setSneakPeek(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;

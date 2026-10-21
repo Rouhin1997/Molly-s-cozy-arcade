@@ -1,3 +1,12 @@
+import { extraConnections } from './extraConnections';
+import type { Difficulty } from '../lib/passport';
+
+const easyPuzzles = new Set(['favourite-faces','spice-cabinet','on-the-map','the-outdoors','little-animals','sweet-tooth','after-school','street-food-tour','retro-remote','soft-pastels','sitcom-corner']);
+const hardPuzzles = new Set(['colour-me-happy','movie-snacks','screen-and-stage','game-night','travel-bag','hidden-compounds','tricky-prefixes','two-meanings','word-trickery']);
+export function connectionPuzzleDifficulty(puzzle: ConnectionPuzzle): Difficulty {
+  return easyPuzzles.has(puzzle.id) ? 'easy' : hardPuzzles.has(puzzle.id) ? 'hard' : 'medium';
+}
+
 export type ConnectionGroup = {
   label: string;
   words: [string, string, string, string];
@@ -111,6 +120,8 @@ export const connectionPuzzles: ConnectionPuzzle[] = [
   ]},
 ];
 
+connectionPuzzles.push(...extraConnections);
+
 export const CONNECTION_COLOURS = ['yellow', 'green', 'blue', 'purple'] as const;
 
 export function dateIndex(dateKey: string): number {
@@ -121,12 +132,14 @@ export function dateIndex(dateKey: string): number {
 
 export function dailyConnectionPuzzle(dateKey: string): ConnectionPuzzle {
   // Rotate through the curated bank in order: no consecutive daily repeats.
-  return connectionPuzzles[((dateIndex(dateKey) % connectionPuzzles.length) + connectionPuzzles.length) % connectionPuzzles.length];
+  const pool = dateKey <= '2026-10-21' ? connectionPuzzles.slice(0,16) : connectionPuzzles;
+  return pool[((dateIndex(dateKey) % pool.length) + pool.length) % pool.length];
 }
 
-export function pickPracticeConnection(recentIds: string[], random = Math.random): ConnectionPuzzle {
-  const unused = connectionPuzzles.filter(p => !recentIds.includes(p.id));
-  const pool = unused.length ? unused : connectionPuzzles;
+export function pickPracticeConnection(recentIds: string[], random = Math.random, difficulty?: Difficulty): ConnectionPuzzle {
+  const themed = difficulty ? connectionPuzzles.filter(p=>connectionPuzzleDifficulty(p)===difficulty) : connectionPuzzles;
+  const unused = themed.filter(p => !recentIds.includes(p.id));
+  const pool = unused.length ? unused : themed;
   return pool[Math.floor(random() * pool.length)];
 }
 

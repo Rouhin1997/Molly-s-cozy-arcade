@@ -1,4 +1,5 @@
-import { matchesRiddle, type Riddle } from '../data/questions';
+import { dailyRiddle, matchesRiddle, type Riddle } from '../data/questions';
+import { scoreWithDifficulty, type Difficulty } from './passport';
 
 export const MAX_GUESSES = 4;
 export const MAX_CLUES = 4;
@@ -8,6 +9,7 @@ export type Round = {
   guesses: string[];
   status: 'playing' | 'won' | 'lost';
   score: number;
+  difficulty?: Difficulty;
 };
 
 export type PracticeSession = {
@@ -32,12 +34,20 @@ export type Progress = {
   daily: Record<string, Round>;
   practice: PracticeSession | null;
   stats: Stats;
+  bestAwards?: Record<string, number>;
 };
 
 export const STORAGE_KEY = 'mollys-cozy-arcade-progress-v1';
 
-export function newRound(): Round {
-  return { cluesShown: 1, guesses: [], status: 'playing', score: 0 };
+export function newRound(difficulty: Difficulty = 'easy'): Round {
+  return { cluesShown: 1, guesses: [], status: 'playing', score: 0, difficulty };
+}
+
+export function maxGuessesForDifficulty(difficulty: Difficulty = 'medium'): number {
+  return difficulty === 'easy' ? 5 : difficulty === 'medium' ? 4 : 3;
+}
+export function maxCluesForDifficulty(difficulty: Difficulty = 'easy'): number {
+  return difficulty === 'hard' ? 3 : MAX_CLUES;
 }
 
 export function initialProgress(): Progress {
@@ -46,16 +56,17 @@ export function initialProgress(): Progress {
     daily: {},
     practice: null,
     stats: { played: 0, solved: 0, points: 0, currentStreak: 0, bestStreak: 0, lastDailyPlayed: null, lastDailyWon: null },
+    bestAwards: {},
   };
 }
 
-export function scoreRound(cluesShown: number, wrongGuesses: number): number {
-  return Math.max(30, 120 - (cluesShown - 1) * 20 - wrongGuesses * 10);
+export function scoreRound(cluesShown: number, wrongGuesses: number, difficulty: Difficulty = 'easy'): number {
+  return scoreWithDifficulty(Math.max(30, 120 - (cluesShown - 1) * 20 - wrongGuesses * 10), difficulty);
 }
 
 export function addClue(round: Round): Round {
   return round.status === 'playing'
-    ? { ...round, cluesShown: Math.min(MAX_CLUES, round.cluesShown + 1) }
+    ? { ...round, cluesShown: Math.min(maxCluesForDifficulty(round.difficulty), round.cluesShown + 1) }
     : round;
 }
 
@@ -64,8 +75,8 @@ export function submitGuess(round: Round, riddle: Riddle, guess: string): Round 
   if (round.status !== 'playing' || !clean) return round;
   const correct = matchesRiddle(riddle, clean);
   const guesses = [...round.guesses, clean];
-  if (correct) return { ...round, guesses, status: 'won', score: scoreRound(round.cluesShown, guesses.length - 1) };
-  if (guesses.length >= MAX_GUESSES) return { ...round, guesses, status: 'lost', score: 0 };
+  if (correct) return { ...round, guesses, status: 'won', score: scoreRound(round.cluesShown, guesses.length - 1, round.difficulty) };
+  if (guesses.length >= maxGuessesForDifficulty(round.difficulty)) return { ...round, guesses, status: 'lost', score: 0 };
   return { ...round, guesses };
 }
 
@@ -111,7 +122,18 @@ export function readProgress(): Progress {
     if (!saved || typeof saved !== 'object' || !('version' in saved) || saved.version !== 1) return initialProgress();
     const state = saved as Progress;
     if (!state.stats || !state.daily || typeof state.stats.played !== 'number') return initialProgress();
-    return state;
+    if (state.bestAwards) return state;
+    const awards: Record<string,number> = {};
+    for (const [date,round] of Object.entries(state.daily)) {
+      if (round.status === 'won') {
+        const id = dailyRiddle(date).id;
+        awards[id] = Math.max(awards[id] ?? 0, round.score);
+      }
+    }
+    for(const [id,round] of Object.entries(state.practice?.rounds ?? {})) {
+      if (round.status==='won') awards[id] = Math.max(awards[id] ?? 0, round.score);
+    }
+    return {...state,bestAwards:awards};
   } catch {
     return initialProgress();
   }

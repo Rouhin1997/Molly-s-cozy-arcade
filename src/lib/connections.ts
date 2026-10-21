@@ -1,4 +1,5 @@
 import type { ConnectionPuzzle } from '../data/connections';
+import { scoreWithDifficulty, type Difficulty } from './passport';
 
 export const CONNECTION_MISTAKES = 4;
 export const CONNECTION_STORAGE_KEY = 'mollys-connections-v1';
@@ -11,6 +12,7 @@ export type ConnectionRound = {
   status: 'playing' | 'won' | 'lost';
   score: number;
   feedback: string;
+  difficulty?: Difficulty;
 };
 
 export type ConnectionStats = {
@@ -32,14 +34,19 @@ export type ConnectionProgress = {
   daily: Record<string, { puzzleId: string; round: ConnectionRound }>;
   practice: ConnectionPractice | null;
   stats: ConnectionStats;
+  bestAwards?: Record<string, number>;
 };
 
-export function newConnectionRound(): ConnectionRound {
-  return { selected: [], solved: [], attempts: [], mistakes: 0, status: 'playing', score: 0, feedback: '' };
+export function newConnectionRound(difficulty: Difficulty = 'medium'): ConnectionRound {
+  return { selected: [], solved: [], attempts: [], mistakes: 0, status: 'playing', score: 0, feedback: '', difficulty };
+}
+
+export function connectionMistakeLimit(difficulty: Difficulty = 'medium'): number {
+  return difficulty === 'easy' ? 5 : difficulty === 'hard' ? 3 : CONNECTION_MISTAKES;
 }
 
 export function initialConnections(): ConnectionProgress {
-  return { version: 1, daily: {}, practice: null, stats: { played: 0, solved: 0, stars: 0, bestScore: 0 } };
+  return { version: 1, daily: {}, practice: null, stats: { played: 0, solved: 0, stars: 0, bestScore: 0 }, bestAwards: {} };
 }
 
 export function toggleConnectionTile(round: ConnectionRound, word: string, puzzle: ConnectionPuzzle): ConnectionRound {
@@ -68,16 +75,16 @@ export function submitConnectionSelection(round: ConnectionRound, puzzle: Connec
     return {
       ...round, selected: [], solved, attempts,
       status: won ? 'won' : 'playing',
-      score: won ? Math.max(60, 180 - round.mistakes * 30) : 0,
+      score: won ? scoreWithDifficulty(Math.max(60, 180 - round.mistakes * 30), round.difficulty ?? 'medium') : 0,
       feedback: won ? 'Perfectly connected! All four groups found. ✨' : 'Lovely connection! One more group down. ✨',
     };
   }
   const mistakes = round.mistakes + 1;
-  const oneAway = puzzle.groups.some((group, i) => !round.solved.includes(i) && group.words.filter(word => selected.includes(word)).length === 3);
+  const oneAway = round.difficulty !== 'hard' && puzzle.groups.some((group, i) => !round.solved.includes(i) && group.words.filter(word => selected.includes(word)).length === 3);
   return {
     ...round, selected: [], attempts, mistakes,
-    status: mistakes >= CONNECTION_MISTAKES ? 'lost' : 'playing',
-    feedback: mistakes >= CONNECTION_MISTAKES
+    status: mistakes >= connectionMistakeLimit(round.difficulty) ? 'lost' : 'playing',
+    feedback: mistakes >= connectionMistakeLimit(round.difficulty)
       ? 'Out of guesses! The groups are revealed below.'
       : oneAway ? 'One away! Three of those words belong together.' : 'Not a group yet. Try another combination.',
   };
@@ -101,7 +108,16 @@ export function readConnections(): ConnectionProgress {
     if (!data || typeof data !== 'object' || !('version' in data) || data.version !== 1) return initialConnections();
     const saved = data as ConnectionProgress;
     if (!saved.stats || typeof saved.stats.stars !== 'number' || !saved.daily || typeof saved.daily !== 'object') return initialConnections();
-    return saved;
+    if(saved.bestAwards) return saved;
+    const awards: Record<string, number> = {};
+    for(const entry of Object.values(saved.daily)) {
+      if(entry.round.status==='won') awards[entry.puzzleId] = Math.max(awards[entry.puzzleId] ?? 0, entry.round.score);
+    }
+    if(saved.practice?.round.status === 'won') {
+      const id = saved.practice.puzzleId;
+      awards[id] = Math.max(awards[id] ?? 0,saved.practice.round.score);
+    }
+    return {...saved,bestAwards:awards};
   } catch {
     return initialConnections();
   }
