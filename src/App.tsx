@@ -209,7 +209,7 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   const practiceRound = practiceRiddle ? session?.rounds[practiceRiddle.id] ?? newRound(difficulty) : null;
   const playingRiddle = mode === 'daily' ? daily : practiceRiddle;
   const activeRound = mode === 'daily' ? dailyRound : practiceRound;
-  const currentDifficulty = activeRound?.difficulty ?? difficulty;
+  const currentDifficulty = activeRound?.difficulty ?? (mode === 'daily' && !!progress.daily[today] ? 'easy' : difficulty);
   const difficultyLocked = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
   const earned = session ? Object.values(session.rounds).reduce((total, r) => total + r.score, 0) : 0;
   const solved = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
