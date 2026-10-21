@@ -1,7 +1,8 @@
+import { extraConnections } from './extraConnections';
 import type { Difficulty } from '../lib/passport';
 
-const easyPuzzles = new Set(['favourite-faces','spice-cabinet','on-the-map','the-outdoors','little-animals','sweet-tooth']);
-const hardPuzzles = new Set(['colour-me-happy','movie-snacks','screen-and-stage','game-night','travel-bag']);
+const easyPuzzles = new Set(['favourite-faces','spice-cabinet','on-the-map','the-outdoors','little-animals','sweet-tooth','after-school','street-food-tour','retro-remote','soft-pastels','sitcom-corner']);
+const hardPuzzles = new Set(['colour-me-happy','movie-snacks','screen-and-stage','game-night','travel-bag','hidden-compounds','tricky-prefixes','two-meanings','word-trickery']);
 export function connectionPuzzleDifficulty(puzzle: ConnectionPuzzle): Difficulty {
   return easyPuzzles.has(puzzle.id) ? 'easy' : hardPuzzles.has(puzzle.id) ? 'hard' : 'medium';
 }
@@ -118,6 +119,8 @@ export const connectionPuzzles: ConnectionPuzzle[] = [
     { label: 'Collective animal nouns', words: ['PRIDE','HERD','SCHOOL','FLOCK'], note: 'Collective nouns for groups of animals.' },
   ]},
 ];
+
+connectionPuzzles.push(...extraConnections);
 
 export const CONNECTION_COLOURS = ['yellow', 'green', 'blue', 'purple'] as const;
 
