@@ -23,7 +23,7 @@ export default function BazingaLab({today,progress,setProgress,onHome}:Props){
   const round=mode==='daily'?daily:progress.practice;
   const currentCase=round?seatingCases.find(c=>c.id===round.caseId):undefined;
   const level=round?.difficulty??difficulty;
-  const locked=!!round&&!isSeatingUntouched(round);
+  const locked=!!round&&!isSeatingUntouched(round)&&(mode==='daily'||round.status==='playing');
   const rules=currentCase?seatingRules(currentCase):[];
   const chosen=round?.selected;
   const activeRoster=currentCase?.solution??[];
