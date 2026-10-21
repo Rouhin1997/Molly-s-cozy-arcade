@@ -108,7 +108,16 @@ export function readConnections(): ConnectionProgress {
     if (!data || typeof data !== 'object' || !('version' in data) || data.version !== 1) return initialConnections();
     const saved = data as ConnectionProgress;
     if (!saved.stats || typeof saved.stats.stars !== 'number' || !saved.daily || typeof saved.daily !== 'object') return initialConnections();
-    return saved;
+    if(saved.bestAwards) return saved;
+    const awards: Record<string, number> = {};
+    for(const entry of Object.values(saved.daily)) {
+      if(entry.round.status==='won') awards[entry.puzzleId] = Math.max(awards[entry.puzzleId] ?? 0, entry.round.score);
+    }
+    if(saved.practice?.round.status === 'won') {
+      const id = saved.practice.puzzleId;
+      awards[id] = Math.max(awards[id] ?? 0,saved.practice.round.score);
+    }
+    return {...saved,bestAwards:awards};
   } catch {
     return initialConnections();
   }
