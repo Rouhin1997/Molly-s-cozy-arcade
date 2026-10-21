@@ -72,7 +72,7 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
   const effectiveDifficulty = session?.difficulty ?? (mode === 'daily' && progress.daily[today] ? 'easy' : difficulty);
   const choices = useMemo(() => activeShow && session ? optionsForShow(activeShow.id, session.seed, effectiveDifficulty === 'medium' ? 6 : 4) : [],
     [activeShow, session?.seed, effectiveDifficulty]); 
-  const difficultyLocked = !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.tuneLevel>1 || r.attempts.length>0 || r.status !== 'playing'));
+  const difficultyLocked = !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.tuneLevel>1 || r.attempts.length>0 || r.status !== 'playing')) && (mode === 'daily' || !finished);
   const sessionStars = session ? Object.values(session.rounds).reduce((n, r) => n + r.score, 0) : 0;
   const identified = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
@@ -141,7 +141,7 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
     setTypedAnswer('');
     if (mode === 'daily') {
       setProgress(prev => ({...prev,daily:{...prev.daily,[today]:newToonSession(`toon-daily-${today}`,'all',next)}}));
-    } else if (session && !finished) {
+    } else if (session) {
       // Retune the entire six-channel session before any channel is attempted.
       startPractice(session.pack, next);
     }
