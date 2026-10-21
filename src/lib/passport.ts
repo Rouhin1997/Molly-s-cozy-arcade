@@ -64,3 +64,14 @@ export function passportSummary(p: ArcadeProgress) {
     ],
   };
 }
+
+export function readPreferredDifficulty(game: string): Difficulty {
+  try {
+    const stored = localStorage.getItem(`mollys-difficulty-${game}`);
+    return stored === 'easy' || stored === 'medium' || stored === 'hard' ? stored : 'medium';
+  } catch { return 'medium'; }
+}
+
+export function savePreferredDifficulty(game: string, level: Difficulty): void {
+  try { localStorage.setItem(`mollys-difficulty-${game}`, level); } catch { /* Still playable. */ }
+}
