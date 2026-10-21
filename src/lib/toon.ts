@@ -1,4 +1,5 @@
 import { generateToonLineup, type ToonPack, type ToonShow, TOON_ROUNDS } from '../data/toon';
+import { scoreWithDifficulty, type Difficulty } from './passport';
 
 export const TOON_STORAGE_KEY = 'mollys-toon-rewind-v1';
 export const MAX_TUNES = 3;
@@ -9,6 +10,7 @@ export type ToonRound = {
   attempts: string[];
   status: 'playing' | 'won' | 'lost';
   score: number;
+  difficulty?: Difficulty;
 };
 export type ToonSession = {
   seed: string;
@@ -16,6 +18,7 @@ export type ToonSession = {
   ids: string[];
   index: number;
   rounds: Record<string, ToonRound>;
+  difficulty?: Difficulty;
 };
 export type ToonStats = {
   played: number;
@@ -29,18 +32,22 @@ export type ToonProgress = {
   daily: Record<string, ToonSession>;
   practice: ToonSession | null;
   stats: ToonStats;
+  bestAwards?: Record<string, number>;
 };
 
-export function freshToonRound(): ToonRound {
-  return { tuneLevel: 1, attempts: [], status: 'playing', score: 0 };
+export function freshToonRound(difficulty: Difficulty = 'easy'): ToonRound {
+  return { tuneLevel: 1, attempts: [], status: 'playing', score: 0, difficulty };
+}
+export function toonWrongLimit(difficulty: Difficulty = 'easy'): number {
+  return difficulty === 'hard' ? 1 : MAX_WRONG_CHANNELS;
 }
 
-export function newToonSession(seed: string, pack: ToonPack = 'all'): ToonSession {
-  return { seed, pack, ids: generateToonLineup(seed, pack, TOON_ROUNDS), index: 0, rounds: {} };
+export function newToonSession(seed: string, pack: ToonPack = 'all', difficulty: Difficulty = 'easy'): ToonSession {
+  return { seed, pack, ids: generateToonLineup(seed, pack, TOON_ROUNDS), index: 0, rounds: {}, difficulty };
 }
 export function currentToonRound(session: ToonSession): ToonRound {
   const showId = session.ids[session.index];
-  return showId ? session.rounds[showId] ?? freshToonRound() : freshToonRound();
+  return showId ? session.rounds[showId] ?? freshToonRound(session.difficulty) : freshToonRound(session.difficulty);
 }
 
 export function tuneToonSignal(round: ToonRound): ToonRound {
@@ -53,9 +60,9 @@ export function guessToonShow(round: ToonRound, show: ToonShow, guessedId: strin
   const attempts = [...round.attempts, guessedId];
   if (guessedId === show.id) {
     return { ...round, attempts, status: 'won',
-      score: Math.max(30, 120 - (round.tuneLevel - 1) * 25 - (attempts.length - 1) * 20) };
+      score: scoreWithDifficulty(Math.max(30, 120 - (round.tuneLevel - 1) * 25 - (attempts.length - 1) * 20), round.difficulty ?? 'easy') };
   }
-  if (attempts.length >= MAX_WRONG_CHANNELS)
+  if (attempts.length >= toonWrongLimit(round.difficulty))
     return { ...round, attempts, status: 'lost', score: 0 };
   return { ...round, attempts };
 }
@@ -81,6 +88,7 @@ export function initialToonProgress(): ToonProgress {
   return {
     version: 1, daily: {}, practice: null,
     stats: { played: 0, solved: 0, stars: 0, perfectSignals: 0, bestSignal: 0 },
+    bestAwards: {},
   };
 }
 
