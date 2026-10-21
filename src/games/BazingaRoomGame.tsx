@@ -24,7 +24,7 @@ const roomIcon:Record<string,string>={
   cafeteria:'🥪',lab:'🔬',comic:'📚',cinema:'🎬',
 };
 const roomTraits:Record<string,string>={
-  sofa:'sofa cushion', 'tv-view':'clear TV view',spot:"Sheldon's famous spot",
+  sofa:'sofa cushion', 'tv-view':'clear TV view',
   warm:'warm corner',breeze:'gentle cross-breeze',draft:'noticeable draft',
   uncomfortable:'less comfortable chair',kitchen:'near kitchen',snacks:'near snacks',
   window:'window-side',door:'door/exit-side',chair:'separate chair',
