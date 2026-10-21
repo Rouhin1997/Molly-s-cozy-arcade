@@ -23,6 +23,17 @@ const roomIcon:Record<string,string>={
   'four-a':'🛋️','four-b':'🌻',wolowitz:'🍽️',raj:'🕵️',
   cafeteria:'🥪',lab:'🔬',comic:'📚',cinema:'🎬',
 };
+const roomTraits:Record<string,string>={
+  sofa:'sofa cushion', 'tv-view':'clear TV view',spot:"Sheldon's famous spot",
+  warm:'warm corner',breeze:'gentle cross-breeze',draft:'noticeable draft',
+  uncomfortable:'less comfortable chair',kitchen:'near kitchen',snacks:'near snacks',
+  window:'window-side',door:'door/exit-side',chair:'separate chair',
+  'partial-view':'limited TV sightline',quiet:'quiet area', 'far-corner':'distant corner',
+  dining:'dining chair',head:'head of the table',counter:'by the register',
+  comic:'near comic shelves',front:'front row',back:'back row',center:'centre seat',
+  aisle:'aisle access',screen:'best straight-on screen angle',desk:'workstation',
+  experiment:'near equipment','lab-safe':'safety-protected workstation',
+};
 const zoneNames:Record<string,string>={
   apartment:'Apartment living room',penny:'Penny’s living room',dinner:'Family dining room',
   raj:'Raj’s party apartment',caltech:'University cafeteria',
@@ -171,6 +182,19 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               </button>;
             })}
           </div></div>
+          <details className="bazinga-room-guide">
+            <summary>🗺️ Inspect the seats: drafts, comfort and sightlines</summary>
+            <div className="bazinga-room-guide-grid">
+              {caseData.seatIds.map((id,i)=>{
+                const chair=room.seats.find(s=>s.id===id)!;
+                return <div key={id}>
+                  <strong>#{i+1} {chair.label}</strong>
+                  <span>{chair.tags.map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
+                </div>;
+              })}
+            </div>
+            <p>Distances and neighbours are shown by their positions on the map. Seat properties are fixed; changing characters never changes the room.</p>
+          </details>
           <p className="bazinga-room-instruction">{round.selected?<><strong>{round.selected}</strong> is selected. Tap a seat to place or swap them.</>:'Select a sticker below, then tap a chair. You may also tap an occupied chair to clear it.'}</p>
           <div className="bazinga-world-cast" role="group" aria-label="Choose a character to place">
             {caseData.solution.map(name=>{
