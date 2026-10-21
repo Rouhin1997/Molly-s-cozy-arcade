@@ -25,7 +25,6 @@ export default function BazingaLab({today,progress,setProgress,onHome}:Props){
   const level=round?.difficulty??difficulty;
   const locked=!!round&&!isSeatingUntouched(round);
   const rules=currentCase?seatingRules(currentCase):[];
-  const completed=round?.status!=='playing';
   const chosen=round?.selected;
   const activeRoster=currentCase?.solution??[];
   const used=round?.chairs.filter(Boolean)??[];
