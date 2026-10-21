@@ -9,7 +9,7 @@ import { readConnections, writeConnections, type ConnectionStats } from './lib/c
 import type { ConnectionProgress } from './lib/connections';
 import { dailyRiddle, localDateKey, practiceRiddles, riddles, matchesRiddle, type Riddle } from './data/questions';
 import {
-  addClue, MAX_CLUES, maxCluesForDifficulty, maxGuessesForDifficulty, scoreRound, newRound,
+  addClue, maxCluesForDifficulty, maxGuessesForDifficulty, scoreRound, newRound,
   readProgress, registerResult, skipRound, submitGuess, writeProgress,
   type Progress, type Round,
 } from './lib/game';
@@ -187,7 +187,7 @@ function Puzzle({ riddle, round, onGuess, onHint, onSkip, onNext, nextText, mode
       </form>
       {round.guesses.length > 0 && <div className="guess-history"><span>Not quite yet:</span> {wrong.map((guess, i) => <span className="wrong-guess" key={`${guess}-${i}`}>{guess} <span aria-hidden="true">×</span></span>)}</div>}
       {notice && <p role="status">{notice}</p>}
-      <div className="puzzle-actions"><button className="btn btn-outline" onClick={() => { onHint(); if (round.cluesShown >= allowedClues) setNotice('All clues are already showing. You’ve got this!'); }} disabled={round.cluesShown >= MAX_CLUES}>✧ Reveal another clue <span>({allowedClues - round.cluesShown} left)</span></button><button className="text-button" onClick={onSkip}>Reveal answer instead →</button></div>
+      <div className="puzzle-actions"><button className="btn btn-outline" onClick={() => { onHint(); if (round.cluesShown >= allowedClues) setNotice('All clues are already showing. You’ve got this!'); }} disabled={round.cluesShown >= allowedClues}>✧ Reveal another clue <span>({allowedClues - round.cluesShown} left)</span></button><button className="text-button" onClick={onSkip}>Reveal answer instead →</button></div>
     </> : <RoundResult round={round} riddle={riddle} onNext={onNext} nextText={nextText}/>}
   </section>;
 }
