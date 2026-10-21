@@ -121,11 +121,8 @@ const c=(id:string,room:RoomId,title:string,episode:string,difficulty:Difficulty
   seatIds:string[],solution:string[],story:string,rules:RoomRule[],winning:string,losing:string):RoomCase =>
   ({id,room,title,episode,difficulty,seatIds,solution,story,rules,winning,losing});
 const has=(a:string,tag:string,text?:string):RoomRule=>({type:'has',a,tag,text});
-const avoids=(a:string,tag:string,text?:string):RoomRule=>({type:'avoids',a,tag,text});
 const adjacent=(a:string,b:string,text?:string):RoomRule=>({type:'adjacent',a,b,text});
-const apart=(a:string,b:string,text?:string):RoomRule=>({type:'not-adjacent',a,b,text});
 const far=(a:string,b:string,text?:string):RoomRule=>({type:'far-from-guest',a,b,text});
-const close=(a:string,prop:string,text?:string):RoomRule=>({type:'closest',a,prop,text});
 
 export const roomCases:RoomCase[] = [
   // Cozy — four visible positions, rich hints, and instantly recognisable scenarios
@@ -318,7 +315,7 @@ const tagText:Record<string,string> = {
   center:'a centre seat',aisle:'an aisle seat',screen:'a seat squarely oriented to the screen',
   'far-corner':'a far-corner position', 'partial-view':'a place with a less convenient TV angle',
 };
-export function roomRuleText(c:RoomCase,r:RoomRule):string {
+export function roomRuleText(_c:RoomCase,r:RoomRule):string {
   if(r.text)return r.text;
   if(r.type==='has')return `${r.a} must sit in ${tagText[r.tag??'']??'the designated position'}.`;
   if(r.type==='avoids')return `${r.a} refuses ${tagText[r.tag??'']??'that kind of chair'}.`;
