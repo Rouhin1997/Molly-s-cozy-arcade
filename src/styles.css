@@ -469,3 +469,12 @@
 @media(max-width:970px){.bazinga-world-layout{grid-template-columns:1fr}.bazinga-world-rules{max-height:none}.bazinga-episode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:570px){.bazinga-world-case{padding:15px 9px;border-radius:17px}.bazinga-room-card{padding:9px 7px}.bazinga-room-map{height:400px}.bazinga-world-head{gap:8px}.bazinga-location-ticket{max-width:95px;min-width:95px}.bazinga-location-ticket>span{font-size:22px}.bazinga-location-ticket strong{font-size:10px}.bazinga-world-head h2{font-size:26px}.bazinga-world-status span{font-size:10px;padding:7px 9px}.bazinga-episode-grid{grid-template-columns:1fr}.bazinga-episode-shelf{padding:15px 12px}.bazinga-shelf-heading{align-items:flex-start;flex-wrap:wrap}.bazinga-room-top{align-items:flex-start;flex-wrap:wrap}.bazinga-story-finale{padding:18px 12px;gap:13px}.bazinga-finale-illustration{min-width:128px;min-height:128px}.bazinga-finale-illustration>.bazinga-sticker{width:112px!important;height:112px!important}.bazinga-finale-group .bazinga-sticker{width:64px!important;height:64px!important}.bazinga-story-finale .btn{margin-left:0;width:100%}.bazinga-edition-bar{flex-wrap:wrap;padding:12px}}
 @media(prefers-reduced-motion:reduce){.bazinga-finale-illustration>.bazinga-sticker{animation:none}.bazinga-world-guest,.bazinga-episode-card{transition:none}}
+
+.bazinga-room-guide{border:1px solid #eadeda;border-radius:12px;background:#fffdfbcc;margin:13px 0;padding:11px 12px}
+.bazinga-room-guide summary{cursor:pointer;color:#735b7f;font-weight:850;font-size:11px;line-height:1.45}
+.bazinga-room-guide summary:focus-visible{outline:3px solid #8063b8;outline-offset:4px;border-radius:4px}
+.bazinga-room-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.bazinga-room-guide-grid>div{display:flex;flex-direction:column;gap:4px;min-width:0;background:#f6f0f8;padding:9px 10px;border:1px solid #e9dfe8;border-radius:10px}
+.bazinga-room-guide-grid strong{font-size:10px;color:#6b5080}
+.bazinga-room-guide-grid span,.bazinga-room-guide p{font-size:10px;line-height:1.55;color:#87728e}
+@media(max-width:480px){.bazinga-room-guide-grid{grid-template-columns:1fr}}
