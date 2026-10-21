@@ -1,3 +1,5 @@
+import { extraRiddles } from './extraQuestions';
+import type { Difficulty } from '../lib/passport';
 export type Category = 'fruit' | 'vegetable' | 'food';
 export type Riddle = {
   id: string;
@@ -132,6 +134,13 @@ export const riddles: Riddle[] = [
     funFact: 'Samosas have a long history, with related pastries found across Asia and the Middle East.'
   }
 ];
+riddles.push(...extraRiddles);
+
+const cozyRiddles = new Set(['aubergine','pineapple','okra','lychee','cauliflower','mushroom','jackfruit','beetroot','papaya','tamarind','rasgulla','momo','avocado','guava','samosa','kiwi','plantain','mishtidoi']);
+const expertRiddles = new Set(['starfruit','asparagus','artichoke','falooda','rambutan','mangosteen','kumquat','longan','breadfruit','soursop','fennel','kohlrabi','celeriac','lotusroot','bambooshoot','waterchestnut','shorsheilish','pitha']);
+export function riddleDifficulty(riddle: Riddle): Difficulty {
+  return cozyRiddles.has(riddle.id) ? 'easy' : expertRiddles.has(riddle.id) ? 'hard' : 'medium';
+}
 
 export function normalizeGuess(value: string): string {
   return value.toLocaleLowerCase('en').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
@@ -159,9 +168,9 @@ export function dailyRiddle(dateKey: string): Riddle {
   return riddles[hash(`molly-daily-${dateKey}`) % riddles.length];
 }
 
-export function practiceRiddles(count = 5): Riddle[] {
+export function practiceRiddles(count = 5, difficulty?: Difficulty): Riddle[] {
   // Separate random practice from the daily seed; no repeats within a set.
-  const shuffled = [...riddles];
+  const shuffled = difficulty ? riddles.filter(riddle => riddleDifficulty(riddle) === difficulty) : [...riddles];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
