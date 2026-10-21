@@ -281,6 +281,15 @@ export const roomCases:RoomCase[] = polishRoomCases(draftRoomCases);
 /** Coordinate-based spatial semantics — no linear array assumptions. */
 const distance=(a:{x:number;y:number},b:{x:number;y:number})=>Math.hypot(a.x-b.x,a.y-b.y);
 function seats(c:RoomCase):RoomSeat[]{const map=rooms[c.room];return c.seatIds.map(id=>{const s=map.seats.find(t=>t.id===id);if(!s)throw Error(`No seat ${id} in ${c.room}`);return s})}
+/** Optional visual neighbour overlay uses exactly the same adjacency predicate as
+ * the solver. No ambiguity about which diagonal seat pairs count as adjacent. */
+export function roomNeighbourLinks(c:RoomCase){
+  const all=seats(c),pairs:{from:RoomSeat;to:RoomSeat}[]=[];
+  for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){
+    if(distance(all[i],all[j])<=34)pairs.push({from:all[i],to:all[j]});
+  }
+  return pairs;
+}
 function propPosition(c:RoomCase,label:string):RoomProp|undefined {return rooms[c.room].props.find(p=>p.label===label)}
 export function holdsRoomRule(c:RoomCase,order:readonly string[],r:RoomRule):boolean{
   const spots=seats(c),a=order.indexOf(r.a),b=r.b?order.indexOf(r.b):-1;
