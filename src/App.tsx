@@ -1,4 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent, type Dispatch, type SetStateAction } from 'react';
+import Connections from './games/Connections';
+import { readConnections, writeConnections, type ConnectionStats } from './lib/connections';
+import type { ConnectionProgress } from './lib/connections';
 import { dailyRiddle, localDateKey, practiceRiddles, riddles, matchesRiddle, type Riddle } from './data/questions';
 import {
   addClue, MAX_CLUES, MAX_GUESSES, newRound,
@@ -6,7 +9,7 @@ import {
   type Progress, type Round,
 } from './lib/game';
 
-type View = 'home' | 'guess' | 'vault';
+type View = 'home' | 'guess' | 'connections' | 'vault';
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
@@ -14,7 +17,6 @@ const upcoming = [
   { icon: '🕵️', name: 'The 99 Files', tag: 'Detective', teaser: 'Solve little mysteries with the Nine-Nine.', theme: 'peach', detail: 'Explore case files, question witnesses and put together the evidence. Cool, cool, cool.' },
   { icon: '⚛️', name: 'Bazinga! Lab', tag: 'Logic', teaser: 'A puzzle night with Sheldon and the gang.', theme: 'yellow', detail: 'Rearrange seats, decode rules and outsmart increasingly ridiculous roommate agreements.' },
   { icon: '🖤', name: 'Pink Rush', tag: 'Music', teaser: 'A high-energy challenge for a true BLINK.', theme: 'pink', detail: 'Match eras, order the setlist and race through song puzzles to build your combo.' },
-  { icon: '🧩', name: 'Little Connections', tag: 'Words', teaser: 'Four secret groups. Sixteen curious words.', theme: 'mint', detail: 'Find the hidden connections in a grid of delightfully tricky words.' },
 ];
 
 function dateUntilBirthday(now = new Date()): number {
@@ -39,6 +41,7 @@ function Home({ onNavigate, onChooseGame, progress, today }: {
   onNavigate: (view: View, mode?: Mode) => void;
   onChooseGame: (name: string) => void;
   progress: Progress;
+  connectionStats: ConnectionStats;
   today: string;
 }) {
   const daily = progress.daily[today];
@@ -77,14 +80,14 @@ function Home({ onNavigate, onChooseGame, progress, today }: {
     </section>
 
     <section className="stats-strip" aria-label="Player progress">
-      <div><span className="stats-icon">🏆</span><span className="stats-number">{progress.stats.solved}</span><span className="stats-label">puzzles solved</span></div>
-      <div><span className="stats-icon">✨</span><span className="stats-number">{progress.stats.points}</span><span className="stats-label">stars collected</span></div>
+      <div><span className="stats-icon">🏆</span><span className="stats-number">{progress.stats.solved + connectionStats.solved}</span><span className="stats-label">puzzles solved</span></div>
+      <div><span className="stats-icon">✨</span><span className="stats-number">{progress.stats.points + connectionStats.stars}</span><span className="stats-label">stars collected</span></div>
       <div><span className="stats-icon">🔥</span><span className="stats-number">{progress.stats.bestStreak}</span><span className="stats-label">best daily streak</span></div>
       <div><span className="stats-icon">💝</span><span className="stats-number">{days === 0 ? 'Today!' : days}</span><span className="stats-label">{days === 0 ? 'happy birthday!' : 'days to birthday'}</span></div>
     </section>
 
     <section className="games-section" id="games">
-      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">One game ready, more magic in the making</span></div>
+      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Two games ready, more magic in the making</span></div>
       <div className="game-grid">
         <article className="game-card featured-card">
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 06</span></div>
@@ -92,8 +95,14 @@ function Home({ onNavigate, onChooseGame, progress, today }: {
           <div className="card-content"><span className="card-category">FOOD & DEDUCTION</span><h3>Guess Who?</h3><p>Four clever clues. One mystery ingredient. How soon can you guess it?</p>
             <button className="card-link" onClick={() => onNavigate('guess', 'practice')}>Let's play <span aria-hidden="true">↗</span></button></div>
         </article>
+        <article className="game-card game-card-mint connection-card">
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">02 / 06</span></div>
+          <div className="game-emoji" aria-hidden="true">🧩</div>
+          <div className="card-content"><span className="card-category">WORDS & PATTERNS</span><h3>Little Connections</h3><p>Sixteen words, four hidden connections and four chances to find them all.</p>
+            <button className="card-link" onClick={() => onNavigate('connections')}>Find the links <span aria-hidden="true">↗</span></button></div>
+        </article>
         {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
-          <div className="card-topline"><span className="soon-pill">IN THE WORKS</span><span className="card-number">0{index + 2} / 06</span></div>
+          <div className="card-topline"><span className="soon-pill">IN THE WORKS</span><span className="card-number">0{index + 3} / 06</span></div>
           <div className="game-emoji" aria-hidden="true">{game.icon}</div>
           <div className="card-content"><span className="card-category">{game.tag.toUpperCase()}</span><h3>{game.name}</h3><p>{game.teaser}</p>
             <button className="card-link" onClick={() => onChooseGame(game.name)}>Sneak peek <span aria-hidden="true">↗</span></button></div>
@@ -238,11 +247,13 @@ function App() {
   const [view, setView] = useState<View>('home');
   const [mode, setMode] = useState<Mode>('daily');
   const [progress, setProgress] = useState<Progress>(readProgress);
+  const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(readConnections);
   const [sneakPeek, setSneakPeek] = useState<string | null>(null);
   const [today, setToday] = useState(localDateKey);
   const selectedGame = useMemo(() => upcoming.find(g => g.name === sneakPeek), [sneakPeek]);
 
   useEffect(() => { writeProgress(progress); }, [progress]);
+  useEffect(() => { writeConnections(connectionProgress); }, [connectionProgress]);
   useEffect(() => {
     const refresh = () => setToday(localDateKey());
     window.addEventListener('focus', refresh);
@@ -254,8 +265,8 @@ function App() {
     setView(next); setMode(nextMode); setSneakPeek(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;
