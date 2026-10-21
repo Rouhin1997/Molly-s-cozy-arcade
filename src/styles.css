@@ -361,3 +361,120 @@
 @media(max-width:870px){.bazinga-layout{grid-template-columns:1fr}.bazinga-guest{justify-content:center}.bazinga-table-surface{height:78px}.site-header nav{gap:11px}.site-header nav button{font-size:11px}}
 @media(max-width:550px){.bazinga-page{margin:21px auto 60px}.bazinga-lab-panel{padding:18px 10px;border-radius:18px}.bazinga-case-tag{display:none}.bazinga-heading h2{font-size:26px}.bazinga-scoreline{gap:6px}.bazinga-scoreline span{font-size:9px;padding:7px 8px}.bazinga-table-card{padding:14px 8px}.bazinga-table-surface{height:68px}.bazinga-table-surface span{font-size:12px}.bazinga-seats{gap:3px}.bazinga-seat{min-height:85px;padding:7px 1px;border-radius:9px}.bazinga-seat>span{font-size:20px}.bazinga-seat strong{font-size:9px}.bazinga-seat small{font-size:7px}.bazinga-guest{padding:8px 5px;gap:4px}.bazinga-guest strong{font-size:10px}.bazinga-guest>span{font-size:15px}.bazinga-rules-card{padding:15px 11px}.bazinga-action-buttons .btn{flex:1;padding:12px 10px;font-size:12px}.bazinga-rules li>p{font-size:11px}.bazinga-result{padding:15px 12px}}
 @media(prefers-reduced-motion:reduce){.bazinga-seat,.bazinga-guest{transition:none}}
+
+/* Phase 2E — Storybook room adventures and original character sticker pieces */
+.bazinga-world-page{max-width:1110px;margin:26px auto 80px}
+.bazinga-edition-bar{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 18px;margin:15px 0;background:#f6edf9;border:1px solid #e8d8ec;border-radius:15px}
+.bazinga-edition-bar>div{display:flex;flex-direction:column;gap:4px;color:#60446a}
+.bazinga-edition-bar strong{font-size:13px}.bazinga-edition-bar small{font-size:11px;color:#8c7a8e}
+.bazinga-edition-bar button{border:1px solid #d9c4e5;border-radius:30px;background:#fff9;padding:8px 13px;color:#755486;font-size:11px;font-weight:850}
+.bazinga-classic-return{display:flex;align-items:center;justify-content:center;gap:17px;flex-wrap:wrap;padding:18px 20px 0}
+.bazinga-classic-return span{font-size:11px;color:#88718e}
+.bazinga-episode-shelf{padding:20px 23px;margin-top:19px;background:#f9f4fb;border:1px solid #eadceb;border-radius:20px}
+.bazinga-shelf-heading{display:flex;justify-content:space-between;align-items:center;gap:18px}
+.bazinga-shelf-heading h2{font-family:'Fraunces',Georgia,serif;margin:6px 0 4px;font-size:24px;color:#5b4167}
+.bazinga-shelf-heading p{font-size:11px;color:#917e99}
+.bazinga-episode-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:17px}
+.bazinga-episode-card{min-height:188px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;padding:16px;border:2px solid #ebdfe9;border-radius:17px;background:linear-gradient(150deg,#fffefd,#f6f0fb);color:#634d6f;transition:transform .14s,border-color .14s}
+.bazinga-episode-card:hover{transform:translateY(-3px);border-color:#c5a3d6}
+.bazinga-episode-card.is-playing{border-color:#a987c1;background:#f0e6f7}
+.bazinga-episode-icon{display:grid;place-items:center;background:#f2e6f8;border-radius:13px;width:48px;height:48px;font-size:24px}
+.bazinga-episode-card .overline{font-size:8px;letter-spacing:1px;line-height:1.55}
+.bazinga-episode-card strong{font-family:'Fraunces',Georgia,serif;font-size:17px;color:#564064;line-height:1.2}
+.bazinga-episode-card small{font-size:10px;color:#927d97;line-height:1.35}
+.bazinga-episode-card em{font-style:normal;font-weight:900;font-size:9px;letter-spacing:.07em;color:#8060a0;margin-top:auto}
+.bazinga-quick-start{display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:15px;font-size:12px;color:#816c90}
+.bazinga-world-case{background:#fff;border:1px solid #eee0e8;border-radius:24px;padding:25px 25px 29px;margin-top:22px;box-shadow:0 12px 35px #6b58700e}
+.bazinga-world-head{display:flex;align-items:start;justify-content:space-between;gap:17px}
+.bazinga-world-head h2{font-family:'Fraunces',Georgia,serif;font-size:clamp(26px,3vw,37px);margin:8px 0;color:#584164}
+.bazinga-world-head p{font-size:13px;line-height:1.7;color:#83728b;margin:0;max-width:610px}
+.bazinga-location-ticket{display:flex;flex-direction:column;align-items:center;gap:6px;flex:none;min-width:146px;max-width:170px;border-radius:16px;border:2px dashed #d9c4e2;padding:10px;background:#fcf5f9;text-align:center}
+.bazinga-location-ticket>span{font-size:28px}.bazinga-location-ticket strong{font-size:12px;color:#655173}.bazinga-location-ticket small{font-size:10px;color:#937f96}
+.bazinga-world-status{display:flex;flex-wrap:wrap;gap:8px;margin:19px 0 17px}
+.bazinga-world-status span{font-size:11px;font-weight:850;color:#805e90;background:#f7edfa;border-radius:50px;padding:8px 13px}
+.bazinga-world-layout{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,.92fr);gap:17px;align-items:stretch}
+.bazinga-room-card{min-width:0;border:1px solid #eadbbf;background:#fff9f1;border-radius:22px;padding:14px}
+.bazinga-room-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:2px 4px 13px}
+.bazinga-room-top strong{font-size:12px;color:#6c526b}.bazinga-room-top small{font-size:9px;color:#a0909b}
+.bazinga-map-scroll{max-width:100%;overflow-x:auto;border-radius:16px;overscroll-behavior-x:contain;scrollbar-color:#b9a6b8 #faf0ec}
+.bazinga-room-map{position:relative;min-width:590px;width:100%;height:418px;overflow:hidden;border-radius:15px;border:8px solid #c9a989;box-shadow:inset 0 4px 18px #7f625d20;background:#f4e5d5}
+.bazinga-room-map:before{content:"";pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(90deg,#fff6 0,#fff6 1px,transparent 1px,transparent 39px),repeating-linear-gradient(0deg,#fff4 0,#fff4 1px,transparent 1px,transparent 39px);opacity:.65}
+.bazinga-room-map:after{content:"";pointer-events:none;position:absolute;inset:0;border:3px solid #ffffffa3;border-radius:7px}
+.room-theme-apartment{background:linear-gradient(135deg,#ebd5aa,#f0e3c9)}
+.room-theme-penny{background:linear-gradient(140deg,#f5d9c9,#f5e6de)}
+.room-theme-dinner{background:linear-gradient(135deg,#f5dbba,#e5cbb0)}
+.room-theme-raj{background:linear-gradient(140deg,#dac8eb,#e5d6e5)}
+.room-theme-caltech{background:linear-gradient(140deg,#cddfd8,#dfebdf)}
+.room-theme-lab{background:linear-gradient(140deg,#c3dcde,#e3eced)}
+.room-theme-comic{background:linear-gradient(140deg,#f3ddba,#e7d5ef)}
+.room-theme-cinema{background:linear-gradient(140deg,#252d4f,#435076);border-color:#737a9d}
+.room-floor-object{position:absolute;left:20%;top:48%;width:60%;height:21%;border:4px solid #aa8a6d;background:repeating-linear-gradient(45deg,#ae977b66 0,#ae977b66 10px,#ebdac1 10px,#ebdac1 20px);border-radius:23px;box-shadow:0 7px 0 #a58a7260;pointer-events:none}
+.room-theme-apartment .room-floor-object,.room-theme-penny .room-floor-object,.room-theme-raj .room-floor-object{left:20%;top:53%;width:50%;height:20%;background:#a88484b3;border-color:#946d75;border-radius:22px}
+.room-theme-dinner .room-floor-object,.room-theme-caltech .room-floor-object{left:31%;top:33%;width:38%;height:39%;background:#d7b18d;border-color:#ae8e71;border-radius:52%}
+.room-theme-lab .room-floor-object{left:25%;top:42%;width:50%;height:18%;background:#aebac4;border-color:#8495a5;border-radius:8px}
+.room-theme-comic .room-floor-object{left:19%;top:42%;width:54%;height:13%;background:#e2c3a5;border-color:#b99577}
+.room-theme-cinema .room-floor-object{left:8%;top:4%;width:84%;height:16%;background:linear-gradient(#c4ddf9,#e7eaf7);border:5px solid #d5d5e9;border-radius:5px;box-shadow:0 0 25px #d3def47d}
+.bazinga-room-prop{position:absolute;transform:translate(-50%,-50%);pointer-events:none;display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;text-align:center;z-index:2}
+.bazinga-room-prop span{font-size:24px;text-shadow:0 2px 5px #ffffff88}
+.bazinga-room-prop small{font-size:9px;font-weight:900;white-space:nowrap;color:#7a596c;background:#fffbdad9;border-radius:7px;padding:2px 5px}
+.room-theme-cinema .bazinga-room-prop small{color:#293658}
+.bazinga-map-seat{position:absolute;z-index:4;transform:translate(-50%,-50%);min-width:85px;max-width:94px;min-height:89px;border:2px dashed #a18aa3;border-radius:15px;background:#fff9eced;box-shadow:0 5px 0 #896c7547;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:5px 3px;color:#674f72}
+.bazinga-map-seat:hover:not(:disabled){background:#fff;border-color:#7e5793;box-shadow:0 4px 0 #916b9966}
+.bazinga-map-seat:focus-visible{z-index:8}
+.bazinga-map-seat.is-occupied{background:#f5efff;border-style:solid;border-color:#aa90c2}
+.bazinga-map-seat.is-fixed{background:#e5f5e9;border-color:#8fbba0}
+.bazinga-map-seat:disabled{cursor:default}
+.bazinga-chair-number{position:absolute;top:-12px;left:-10px;width:24px;height:24px;border-radius:50%;background:#5b476c;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:900}
+.bazinga-chair-empty{font-size:27px;line-height:1.4;color:#ae88b6}
+.bazinga-map-seat .bazinga-sticker{height:53px!important;width:53px!important;filter:drop-shadow(0 3px 2px #5d47552e)}
+.bazinga-map-seat strong{max-width:100%;overflow-wrap:anywhere;font-size:9px;line-height:1.2;text-align:center}
+.bazinga-chair-fixed{position:absolute;right:-7px;top:-10px;border-radius:50%;background:#d9f4e3;border:1px solid #8da899;font-size:16px;color:#6a9377;padding:2px}
+.bazinga-room-instruction{text-align:center;font-size:11px;line-height:1.5;color:#836d8c;margin:12px 2px}
+.bazinga-world-cast{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bazinga-world-guest{min-width:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;padding:8px 3px;border:2px solid #ebdfe6;border-radius:14px;background:#fffdfd;color:#6c536f;transition:transform .16s,border-color .16s}
+.bazinga-world-guest:hover:not(:disabled){transform:translateY(-2px);border-color:#c8a6da}
+.bazinga-world-guest.is-selected{border-color:#76539b;box-shadow:0 0 0 3px #aa83c23d;background:#f2e9f7}
+.bazinga-world-guest.is-placed:not(.is-selected){background:#f0f7f1}
+.bazinga-world-guest strong{font-size:11px}
+.bazinga-world-guest small{font-size:9px;color:#938397}
+.bazinga-world-guest:disabled{opacity:.65;cursor:default}
+.bazinga-world-rules{min-width:0;display:flex;flex-direction:column;gap:11px;padding:22px 17px;border-radius:19px;border:1px solid #e5d4e9;background:linear-gradient(145deg,#f9f2fa,#efe4f1)}
+.bazinga-rule-paper-head{display:flex;gap:10px;align-items:center}
+.bazinga-rule-paper-head>span{font-size:28px}
+.bazinga-rule-paper-head h3{font-family:'Fraunces',Georgia,serif;font-size:22px;margin:0;color:#5a4167}
+.bazinga-rule-paper-head small{color:#9985a0;font-size:10px}
+.bazinga-rule-paper-intro{font-size:11px;color:#806d8c;line-height:1.65}
+.bazinga-world-clues{padding:0;margin:0;display:flex;flex-direction:column;gap:9px;list-style:none}
+.bazinga-world-clues li{display:flex;align-items:flex-start;gap:9px;border:1px solid #e7dbea;background:#ffffffc9;border-radius:12px;padding:10px}
+.bazinga-clue-index{display:grid;place-items:center;flex:none;border-radius:9px;background:#e8d4ef;color:#775c86;width:24px;height:24px;font-weight:900;font-size:11px}
+.bazinga-world-clues p{font-size:12px;color:#685874;line-height:1.55;margin:2px 0;flex:1}
+.rule-pass,.rule-fail{font-weight:900;font-size:17px}.rule-pass{color:#39945f}.rule-fail{color:#cf6577}
+.bazinga-paper-footer{font-size:10px;line-height:1.6;color:#a089a4;margin-top:auto}
+.bazinga-world-controls{padding:22px 10px 7px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.bazinga-world-controls p{text-align:center;font-size:12px;font-weight:800;color:#785f87;margin:0}
+.bazinga-world-controls>div{display:flex;flex-wrap:wrap;gap:9px;justify-content:center}
+.bazinga-story-finale{position:relative;overflow:hidden;margin-top:25px;padding:21px 25px;border:2px solid #cde7d4;background:radial-gradient(circle at 4% 10%,#fbfffb,transparent 45%),linear-gradient(110deg,#e9f6e9,#f8ecf5);border-radius:25px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.bazinga-story-finale.is-loss{background:radial-gradient(circle at 4% 10%,#fff8ef,transparent 45%),linear-gradient(110deg,#fbe5ee,#efe1fa);border-color:#e5ccdf}
+.bazinga-finale-illustration{position:relative;display:grid;place-items:center;flex:none;min-width:161px;min-height:161px;border:2px dashed #ffffffc5;border-radius:50%;background:#ffffff72}
+.bazinga-finale-illustration>.bazinga-sticker{filter:drop-shadow(0 8px 5px #6c4b7150);animation:sticker-bounce .48s ease-out both}
+.bazinga-finale-group{display:flex;align-items:center;justify-content:center;margin-left:15px}
+.bazinga-finale-group .bazinga-sticker{margin-left:-20px;filter:drop-shadow(0 5px 4px #5d4e5e37)}
+.bazinga-finale-sparkle{position:absolute;top:0;right:4px;font-size:25px;color:#bb89c9}
+.bazinga-finale-copy{flex:1;min-width:230px}
+.bazinga-finale-copy h3{font-family:'Fraunces',Georgia,serif;font-size:clamp(25px,3vw,36px);color:#63476b;margin:7px 0}
+.bazinga-finale-copy blockquote{font-family:'Fraunces',Georgia,serif;color:#664c71;font-size:16px;line-height:1.55;border-left:3px solid #b38aba;margin:8px 0 12px;padding-left:12px}
+.bazinga-finale-copy p{font-size:11px;color:#836e8b;line-height:1.65}
+.bazinga-story-finale .btn{margin-left:auto}
+@keyframes sticker-bounce{0%{transform:scale(.6) rotate(-8deg);opacity:0}65%{transform:scale(1.07) rotate(3deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+@media(max-width:970px){.bazinga-world-layout{grid-template-columns:1fr}.bazinga-world-rules{max-height:none}.bazinga-episode-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:570px){.bazinga-world-case{padding:15px 9px;border-radius:17px}.bazinga-room-card{padding:9px 7px}.bazinga-room-map{height:400px}.bazinga-world-head{gap:8px}.bazinga-location-ticket{max-width:95px;min-width:95px}.bazinga-location-ticket>span{font-size:22px}.bazinga-location-ticket strong{font-size:10px}.bazinga-world-head h2{font-size:26px}.bazinga-world-status span{font-size:10px;padding:7px 9px}.bazinga-episode-grid{grid-template-columns:1fr}.bazinga-episode-shelf{padding:15px 12px}.bazinga-shelf-heading{align-items:flex-start;flex-wrap:wrap}.bazinga-room-top{align-items:flex-start;flex-wrap:wrap}.bazinga-story-finale{padding:18px 12px;gap:13px}.bazinga-finale-illustration{min-width:128px;min-height:128px}.bazinga-finale-illustration>.bazinga-sticker{width:112px!important;height:112px!important}.bazinga-finale-group .bazinga-sticker{width:64px!important;height:64px!important}.bazinga-story-finale .btn{margin-left:0;width:100%}.bazinga-edition-bar{flex-wrap:wrap;padding:12px}}
+@media(prefers-reduced-motion:reduce){.bazinga-finale-illustration>.bazinga-sticker{animation:none}.bazinga-world-guest,.bazinga-episode-card{transition:none}}
+
+.bazinga-room-guide{border:1px solid #eadeda;border-radius:12px;background:#fffdfbcc;margin:13px 0;padding:11px 12px}
+.bazinga-room-guide summary{cursor:pointer;color:#735b7f;font-weight:850;font-size:11px;line-height:1.45}
+.bazinga-room-guide summary:focus-visible{outline:3px solid #8063b8;outline-offset:4px;border-radius:4px}
+.bazinga-room-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.bazinga-room-guide-grid>div{display:flex;flex-direction:column;gap:4px;min-width:0;background:#f6f0f8;padding:9px 10px;border:1px solid #e9dfe8;border-radius:10px}
+.bazinga-room-guide-grid strong{font-size:10px;color:#6b5080}
+.bazinga-room-guide-grid span,.bazinga-room-guide p{font-size:10px;line-height:1.55;color:#87728e}
+@media(max-width:480px){.bazinga-room-guide-grid{grid-template-columns:1fr}}

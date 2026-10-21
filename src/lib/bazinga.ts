@@ -1,4 +1,5 @@
 import type { Difficulty } from './passport';
+import type { WorldRound } from './bazingaWorld';
 import { bestAward, scoreWithDifficulty } from './passport';
 import { dailySeatingCase, practiceSeatingCase, seatingCases, seatingRules, ruleHolds, type SeatingCase } from '../data/bazinga';
 
@@ -31,10 +32,14 @@ export type BazingaProgress = {
   recent:string[];
   stats:BazingaStats;
   bestAwards:Record<string,number>;
+  /** Version 1 retains the legacy linear lab; these additions keep old saves valid. */
+  worldDaily?:Record<string,WorldRound>;
+  worldPractice?:WorldRound|null;
+  worldRecent?:string[];
 };
 
 export function initialBazingaProgress():BazingaProgress {
-  return {version:1,daily:{},practice:null,recent:[],stats:{played:0,solved:0,stars:0,bestScore:0,perfect:0},bestAwards:{}};
+  return {version:1,daily:{},practice:null,recent:[],stats:{played:0,solved:0,stars:0,bestScore:0,perfect:0},bestAwards:{},worldDaily:{},worldPractice:null,worldRecent:[]};
 }
 export function newSeatingRound(c:SeatingCase):SeatingRound {
   return {caseId:c.id,difficulty:c.difficulty,chairs:Array(c.solution.length).fill(null),selected:null,locked:[],attempts:0,hints:0,status:'playing',score:0,feedback:'Tap a guest, then tap an empty chair.'};
@@ -113,7 +118,7 @@ export function readBazingaProgress():BazingaProgress {
     if(!state||typeof state!=='object'||!('version' in state)||state.version!==1)return initialBazingaProgress();
     const p=state as BazingaProgress;
     if(!p.daily||!p.stats||typeof p.stats.stars!=='number'||!Array.isArray(p.recent))return initialBazingaProgress();
-    return {...p,bestAwards:p.bestAwards??{}};
+    return {...p,bestAwards:p.bestAwards??{},worldDaily:p.worldDaily??{},worldPractice:p.worldPractice??null,worldRecent:p.worldRecent??[]};
   }catch{return initialBazingaProgress()}
 }
 export function writeBazingaProgress(p:BazingaProgress):void{

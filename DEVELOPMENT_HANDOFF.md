@@ -1,10 +1,34 @@
 # Molly's Cozy Arcade — Development Handoff
 
-**Checkpoint:** 21 October 2026, completion of Phase 2D (difficulty consistency + Bazinga! Lab)
+**Checkpoint:** 22 October 2026, Phase 2E (Bazinga! Room Adventures with original character stickers and spatial case maps)
 **Repository:** https://github.com/Rouhin1997/Molly-s-cozy-arcade
 **Live arcade:** https://rouhin1997.github.io/Molly-s-cozy-arcade/
 **Default branch:** `main`; GitHub Actions publishes `main` to GitHub Pages
 **Primary milestone:** complete a meaningful November 13 birthday experience. All regular games should remain playable year-round.
+
+## Latest release — Phase 2E: Bazinga! Room Adventures
+
+**Current default Bazinga screen is now Room Adventures**, not the old line-of-chairs activity. A clearly labeled **Classic seating puzzles** link opens the old, completely preserved game. `src/games/BazingaLab.tsx` is a small mode router; the original `BazingaLab.tsx` implementation was copied into `BazingaClassic.tsx` with the same props and save schema.
+
+### New gameplay and art
+- Room map settings: Apartment 4A, Apartment 4B, Howard & Bernadette's house, Raj's apartment, Caltech cafeteria, Caltech physics lab, Stuart's comic store, movie theatre. **Original schematic layouts** approximating iconic recurring set features; never claim to be official set reproductions.
+- **18 new handcrafted episode cases** in `src/data/bazingaWorld.ts` (6 per difficulty; no random filler), separate from the previous 18 Classic puzzles. Examples: Star Wars Night in Apartment 4A, Dinner at Howard's, Raj's Murder Mystery, New Comic Day, Caltech Lunch, Sick-Day Contingency, and movie-theatre screening puzzles.
+- **Actual 2D spatial constraints**: a unique traditional spot, sofa, line of sight to TV, kitchen and window proximity, cold drafts versus *pleasant* cross-breeze, Stuart's inconvenient seats, and Sheldon’s maximized distance from a sick guest. Each authored case is exhaustively checked for precisely **one** arrangement satisfying all clues.
+- A visible map/props and expandable **room seat guide** show draft/sightline/chair details, ensuring answerability without secret seat tags. The UI supports keyboard buttons; on narrow phones the room map scrolls horizontally.
+- Eight entirely original, hand-coded scalable SVG chibi sticker tokens in `src/components/BazingaSticker.tsx`; these appear on chair buttons and in original illustrated reaction cards. A solved case displays Sheldon’s unique, newly written praise and group art; loss says “Bazinga!” via a Sheldon sticker and shows the one valid arrangement.
+- Art/copyright documentation: `BAZINGA_ART_AND_SOURCES.md`, citing official Warner Bros. set exhibitions and fan episode references. **No official actor photos, screenshots, scripts, logos or television audio were distributed**.
+
+### Compatibility and scores
+- No database or external image dependency. Extend `BazingaProgress`'s existing v1 object with optional `worldDaily`, `worldPractice` and `worldRecent`. Old `daily` / `practice` and statistics remain; `readBazingaProgress` populates safe defaults. `mollys-bazinga-v1` stays the storage key, and old Passport v1/v2 JSON exports still import.
+- Per-case star ledger prefix `room:` prevents score collisions with classic case IDs. Both editions contribute to one Bazinga total and the Passport.
+- Room challenge tiers use Cozy/Clever/Expert multipliers (1×/1.5×/2×), with 4/3/2 checks and 2/1/0 fixed-chair hints, respectively.
+- **Tests:** `tests/bazingaWorld.test.ts` checks 18 unique solution counts via permutations, each narrative clue, all completed level outcomes, interaction, hint locks, room-distance logic, score replay safety. Older Bazinga game tests still run.
+
+### Exact next action in a future chat
+1. **Ask the owner to play-test the new room maps** on desktop and phone: placement, scrolling, whether scene/story clues are understandable and whether character sticker art feels sufficiently BBT-like.
+2. Fix any discovered UX bugs or impossible-seeming scenario based on their feedback. Automated tests passing does not substitute for real device/browser QA.
+3. After the user approves this refreshed Bazinga, implement **The 99 Files** or shift to **November 13 Birthday Quest**, depending on remaining time. Pink Rush remains planned. Avoid adding any copied BBT assets without a vetted license.
+4. Keep this checkpoint updated in GitHub after each substantive milestone.
 
 ## The intended user experience
 
@@ -17,7 +41,7 @@ This is a private-feeling, cozy birthday gift, but the GitHub Pages repository a
 | Guess Who? | `src/App.tsx`, `src/lib/game.ts` | Local-date daily & five-round practice | 48 authored foods/fruits/vegetables | Cozy 5 guesses/4 clues, Clever 4/4, Expert 3/3 |
 | Little Connections | `src/games/Connections.tsx`, `src/lib/connections.ts` | Local-date daily & curated practice | 28 groups-of-four boards | Cozy 5 mistakes, Clever 4, Expert 3; hard removes one-away feedback |
 | Toon Rewind | `src/games/ToonRewind.tsx`, `src/lib/toon.ts` | Six-channel daily & six-channel themed practice | 35 CN India/Toonami-era cartoons | Cozy 4 choices/emoji props, Clever 6 choices/subtler hints, Expert typed show names/one miss |
-| Bazinga! Lab | `src/games/BazingaLab.tsx`, `src/lib/bazinga.ts`, `src/data/bazinga.ts` | One local-date puzzle & replayable difficulty-filtered practice | 18 distinct uniquely solvable seating cases | Cozy 4 seats/4 checks/2 hints, Clever 5/3/1, Expert 6/2/0 |
+| Bazinga! Room Adventures (default) + Classic Lab | `src/games/BazingaRoomGame.tsx`, `src/data/bazingaWorld.ts`, `src/lib/bazingaWorld.ts`; original `src/games/BazingaClassic.tsx` remains | Daily episode & browseable scenario collection; legacy Classic daily/practice | **18 new authored 2D room cases across 8 venues + 18 preserved Classic cases** | Room Cozy 4 guests/4 checks/2 hints, Clever 5/3/1, Expert 6/2/0 |
 
 **Bazinga gameplay:** select character chip → select numbered chair to assign or swap; clear an occupied chair by clicking it with no selected guest. Use written spatial constraints to deduce the only valid left-to-right arrangement. Revealing a hint locks one correct guest in their chair. The rule generator checks all possible permutations so each case has one unique solution. All difficulty levels award different star multipliers, and per-case highest-score rewards cap repetitive farming.
 
@@ -56,11 +80,11 @@ The Passport's manual JSON export uses **file format version 2**, including all 
 ## Source organization and release process
 
 - `src/App.tsx`: lobby, Guess Who?, view router, global progress.
-- `src/games/`: Toon Rewind, Connections, Bazinga and Passport.
+- `src/games/`: Toon Rewind, Connections, Bazinga (room adventure + Classic) and Passport.
 - `src/data/`: original problem banks and deterministic selectors. `src/data/bazinga.ts` also exhaustively validates case uniqueness.
 - `src/lib/`: game rules, local saving and scoring.
 - `src/styles.css`: shared pastel theme plus scoped game CSS and responsive breakpoints.
-- `tests/connections.test.ts`, `tests/toon.test.ts`, `tests/expansion.test.ts`, `tests/bazinga.test.ts`: Vitest suites.
+- `tests/connections.test.ts`, `tests/toon.test.ts`, `tests/expansion.test.ts`, `tests/bazinga.test.ts`, `tests/bazingaWorld.test.ts`: Vitest suites.
 - `.github/workflows/test.yml`: on pushes to feature branches, main and pull requests runs Node 22, `npm run build`, `npm test`.
 - `.github/workflows/deploy.yml`: on changes to `main`, builds Vite and deploys the `dist` directory to GitHub Pages.
 - There is no committed npm lockfile yet: CI uses `npm install --no-audit --no-fund`. Reproducibility could be improved later.

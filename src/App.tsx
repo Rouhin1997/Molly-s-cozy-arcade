@@ -122,7 +122,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">04 / 06</span></div>
           <div className="game-emoji" aria-hidden="true">⚛️</div>
           <div className="card-content"><span className="card-category">LOGIC & SEATING EXPERIMENTS</span><h3>Bazinga! Lab</h3>
-            <p>Arrange the gang around the table. One seating order satisfies every rule!</p>
+            <p>Sheldon’s spot, Raj’s mystery night, comic-shop chaos: solve 18 story puzzles across eight familiar rooms!</p>
             <button className="card-link" onClick={() => onNavigate('bazinga')}>Enter the lab <span aria-hidden="true">↗</span></button></div>
         </article>
         {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
