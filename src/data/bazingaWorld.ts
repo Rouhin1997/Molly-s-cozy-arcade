@@ -1,4 +1,5 @@
 import type { Difficulty } from '../lib/passport';
+import { polishRoomCases } from './bazingaPolish';
 
 /** Original top-down game maps inspired by recurring show settings.
  * These are playable schematics, NOT replicas, production blueprints or set photographs.
@@ -29,7 +30,7 @@ const prop=(icon:string,label:string,x:number,y:number):RoomProp=>({icon,label,x
 export const rooms: Record<RoomId,Room> = {
   'four-a': {id:'four-a',name:'Apartment 4A',subtitle:'The iconic couch, bookshelves, desk and TV',theme:'apartment',
     seats:[
-      seat('spot',"Sheldon's spot",27,60,['sofa','tv-view','spot','warm','breeze']),
+      seat('spot',"Sofa · window end",27,60,['sofa','tv-view','spot','warm','breeze']),
       seat('middle','Middle cushion',43,60,['sofa','tv-view','warm']),
       seat('right','Sofa end',59,60,['sofa','tv-view']),
       seat('armchair','Armchair',78,44,['chair','tv-view','door','draft']),
@@ -124,7 +125,7 @@ const has=(a:string,tag:string,text?:string):RoomRule=>({type:'has',a,tag,text})
 const adjacent=(a:string,b:string,text?:string):RoomRule=>({type:'adjacent',a,b,text});
 const far=(a:string,b:string,text?:string):RoomRule=>({type:'far-from-guest',a,b,text});
 
-export const roomCases:RoomCase[] = [
+const draftRoomCases:RoomCase[] = [
   // Cozy — four visible positions, rich hints, and instantly recognisable scenarios
   c('star-wars-4a','four-a',"Star Wars at Sheldon's",'The Prime Viewing Spot','easy',
     ['spot','middle','right','armchair'],['Sheldon','Leonard','Penny','Raj'],
@@ -275,6 +276,8 @@ export const roomCases:RoomCase[] = [
     'The particle of common sense has escaped this cafeteria. Bazinga!'),
 ];
 
+export const roomCases:RoomCase[] = polishRoomCases(draftRoomCases);
+
 /** Coordinate-based spatial semantics — no linear array assumptions. */
 const distance=(a:{x:number;y:number},b:{x:number;y:number})=>Math.hypot(a.x-b.x,a.y-b.y);
 function seats(c:RoomCase):RoomSeat[]{const map=rooms[c.room];return c.seatIds.map(id=>{const s=map.seats.find(t=>t.id===id);if(!s)throw Error(`No seat ${id} in ${c.room}`);return s})}
@@ -342,14 +345,26 @@ const rulesCache=new Map<string,RoomRule[]>();
 export function roomRules(c:RoomCase):RoomRule[]{
   const previous=rulesCache.get(c.id);if(previous)return previous;
   const chairs=seats(c), pool:RoomRule[]=[];
+  const tagFrequency=new Map<string,number>();
+  for(const tag of new Set(chairs.flatMap(s=>s.tags))){
+    tagFrequency.set(tag,chairs.filter(seat=>seat.tags.includes(tag)).length);
+  }
   // Narrative anchors are hand-authored and tested; the remaining clues are
   // real spatial facts derived from each venue's map, NOT seat indices.
   for(const name of c.solution){
     const seat=chairs[c.solution.indexOf(name)];
-    for(const tag of seat.tags)pool.push({type:'has',a:name,tag});
-    const allTags=new Set(chairs.flatMap(s=>s.tags));
-    for(const tag of allTags)if(!seat.tags.includes(tag))pool.push({type:'avoids',a:name,tag});
-    for(const p of rooms[c.room].props){
+    // Keep medium/expert property clues genuinely broad; do not translate a
+    // unique image label directly into a person's exact chair.
+    for(const tag of seat.tags){
+      if((tagFrequency.get(tag)??0)>=2)pool.push({type:'has',a:name,tag});
+    }
+    for(const tag of tagFrequency.keys()){
+      if(!seat.tags.includes(tag)&&(tagFrequency.get(tag)??0)>=2)
+        pool.push({type:'avoids',a:name,tag});
+    }
+    // Object-distance facts are harder to reason about than a name on a chair,
+    // but reserve single-location anchors mainly for Cozy puzzles.
+    if(c.difficulty==='easy')for(const p of rooms[c.room].props){
       for(const type of ['closest','farthest'] as const){
         const rule:RoomRule={type,a:name,prop:p.label};
         if(holdsRoomRule(c,c.solution,rule))pool.push(rule);
@@ -365,22 +380,38 @@ export function roomRules(c:RoomCase):RoomRule[]{
   const chosen=[...c.rules];
   let viable=candidates(c).filter(order=>chosen.every(r=>holdsRoomRule(c,order,r)));
   const order=shuffle(pool,c.id+'-deduction');
+  const relation=(r:RoomRule)=>['adjacent','not-adjacent','left','far-from-guest'].includes(r.type);
   while(viable.length>1){
-    let best:RoomRule|undefined,bestCount=viable.length;
-    for(const rule of order){
-      if(chosen.some(r=>uniqueKey(r)===uniqueKey(rule)))continue;
-      const count=viable.filter(candidate=>holdsRoomRule(c,candidate,rule)).length;
-      if(count>0&&count<bestCount){best=rule;bestCount=count}
-    }
-    if(!best)throw new Error(`Room case ${c.id} cannot be uniquely solved`);
-    chosen.push(best);
-    viable=viable.filter(candidate=>holdsRoomRule(c,candidate,best));
+    const usable=order.filter(r=>!chosen.some(cue=>uniqueKey(cue)===uniqueKey(r)))
+      .map(r=>({rule:r,count:viable.filter(candidate=>holdsRoomRule(c,candidate,r)).length}))
+      .filter(({count})=>count>0&&count<viable.length);
+    if(!usable.length)throw new Error(`Room case ${c.id} cannot be uniquely solved`);
+    // Expert clues are chosen for chained reasoning, not for instant solution.
+    // Target moderate information per clue instead of always taking the most
+    // brutally eliminating constraint. Relations take priority over seat tags.
+    const target=c.difficulty==='hard'?.45:c.difficulty==='medium'?.35:.20;
+    usable.sort((x,y)=>{
+      const weight=(v:typeof x)=>{
+        const ratio=v.count/viable.length;
+        const isRel=relation(v.rule);
+        const tooEasy=c.difficulty==='hard'&&ratio<.19?.38:0;
+        return Math.abs(ratio-target)+(isRel?0:c.difficulty==='hard'?.28:.11)+tooEasy;
+      };
+      return weight(x)-weight(y);
+    });
+    const next=usable[0];
+    chosen.push(next.rule);
+    viable=viable.filter(candidate=>holdsRoomRule(c,candidate,next.rule));
   }
-  // A minimum of different spatial types keeps even simpler sessions interesting.
-  const min=c.difficulty==='easy'?4:c.difficulty==='medium'?6:8;
-  for(const rule of order){
+  // Extra authentic room constraints make clue chains richer, without
+  // spoon-feeding exact positions after the deduction is already solved.
+  const min=c.difficulty==='easy'?4:c.difficulty==='medium'?7:9;
+  const supplementary=order.filter(r=>relation(r)&&!chosen.some(x=>uniqueKey(x)===uniqueKey(r)));
+  for(const rule of supplementary){
     if(chosen.length>=min)break;
-    if(chosen.some(r=>uniqueKey(r)===uniqueKey(rule)))continue;
+    // Avoid mirror-image duplicates: A beside B == B beside A.
+    if(['adjacent','not-adjacent'].includes(rule.type)&&
+       chosen.some(x=>x.type===rule.type&&x.a===rule.b&&x.b===rule.a))continue;
     chosen.push(rule);
   }
   const result=[...c.rules,...shuffle(chosen.slice(c.rules.length),c.id+'-present')];
