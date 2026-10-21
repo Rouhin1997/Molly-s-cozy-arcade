@@ -69,7 +69,7 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
   const finished = !!session && session.index >= session.ids.length;
   const activeShow = session && !finished ? toonShows.find(s => s.id === session.ids[session.index]) : undefined;
   const round = session && activeShow ? currentToonRound(session) : undefined;
-  const effectiveDifficulty = session?.difficulty ?? (mode === 'daily' && progress.daily[today] ? 'easy' : difficulty);
+  const effectiveDifficulty = session ? (session.difficulty ?? 'easy') : difficulty;
   const choices = useMemo(() => activeShow && session ? optionsForShow(activeShow.id, session.seed, effectiveDifficulty === 'medium' ? 6 : 4) : [],
     [activeShow, session?.seed, effectiveDifficulty]); 
   const difficultyLocked = !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.tuneLevel>1 || r.attempts.length>0 || r.status !== 'playing')) && (mode === 'daily' || !finished);
