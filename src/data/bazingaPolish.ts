@@ -9,7 +9,6 @@ const A=(a:string,b:string,text:string):RoomRule=>({type:'adjacent',a,b,text});
 const N=(a:string,b:string,text:string):RoomRule=>({type:'not-adjacent',a,b,text});
 const F=(a:string,b:string,text:string):RoomRule=>({type:'far-from-guest',a,b,text});
 const V=(a:string,tag:string,text:string):RoomRule=>({type:'avoids',a,tag,text});
-const L=(a:string,b:string,text:string):RoomRule=>({type:'left',a,b,text});
 const scenes:Record<string,Scene>={
   'star-wars-4a':{
     story:"A Star Wars marathon starts in six minutes. Sheldon cites an 'optimal viewing geometry' clause. Leonard hasn't even unwrapped the takeout.",
