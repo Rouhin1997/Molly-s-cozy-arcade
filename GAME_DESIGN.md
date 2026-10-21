@@ -19,7 +19,7 @@
 | The 99 Files | Small detective cases; inspect evidence, interview witnesses and deduce the culprit | Planned |
 | Bazinga! Lab | Interactive constraint-solving and logic games inspired by The Big Bang Theory | Planned |
 | Pink Rush | Timed BLACKPINK setlist, era and performance-related puzzles; combos and sequencing | Planned |
-| Little Connections | Group sixteen words into four hidden themes | Planned |
+| Little Connections | Find four hidden groups of four words, using four mistakes and one-away feedback | **Milestone 2A playable** |
 
 Future possible packs: Bollywood, historical photographs, semantic word guessing.
 
@@ -46,9 +46,24 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 ## Development milestones
 
 1. **Foundation:** React / TypeScript / Vite app, GitHub Pages workflow, home screen, Guess Who?, local progress, documentation.
-2. **Game variety:** dedicated mechanics and curated content for Toon Rewind, The 99 Files, Bazinga! Lab, Pink Rush and Connections. Fact-check specifically **Indian CN broadcast history**.
+2. **Game variety:** Little Connections is the first Phase 2 game; dedicated mechanics and curated content for Toon Rewind, The 99 Files, Bazinga! Lab, and Pink Rush follow. Fact-check specifically **Indian CN broadcast history**.
 3. **Birthday Quest and coupons:** annual event, surprise reveal, wallet and redemption rules. Decide on a secure backend only if required.
 4. **Polish and QA:** test on phones, keyboard use, screen readers, scoring, storage failures, new-day rollovers and GitHub Pages URL.
+
+## Little Connections (Milestone 2A)
+
+- A curated set of 16 original boards, each containing 16 unique words divided into four groups.
+- Groups appear in four tiers (yellow, green, blue, purple). Solved groups move into coloured answer strips.
+- Four incorrect submissions are allowed. Matching 3 of the 4 members of an unsolved group triggers a "One away" message.
+- Repeating an identical wrong set never costs a second mistake.
+- Full success earns 180 stars, minus 30 per incorrect attempt. A failed board earns zero.
+- A daily board rotates deterministically without adjacent-day repeats and is persisted by date. Practice selects a new board, avoiding the five most recently started.
+- Existing Guess Who? browser data uses a separate storage key and remains intact. The arcade lobby displays combined solved counts and stars.
+- Content, engine, UI, and automated tests live in independent modules; more boards can be added without rewriting rules.
+
+## Arcade Passport (planned after the core games)
+
+A personal player-profile screen displaying total stars, total puzzles solved, daily streaks, per-game bests, game-specific badges, and achievements. This will sit above all game engines and will not replace individual saves. The eventual birthday coupon wallet remains a separate gift system, not a purchase mechanic. Before cross-device syncing, plan explicit migrations from existing browser-local save formats and a one-time import option. Do not require login for the basic arcade.
 
 ## Future engineering considerations
 
