@@ -92,7 +92,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('vent','Air-vent stool',50,75,['chair','draft','uncomfortable']),
       seat('exit','Exit workstation',83,74,['desk','door','lab-safe']),
     ],
-    props:[prop('🔭','Telescope',49,8),prop('🧯','Safety shower',11,10),prop('💻','Terminal',17,88),prop('🚪','Exit',95,92)],
+    props:[prop('🔭','Telescope',49,8),prop('🧯','Safety shower',11,10),prop('💻','Terminal',10,93),prop('🚪','Exit',95,92)],
   },
   comic:{id:'comic',name:"Stuart's Comic Book Store",subtitle:'Fresh issues, awkward queues and an ill-fated stool',theme:'comic',
     seats:[
