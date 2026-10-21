@@ -30,7 +30,7 @@ const prop=(icon:string,label:string,x:number,y:number):RoomProp=>({icon,label,x
 export const rooms: Record<RoomId,Room> = {
   'four-a': {id:'four-a',name:'Apartment 4A',subtitle:'The iconic couch, bookshelves, desk and TV',theme:'apartment',
     seats:[
-      seat('spot',"Sofa · window end",27,60,['sofa','tv-view','spot','warm','breeze']),
+      seat('spot',"Sofa · left cushion",27,60,['sofa','tv-view','spot','warm','breeze']),
       seat('middle','Middle cushion',43,60,['sofa','tv-view','warm']),
       seat('right','Sofa end',59,60,['sofa','tv-view']),
       seat('armchair','Armchair',78,44,['chair','tv-view','door','draft']),
