@@ -11,7 +11,7 @@ export const extraConnections: ConnectionPuzzle[] = [
   {id:'street-food-tour',title:'Street Food Tour',groups:[
     g('Indian savoury street snacks',['PANIPURI','CHAAT','VADAPAV','PAKORA'],'Four snacks sold across India.'),
     g('Chinese filled dumplings',['JIAOZI','WONTON','BAOZI','SHUMAI'],'Different Chinese dumplings.'),
-    g('Italian pasta types',['ORZO','GNOCCHI','RAVIOLI','LINGUINE'],'Italian starches and pasta shapes.'),
+    g('Italian pasta and dumpling styles',['ORZO','GNOCCHI','RAVIOLI','LINGUINE'],'Italian starches and pasta or dumpling shapes.'),
     g('Middle Eastern dips',['HUMMUS','BABA GANOUSH','LABNEH','MUHAMMARA'],'Four different dips or spreads.'),
   ]},
   {id:'retro-remote',title:'Retro Remote',groups:[
@@ -52,7 +52,7 @@ export const extraConnections: ConnectionPuzzle[] = [
   ]},
   {id:'two-meanings',title:'Double Meanings',groups:[
     g('Can be a tree or a name',['ASH','WILLOW','HOLLY','LAUREL'],'Words used for trees and given names.'),
-    g('Can be a tool or a bird',['CRANE','JACK','ROBIN','SWALLOW'],'Trick group: only crane is a tool and bird, so this is not valid.'), 
+    g('Bird names',['CRANE','ROBIN','SWALLOW','SPARROW'],'Four familiar birds.'), 
     g('Musical terms',['BEAT','CHORD','PITCH','TEMPO'],'Words used in music.'),
     g('Can follow sun',['FLOWER','RISE','SET','SHINE'],'Sunflower, sunrise, sunset, sunshine.'),
   ]},
