@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useMemo, useState, type FormEvent, type Dispatch, type SetStateAction } from 'react';
 import { dailyRiddle, localDateKey, practiceRiddles, riddles, matchesRiddle, type Riddle } from './data/questions';
 import {
   addClue, MAX_CLUES, MAX_GUESSES, newRound,
   readProgress, registerResult, skipRound, submitGuess, writeProgress,
-  type PracticeSession, type Progress, type Round,
+  type Progress, type Round,
 } from './lib/game';
 
 type View = 'home' | 'guess' | 'vault';
@@ -33,10 +33,6 @@ function Logo({ onClick }: { onClick: () => void }) {
     <span className="brand-mark">✿</span>
     <span><strong>Molly's</strong><small>COZY ARCADE</small></span>
   </button>;
-}
-
-function StatusChip({ children }: { children: ReactNode }) {
-  return <span className="chip">{children}</span>;
 }
 
 function Home({ onNavigate, onChooseGame, progress, today }: {
