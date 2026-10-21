@@ -210,7 +210,9 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   const playingRiddle = mode === 'daily' ? daily : practiceRiddle;
   const activeRound = mode === 'daily' ? dailyRound : practiceRound;
   const currentDifficulty = activeRound?.difficulty ?? (mode === 'daily' && !!progress.daily[today] ? 'easy' : difficulty);
-  const difficultyLocked = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
+  const hasStarted = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
+  const sessionStarted = mode === 'practice' && !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.guesses.length>0 || r.cluesShown>1 || r.status !== 'playing'));
+  const difficultyLocked = mode === 'daily' ? hasStarted : !!sessionStarted;
   const earned = session ? Object.values(session.rounds).reduce((total, r) => total + r.score, 0) : 0;
   const solved = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
@@ -220,11 +222,14 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   }
 
   function chooseDifficulty(level: Difficulty) {
-    if (difficultyLocked && activeRound?.status==='playing') return;
+    if (difficultyLocked || level === currentDifficulty) return;
     setDifficulty(level);
     savePreferredDifficulty('guess', level);
-    if (mode==='daily' && !difficultyLocked) setProgress(prev=>({...prev,daily:{...prev.daily,[today]:newRound(level)}}));
-    if (mode==='practice' && activeRound?.status!=='playing') newPractice(level);
+    if (mode === 'daily') {
+      setProgress(prev => ({...prev,daily:{...prev.daily,[today]:newRound(level)}}));
+    } else if (session && !finished) {
+      newPractice(level);
+    }
   }
 
   function updateRound(transform: (round: Round) => Round) {
@@ -265,10 +270,10 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
     <button className="back-link" onClick={onHome}>← Back to the game shelf</button>
     <div className="game-head"><div><div className="overline">THE LITTLE PUZZLE CLUB / GAME 01</div><h1><span aria-hidden="true">🍓</span> Guess Who?</h1><p>For curious minds and adventurous taste buds.</p></div><span className="decorative-berry" aria-hidden="true">✿</span></div>
     <div className="mode-tabs" role="tablist" aria-label="Game mode"><button role="tab" aria-selected={mode === 'daily'} className={mode === 'daily' ? 'selected' : ''} onClick={() => setMode('daily')}>☀ Today's riddle</button><button role="tab" aria-selected={mode === 'practice'} className={mode === 'practice' ? 'selected' : ''} onClick={() => setMode('practice')}>✿ Practice picnic</button></div>
-    <DifficultyPicker value={currentDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && activeRound?.status==='playing'}
-      lockedMessage="Difficulty is locked for this mystery. Start another practice session to switch levels."/>
+    <DifficultyPicker value={currentDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked}
+      lockedMessage="This mystery or practice set has started. Finish it, then select a new difficulty for your next session."/>
     {mode === 'daily' ? <div className="mode-intro"><span>🍯</span><p><strong>One mystery every day.</strong> The same puzzle waits for you all day, and your progress is saved automatically. Come back tomorrow for another!</p></div> : <div className="mode-intro"><span>🧺</span><p><strong>Five bites of fun.</strong> Play a little set of five randomly picked riddles. Collect stars and try to beat your score!</p></div>}
-    {mode === 'practice' && !session ? <div className="start-panel"><span>🧺</span><h2>Ready for a little picnic?</h2><p>Five mini mysteries, four guesses each. No pressure—just fun.</p><button className="btn btn-primary" onClick={()=>newPractice()}>Start a five-puzzle set ↗</button></div> : null}
+    {mode === 'practice' && !session ? <div className="start-panel"><span>🧺</span><h2>Ready for a little picnic?</h2><p>Five mini mysteries from your chosen difficulty. Each set locks its challenge level after the first move.</p><button className="btn btn-primary" onClick={()=>newPractice()}>Start a five-puzzle set ↗</button></div> : null}
     {mode === 'practice' && finished ? <div className="start-panel summary-panel"><span>🌷</span><h2>Picnic complete!</h2><p>You solved {solved} out of 5 little mysteries and collected <strong>{earned} stars</strong>.</p><div className="summary-stars">{session?.ids.map((id, i) => <span key={id} title={`Puzzle ${i + 1}: ${session.rounds[id]?.status === 'won' ? 'solved' : 'missed'}`}>{session.rounds[id]?.status === 'won' ? '⭐' : '☆'}</span>)}</div><button className="btn btn-primary" onClick={()=>newPractice()}>Play a fresh set ↗</button></div> : null}
     {playingRiddle && activeRound && <>
       {mode === 'practice' && session && <div className="progress-pebbles" aria-label={`Puzzle ${session.index + 1} of 5`}>{session.ids.map((_, index) => <span key={index} className={index < session.index ? 'completed' : index === session.index ? 'active' : ''}/>)}</div>}
