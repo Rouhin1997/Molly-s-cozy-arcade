@@ -206,3 +206,52 @@
 @media(prefers-reduced-motion:reduce){
  .toon-choice,.toon-tune-button,.toon-clue{transition:none}
 }
+
+/* The Passport — a pastel scrapbook / collectible-stamp collection */
+.passport-home-invite{display:flex;align-items:center;justify-content:space-between;gap:18px;background:#f9f1fb;border:1px solid #efdfef;border-radius:19px;padding:18px 22px;margin-top:24px}
+.passport-home-invite>div{display:flex;gap:13px;align-items:center}
+.passport-home-invite>div>span{font-size:32px}
+.passport-home-invite>div>div{display:flex;flex-direction:column;gap:4px}
+.passport-home-invite strong{font-family:'Fraunces',Georgia,serif;font-size:21px;color:#63466d}
+.passport-home-invite small{font-size:12px;color:#907b91}
+.passport-page{max-width:1050px;margin:29px auto 80px}
+.passport-heading{margin:28px 0 22px}
+.passport-heading h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(31px,4vw,47px);margin:10px 0;color:#523961}
+.passport-heading p{color:#8b778f;font-size:14px}
+.passport-cover{border:2px solid #dfcee2;border-radius:28px;padding:35px;background:radial-gradient(circle at 92% 12%,#f4dfeb 0,transparent 38%),linear-gradient(130deg,#fdf9f3,#fbf0f9);box-shadow:8px 9px 0 #f1e6f2}
+.passport-cover-head{display:flex;justify-content:space-between;align-items:center;gap:17px}
+.passport-cover-head h2{font-family:'Fraunces',Georgia,serif;font-size:clamp(26px,3vw,37px);color:#614b6e;margin:9px 0}
+.passport-cover-head p{font-size:13px;color:#947f9e;margin:0}
+.passport-flower{display:grid;place-items:center;background:#f0e0f6;border:2px solid #e6d4ec;border-radius:50%;font-size:47px;width:91px;height:91px;flex:none;transform:rotate(10deg)}
+.passport-big-stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:30px;padding:23px 15px;background:#fffdfbdb;border:1px solid #eee4e9;border-radius:19px;gap:16px}
+.passport-big-stats>div{display:flex;align-items:center;flex-direction:column;gap:5px;text-align:center}
+.passport-big-stats>div>span{font-size:25px}
+.passport-big-stats strong{font-family:'Fraunces',Georgia,serif;font-size:27px;color:#5e466c}
+.passport-big-stats small{font-size:11px;color:#8e7c96}
+.passport-section{margin-top:36px}
+.passport-section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:17px}
+.passport-section-heading h2{font-family:'Fraunces',Georgia,serif;color:#553e62;font-size:30px;margin:7px 0 0}
+.passport-count{font-size:11px;color:#815f91;font-weight:850;padding:9px 14px;border-radius:40px;background:#efe3f6}
+.passport-stamps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.passport-stamp{min-width:0;min-height:185px;border-radius:19px;border:1px dashed #cdb7d4;background:#fcf8ff;padding:16px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;box-shadow:inset 0 0 0 5px #fff9}
+.passport-stamp.is-earned{border:2px solid #d0b4dd;background:linear-gradient(145deg,#f5e5fa,#e9f4f2);box-shadow:0 8px 23px #7b568b13, inset 0 0 0 5px #fff6}
+.passport-stamp.is-locked{filter:saturate(.7);opacity:.69}
+.passport-stamp-icon{width:63px;height:63px;display:grid;place-items:center;border:2px dashed #cbb2d3;border-radius:50%;font-size:29px;background:#fff9;transform:rotate(-7deg)}
+.passport-stamp.is-earned .passport-stamp-icon{border-style:solid;background:#fff7}
+.passport-stamp strong{font-size:12px;color:#5e4767;line-height:1.3}
+.passport-stamp>span{font-size:10px;line-height:1.45;color:#8c7991;flex:1}
+.passport-stamp small{font-size:9px;letter-spacing:.08em;color:#8c70a2;font-weight:950}
+.passport-game-records{display:grid;gap:10px}
+.passport-game-record{display:grid;grid-template-columns:59px minmax(0,1fr) minmax(100px,.55fr) minmax(100px,.55fr);align-items:center;gap:15px;background:#fff;border:1px solid #efe4eb;border-radius:16px;padding:13px 18px}
+.passport-game-icon{display:grid;place-items:center;background:#f6edf8;border-radius:15px;height:52px;width:52px;font-size:27px}
+.passport-game-title,.passport-game-record>div:not(.passport-game-icon){display:flex;flex-direction:column;gap:5px}
+.passport-game-record strong{font-size:15px;color:#583e67}
+.passport-game-record small{font-size:10px;color:#9a899e}
+.passport-backup{display:flex;justify-content:space-between;align-items:center;gap:23px;flex-wrap:wrap;border:1px solid #e7dced;border-radius:19px;background:#f5effa;padding:23px 28px;margin-top:36px}
+.passport-backup>div:first-child{max-width:540px}
+.passport-backup h2{font-family:'Fraunces',Georgia,serif;font-size:25px;color:#5e4770;margin:6px 0}
+.passport-backup p{font-size:12px;line-height:1.65;color:#806b87;margin:0}
+.passport-backup-actions{display:flex;gap:8px;flex-wrap:wrap}
+.passport-backup-feedback{width:100%;color:#6d5784;font-weight:700}
+@media(max-width:790px){.passport-stamps{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:550px){.passport-cover{padding:23px 15px}.passport-big-stats{grid-template-columns:repeat(2,1fr)}.passport-flower{width:65px;height:65px;font-size:32px}.passport-stamps{grid-template-columns:repeat(2,minmax(0,1fr))}.passport-stamp{min-height:174px}.passport-game-record{grid-template-columns:45px minmax(0,1fr) minmax(90px,.65fr);gap:8px;padding:12px 10px}.passport-game-icon{width:41px;height:41px;font-size:23px}.passport-game-record>div:last-child{grid-column:2/-1;display:flex;flex-direction:row;gap:10px}.passport-game-record strong{font-size:12px}.passport-home-invite{flex-wrap:wrap;padding:15px}.passport-home-invite strong{font-size:18px}.passport-home-invite .btn{width:100%}.passport-backup{padding:20px 15px}}
