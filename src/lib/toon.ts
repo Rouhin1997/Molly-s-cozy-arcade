@@ -115,7 +115,15 @@ export function readToonProgress(): ToonProgress {
     if (!data || typeof data !== 'object' || !('version' in data) || data.version !== 1) return initialToonProgress();
     const saved = data as ToonProgress;
     if (!saved.stats || typeof saved.stats.stars !== 'number' || !saved.daily || typeof saved.daily !== 'object') return initialToonProgress();
-    return saved;
+    if(saved.bestAwards) return saved;
+    const awards: Record<string,number> = {};
+    const sessions = [...Object.values(saved.daily), ...(saved.practice ? [saved.practice] : [])];
+    for(const session of sessions) {
+      for(const [id,round] of Object.entries(session.rounds)) {
+        if(round.status==='won') awards[id] = Math.max(awards[id] ?? 0,round.score);
+      }
+    }
+    return {...saved,bestAwards:awards};
   } catch { return initialToonProgress(); }
 }
 export function writeToonProgress(value: ToonProgress): void {
