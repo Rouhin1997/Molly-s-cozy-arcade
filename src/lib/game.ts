@@ -43,7 +43,7 @@ export function newRound(difficulty: Difficulty = 'easy'): Round {
   return { cluesShown: 1, guesses: [], status: 'playing', score: 0, difficulty };
 }
 
-export function maxGuessesForDifficulty(difficulty: Difficulty = 'easy'): number {
+export function maxGuessesForDifficulty(difficulty: Difficulty = 'medium'): number {
   return difficulty === 'easy' ? 5 : difficulty === 'medium' ? 4 : 3;
 }
 export function maxCluesForDifficulty(difficulty: Difficulty = 'easy'): number {
