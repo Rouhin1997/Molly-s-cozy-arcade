@@ -1,3 +1,11 @@
+import type { Difficulty } from '../lib/passport';
+
+const easyPuzzles = new Set(['favourite-faces','spice-cabinet','on-the-map','the-outdoors','little-animals','sweet-tooth']);
+const hardPuzzles = new Set(['colour-me-happy','movie-snacks','screen-and-stage','game-night','travel-bag']);
+export function connectionPuzzleDifficulty(puzzle: ConnectionPuzzle): Difficulty {
+  return easyPuzzles.has(puzzle.id) ? 'easy' : hardPuzzles.has(puzzle.id) ? 'hard' : 'medium';
+}
+
 export type ConnectionGroup = {
   label: string;
   words: [string, string, string, string];
@@ -124,9 +132,10 @@ export function dailyConnectionPuzzle(dateKey: string): ConnectionPuzzle {
   return connectionPuzzles[((dateIndex(dateKey) % connectionPuzzles.length) + connectionPuzzles.length) % connectionPuzzles.length];
 }
 
-export function pickPracticeConnection(recentIds: string[], random = Math.random): ConnectionPuzzle {
-  const unused = connectionPuzzles.filter(p => !recentIds.includes(p.id));
-  const pool = unused.length ? unused : connectionPuzzles;
+export function pickPracticeConnection(recentIds: string[], random = Math.random, difficulty?: Difficulty): ConnectionPuzzle {
+  const themed = difficulty ? connectionPuzzles.filter(p=>connectionPuzzleDifficulty(p)===difficulty) : connectionPuzzles;
+  const unused = themed.filter(p => !recentIds.includes(p.id));
+  const pool = unused.length ? unused : themed;
   return pool[Math.floor(random() * pool.length)];
 }
 
