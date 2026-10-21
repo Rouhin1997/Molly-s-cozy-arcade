@@ -221,7 +221,7 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   const currentDifficulty = activeRound?.difficulty ?? (mode === 'daily' && !!progress.daily[today] ? 'easy' : difficulty);
   const hasStarted = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
   const sessionStarted = mode === 'practice' && !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.guesses.length>0 || r.cluesShown>1 || r.status !== 'playing'));
-  const difficultyLocked = mode === 'daily' ? hasStarted : !!sessionStarted;
+  const difficultyLocked = mode === 'daily' ? hasStarted : !!sessionStarted && !finished;
   const earned = session ? Object.values(session.rounds).reduce((total, r) => total + r.score, 0) : 0;
   const solved = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
@@ -236,7 +236,7 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
     savePreferredDifficulty('guess', level);
     if (mode === 'daily') {
       setProgress(prev => ({...prev,daily:{...prev.daily,[today]:newRound(level)}}));
-    } else if (session && !finished) {
+    } else if (session) {
       newPractice(level);
     }
   }
