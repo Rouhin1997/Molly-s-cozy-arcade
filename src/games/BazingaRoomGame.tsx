@@ -151,7 +151,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
       <div className="bazinga-world-layout">
         <section className="bazinga-room-card" aria-label={`Interactive seating map: ${room.name}`}>
           <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong><small>Original schematic · not a studio blueprint</small></div>
-          <div className={`bazinga-room-map room-theme-${room.theme}`} role="group" aria-label="Room seats and furniture">
+          <div className="bazinga-map-scroll"><div className={`bazinga-room-map room-theme-${room.theme}`} role="group" aria-label="Room seats and furniture">
             <div className="room-floor-object" aria-hidden="true"/>
             {room.props.map((item,i)=><div key={i} className="bazinga-room-prop" style={{left:`${item.x}%`,top:`${item.y}%`}} aria-label={item.label}>
               <span aria-hidden="true">{item.icon}</span><small>{item.label}</small>
