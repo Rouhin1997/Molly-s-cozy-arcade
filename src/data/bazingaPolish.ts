@@ -137,7 +137,7 @@ const scenes:Record<string,Scene>={
     story:"Raj's midnight murder mystery is underway. A missing vintage comic, an untrustworthy alibi and six different temperaments have made the seating chart evidence.",
     rules:[
       H('Stuart','chair',"Stuart has decided the sofa is far too public for his detective persona."),
-      H('Raj','kitchen',"Raj must be able to supervise both the refreshments and the interrogation."),
+      V('Raj','tv-view',"Raj does not want a direct view of the screen to spoil his carefully arranged clues."),
       A('Amy','Penny',"Amy and Penny are comparing contradictory witness statements in neighbouring seats."),
       N('Raj','Howard',"Howard's improvised detective accent has persuaded Raj to demand some personal space."),
     ],
@@ -146,10 +146,10 @@ const scenes:Record<string,Scene>={
   'nobel-banquet':{
     story:"A Nobel-themed dinner has become a test of Bernadette's patience. Sheldon is cross-examining the seating chart as though it were a journal submission.",
     rules:[
-      H('Bernadette','dining',"Bernadette is hosting and expects a proper place at the dining table."),
+      A('Bernadette','Amy',"Bernadette has a quiet announcement for Amy and needs her close enough to hear it."),
       N('Stuart','Bernadette',"Stuart asks not to sit directly next to the person who can assign him more chores."),
-      H('Sheldon','door',"Sheldon, temporarily overruled on thermostat control, has selected a position near the door."),
-      A('Amy','Bernadette',"Amy has promised Bernadette a discreet conversation at dinner."),
+      V('Sheldon','kitchen',"Sheldon will not sit near the kitchen while somebody is handling raw food."),
+      V('Amy','door',"Amy would rather not have the dining-room door opening behind her."),
     ],
     winning:"I inspected your answer expecting a flaw. Annoyingly, I found none. Well done, I suppose.",
   },
@@ -157,7 +157,7 @@ const scenes:Record<string,Scene>={
     story:"A Caltech safety demonstration has drawn in everyone. Sheldon has written a procedural appendix longer than the laboratory manual.",
     rules:[
       H('Sheldon','experiment',"Sheldon must be near the instrumentation to demonstrate the hypothesis."),
-      H('Stuart','chair',"Stuart is not qualified to occupy an active experiment workstation."),
+      V('Stuart','experiment',"Stuart, who has not completed safety training, must stay clear of the active experimental benches."),
       H('Bernadette','lab-safe',"Bernadette insists on a station that meets the lab's protective criteria."),
       H('Amy','lab-safe',"Amy also refuses to work at an unprotected station."),
     ],
@@ -167,7 +167,7 @@ const scenes:Record<string,Scene>={
     story:"The Caltech cafeteria has become a physics summit. Sheldon insists this is merely combinatorics, Howard wants lunch, and Raj is conducting a social experiment.",
     rules:[
       H('Sheldon','window',"Sheldon has ruled out the interior side after studying the lighting conditions."),
-      H('Stuart','dining',"Stuart has agreed to remain at the main table, despite a tempting empty bench nearby."),
+      N('Stuart','Leonard',"Stuart would prefer not to sit within immediate range of Leonard's lunch debate."),
       H('Howard','snacks',"Howard intends to eat promptly, with minimum queuing overhead."),
       A('Amy','Sheldon',"Amy plans to challenge Sheldon's assumptions from an adjacent position."),
     ],
