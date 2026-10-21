@@ -1,10 +1,36 @@
 # Molly's Cozy Arcade — Development Handoff
 
-**Checkpoint:** 22 October 2026, Phase 2E (Bazinga! Room Adventures with original character stickers and spatial case maps)
+**Checkpoint:** 22 October 2026, Phase 2F (richer BBT logic, spatial-fairness and polished storybook maps)
 **Repository:** https://github.com/Rouhin1997/Molly-s-cozy-arcade
 **Live arcade:** https://rouhin1997.github.io/Molly-s-cozy-arcade/
 **Default branch:** `main`; GitHub Actions publishes `main` to GitHub Pages
 **Primary milestone:** complete a meaningful November 13 birthday experience. All regular games should remain playable year-round.
+
+## Latest polish — Phase 2F: Deduction depth, canon calibration and room clarity
+
+**User play-test feedback:** Room Adventures maps, sticker portraits and themed reactions were praised, but **Expert clues gave away too many exact seats**, the seat labeled “Sheldon's spot” was a giveaway, some character dialogue did not sound like Sheldon, and multiple decorative fixture icons overlapped playable seats (notably Raj's mystery gala). User requested more authentic lore, more rigor, bigger room furniture, and a short losing message. **Classic Lab must remain untouched.**
+
+### Implemented Phase 2F improvements
+
+1. **18 rewritten, hand-authored BBT-inspired stories and clues** in `src/data/bazingaPolish.ts`, layered over the existing stable 18 case IDs and solutions. New dialogue references Sheldon's preferred *comfortable* cross-breeze/TV angle, Roommate Agreement clauses, Halo and new-comic Wednesdays, Raj's party scenarios, Howard/Bernadette and Stuart's living arrangement, lab safety and movie viewing geometry. These are *original hypothetical episode premises*, not reproduced script lines.
+2. **Expert puzzle-generation hardening** in `src/data/bazingaWorld.ts`: generated property clues cannot instantly map a character to a single identifiable chair; the solver favors relational deductions (nearby, apart, left/right, guest distance). No longer simply picks the most decisive clue every time. Automated diagnostics enforce Expert opening clues leave **more than three valid arrangements** and at most **one uniquely pinning property clue**, with multiple relationship clues. Every finished case still has **exactly one** valid seating solution by exhaustive permutations.
+3. **No automatic answer label** in Apartment 4A: the cushion is identified as “Sofa · left cushion”, with its physical warmth and breeze attributes discoverable. The special `spot` marker stays internal for game rules but is not displayed in the seat guide or chair tooltip. Sheldon’s canonical couch justification involves radiator warmth, summer cross-breeze and a conversationally suitable screen angle, not the blanket absence of airflow.
+4. **Sheldon reactions revised** from generic enthusiastic praise to grudging, qualified, precise, mildly condescending original compliments (e.g. “I inspected your answer expecting a flaw. Annoyingly, I found none. Well done, I suppose.”). Loss headline is now simply **“Bazinga! You lose!”** with the correct solution hidden in a voluntary expandable detail panel.
+5. **Room maps enlarged and props repositioned**, especially Raj’s window/mystery board, Penny’s window/door, Caltech terminal, and comic shop display. Enlarged TV, windows, comic/lab equipment and other icon panels. A new `roomPropOverlaps()` test verifies visual fixture collision clearance across all playable chairs in the enlarged minimum 650×500 map.
+6. **Transparent adjacency semantics**: an optional “Draw lines between chairs the puzzle treats as neighbours” checkbox in the seat guide shows exactly the same neighbour edges the solver uses (including eligible diagonals). Expert still does not reveal which characters belong in those seats. Automated tests compare all visual edges to the actual rule predicate.
+7. **Difficulty feedback refinement**: after a wrong submission, only Cozy reveals individual pass/fail clue marks; Clever and Expert receive a count without revealing exactly which conditions pass. Existing Cozy/Clever/Expert attempt, hint and reward rules remain unchanged.
+8. Existing save formats, case IDs, room positions/answers, Passport award ledgers and Classic Lab remain compatible. **No new official image assets** or copyrighted screenshots were introduced.
+
+### References / source context
+- [Sheldon's spot explanation from Pilot and The Gorilla Experiment](https://the-big-bang-theory.com/sheldons_spot/)
+- [The Roommate Agreement](https://the-big-bang-theory.com/roommate_agreement/)
+- [Recurring schedule, including comic book/Halo Wednesday](https://the-big-bang-theory.com/weekly_calendar/)
+- [Howard & Bernadette / Stuart living arrangement](https://the-big-bang-theory.com/characters.Bernadette/)
+- `BAZINGA_ART_AND_SOURCES.md` also documents original-art copyright policy.
+
+### Next session
+
+First ask the user to **play-test Star Wars at Sheldon's, Raj's Mystery Gala and at least two Expert cases**, plus the new neighbour overlay. Confirm the clues require deduction rather than obvious lore alone, and that enlarged icons do not obstruct seats on their actual device. If the user approves, proceed with **The 99 Files** or the **November 13 birthday experience** based on priority. Preserve all previous scores and Classic Lab. The tests guarantee uniqueness and basic collisions, **not** a fully completed manual browser QA.
 
 ## Latest release — Phase 2E: Bazinga! Room Adventures
 
