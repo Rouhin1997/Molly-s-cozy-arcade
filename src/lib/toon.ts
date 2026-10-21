@@ -55,10 +55,25 @@ export function tuneToonSignal(round: ToonRound): ToonRound {
   return { ...round, tuneLevel: round.tuneLevel + 1 };
 }
 
+export function normalizedToonAnswer(value: string): string {
+  return value.toLocaleLowerCase('en').normalize('NFKD').replace(/[^a-z0-9]+/g, '');
+}
 export function guessToonShow(round: ToonRound, show: ToonShow, guessedId: string): ToonRound {
   if (round.status !== 'playing' || !guessedId || round.attempts.includes(guessedId)) return round;
+  const aliases: Record<string, string[]> = {
+    scooby: ['scooby doo', 'scooby doo where are you'],
+    dexter: ['dexters lab', 'dexters laboratory'],
+    dbz: ['dragon ball z','dbz'],
+    'ben10-af': ['ben 10 alien force'],
+    powerpuff: ['powerpuff girls','the powerpuff girls'],
+    'ed-edd-eddy': ['ed edd and eddy'],
+    'billy-mandy': ['billy and mandy'],
+    knd: ['kids next door','codename kids next door'],
+  };
+  const correct = guessedId === show.id || [show.title, ...(aliases[show.id] ?? [])]
+    .some(title => normalizedToonAnswer(title) === normalizedToonAnswer(guessedId));
   const attempts = [...round.attempts, guessedId];
-  if (guessedId === show.id) {
+  if (correct) {
     return { ...round, attempts, status: 'won',
       score: scoreWithDifficulty(Math.max(30, 120 - (round.tuneLevel - 1) * 25 - (attempts.length - 1) * 20), round.difficulty ?? 'easy') };
   }
