@@ -87,7 +87,7 @@ describe('connections game rules', () => {
     let round = newConnectionRound();
     puzzle.groups.forEach(group => { round = submitConnectionSelection(choose(round, group.words), puzzle); });
     expect(round.status).toBe('won');
-    expect(round.score).toBe(180);
+    expect(round.score).toBe(270);
     expect(round.solved).toHaveLength(4);
   });
 
@@ -108,7 +108,7 @@ describe('connections game rules', () => {
     let round = newConnectionRound();
     puzzle.groups.forEach(group => { round = submitConnectionSelection(choose(round, group.words), puzzle); });
     const updated = recordConnectionResult({played:0,solved:0,stars:0,bestScore:0}, round);
-    expect(updated).toEqual({ played:1, solved:1, stars:180, bestScore:180 });
+    expect(updated).toEqual({ played:1, solved:1, stars:270, bestScore:270 });
   });
 });
 
@@ -120,5 +120,31 @@ describe('Guess Who? regression', () => {
   it('still accepts familiar alternate food names', () => {
     const eggplant = riddles.find(r => r.id === 'aubergine')!;
     expect(submitGuess(newRound(), eggplant, 'baingan').status).toBe('won');
+  });
+});
+
+describe('Three-tier game difficulty', () => {
+  it('uses distinct star rewards without changing category membership', () => {
+    const scores = (difficulty: 'easy' | 'medium' | 'hard') => {
+      let round = newConnectionRound(difficulty);
+      puzzle.groups.forEach(group => { round = submitConnectionSelection(choose(round, group.words), puzzle); });
+      return round.score;
+    };
+    expect(scores('easy')).toBe(180);
+    expect(scores('medium')).toBe(270);
+    expect(scores('hard')).toBe(360);
+  });
+
+  it('offers five mistakes on Cozy and three on Expert', () => {
+    const wrongSet = (i: number) => [...puzzle.groups[0].words.slice(0, 2), puzzle.groups[1].words[i], puzzle.groups[2].words[0]];
+    let cozy = newConnectionRound('easy');
+    let expert = newConnectionRound('hard');
+    for(let i=0;i<3;i++) {
+      cozy = submitConnectionSelection(choose(cozy, wrongSet(i)), puzzle);
+      expert = submitConnectionSelection(choose(expert, wrongSet(i)), puzzle);
+    }
+    expect(expert.status).toBe('lost');
+    expect(cozy.status).toBe('playing');
+    expect(expert.feedback).not.toContain('One away');
   });
 });
