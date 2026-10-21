@@ -164,7 +164,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
           <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong><small>Original schematic · not a studio blueprint</small></div>
           <div className="bazinga-map-scroll"><div className={`bazinga-room-map room-theme-${room.theme}`} role="group" aria-label="Room seats and furniture">
             <div className="room-floor-object" aria-hidden="true"/>
-            {room.props.map((item,i)=><div key={i} className="bazinga-room-prop" style={{left:`${item.x}%`,top:`${item.y}%`}} aria-label={item.label}>
+            {room.props.map((item,i)=><div key={i} className={`bazinga-room-prop room-prop-${item.label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} style={{left:`${item.x}%`,top:`${item.y}%`}} aria-label={item.label}>
               <span aria-hidden="true">{item.icon}</span><small>{item.label}</small>
             </div>)}
             {caseData.seatIds.map((id,i)=>{
@@ -172,7 +172,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               const name=round.placements[id],isFixed=round.fixed.includes(id);
               return <button type="button" key={id} className={`bazinga-map-seat ${name?'is-occupied':''} ${isFixed?'is-fixed':''} ${round.selected?'has-selection':''}`}
                 style={{left:`${s.x}%`,top:`${s.y}%`}} disabled={round.status!=='playing'||isFixed}
-                title={`${s.label} · ${s.tags.join(', ')}`}
+                title={s.label}
                 aria-label={`${s.label}: ${name??'empty'}${isFixed?', fixed by a hint':''}`}
                 onClick={()=>changeRound((r,c)=>placeWorldGuest(r,c,id))}>
                 <span className="bazinga-chair-number">{i+1}</span>
@@ -189,7 +189,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
                 const chair=room.seats.find(s=>s.id===id)!;
                 return <div key={id}>
                   <strong>#{i+1} {chair.label}</strong>
-                  <span>{chair.tags.map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
+                  <span>{chair.tags.filter(tag=>tag!=='spot').map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
                 </div>;
               })}
             </div>
@@ -217,7 +217,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
           <div className="bazinga-rule-paper-intro">To preserve domestic peace, all {rules.length} clauses must hold at the same time.</div>
           <ol className="bazinga-world-clues">
             {rules.map((rule,i)=>{
-              const showFeedback=round.attempts>0&&round.status==='playing'&&allPlaced&&level!=='hard';
+              const showFeedback=round.attempts>0&&round.status==='playing'&&allPlaced&&level==='easy';
               return <li key={i}>
                 <span className="bazinga-clue-index">{i+1}</span>
                 <p>{roomRuleText(caseData,rule)}</p>
@@ -242,9 +242,17 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
         </div>
         <div className="bazinga-finale-copy">
           <span className="overline">{round.status==='won'?'THE ROOMMATE AGREEMENT IS SATISFIED':'A TECHNICAL OBJECTION HAS BEEN RAISED'}</span>
-          <h3>{round.status==='won'?'A rare Sheldon compliment!':'Bazinga!'}</h3>
-          <blockquote>“{round.status==='won'?caseData.winning:caseData.losing}”</blockquote>
-          <p>{round.status==='won'?`All ${rules.length} rules correct · ${round.score} stars earned.`:`The correct arrangement: ${caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${room.seats.find(s=>s.id===id)?.label})`).join(' · ')}`}</p>
+          <h3>{round.status==='won'?'An unusually generous assessment':'Bazinga!'}</h3>
+          {round.status==='won'?<>
+            <blockquote>“{caseData.winning}”</blockquote>
+            <p>All {rules.length} constraints satisfied · {round.score} stars earned.</p>
+          </>:<>
+            <p className="bazinga-lose-line">You lose!</p>
+            <details className="bazinga-solution-reveal">
+              <summary>See the correct seating arrangement</summary>
+              <p>{caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${room.seats.find(seat=>seat.id===id)?.label})`).join(' · ')}</p>
+            </details>
+          </>}
         </div>
         <button className="btn btn-primary" onClick={()=>{setMode('practice');randomCase(level)}}>Next episode ↗</button>
       </section>}
