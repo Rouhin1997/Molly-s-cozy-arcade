@@ -17,7 +17,7 @@
 | Guess Who? | Free-text answer to gradually revealed clues about fruits, vegetables and food | **Milestone 1 playable** |
 | Toon Rewind | CRT-style channel surfing, visual prop recognition and tunable signals from Cartoon Network India c. 2000–2010 | **Milestone 2B playable** |
 | The 99 Files | Small detective cases; inspect evidence, interview witnesses and deduce the culprit | Planned |
-| Bazinga! Lab | Interactive constraint-solving and logic games inspired by The Big Bang Theory | Planned |
+| Bazinga! Lab | Hands-on, uniquely solvable seating arrangement logic puzzles with character chips and constraint cards | **Milestone 2D playable** |
 | Pink Rush | Timed BLACKPINK setlist, era and performance-related puzzles; combos and sequencing | Planned |
 | Little Connections | Find four hidden groups of four words, using four mistakes and one-away feedback | **Milestone 2A playable** |
 
@@ -53,6 +53,17 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - Licensed or permissioned show/character images can be plugged into individual reveal cards later; **never scrape and hotlink random copyrighted screenshots**.
 - Remaining Phase 2 games and Birthday Quest & coupon wallet are not in this release.
 
+## Phase 2D — Difficulty consistency & Bazinga! Lab
+
+- **Uniform difficulty lifecycle (implemented):** choose Cozy/Clever/Expert before the first meaningful action; after play begins the game's difficulty is locked. A completed *daily* result is never overwritten by selecting a new tier. Selecting a different difficulty at the end of a practice session starts a new practice puzzle/session; selecting a different tier before beginning immediately starts a properly graded fresh one. Preferences are stored per game.
+- **Bazinga! Lab (implemented):** a standalone, non-quiz, spatial constraint puzzle inspired by *The Big Bang Theory*. Players assign recognizable characters to chairs, reading a set of seating rules. Selecting a character then a seat moves/swaps them; tapping an occupied seat can clear it. Failed checks indicate how many rules pass; the correct order is revealed at the end.
+- 18 authored scenarios: six Cozy cases with 4 guests, six Clever cases with 5, and six Expert cases with 6. Each set's correctness and **unique solution** are exhaustively verified against every possible permutation in automated tests.
+- Cozy: four checks and two locking seat hints. Clever: three checks and one hint. Expert: two checks, no hints. Stars = max(50, 180 − 25×prior incorrect checks − 30×hints used) × 1, 1.5, or 2. Full loss = 0.
+- One deterministically selected case per day **and** difficulty tier, persisted by local date (only the chosen tier counts as that day's played result); unlimited non-repeating practice cases in the selected pool. One best-awarded score per case ID prevents duplicate farming.
+- Integrates into the game shelf and cumulative four-game Passport totals, with two new unlockable achievement stamps. New save key: `mollys-bazinga-v1`. Passport exports now use version 2 with all four games; older version 1 backups can still be imported without erasing the new game's data.
+- Asset note: stylized characters are original emoji and hand-coded CSS, not copied TV show character artwork or footage.
+- **Future difficulty refinements:** fresh hard-specific narrative puzzle packs, optional explicit confirmation before resetting a pristine practice board, mobile/keyboard tests, and accessibility focus improvements.
+
 ## Birthday-only experience (Milestone 3, not currently implemented)
 
 - Each **November 13**, offer a curated Birthday Quest that links several mechanics.
@@ -66,7 +77,7 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 ## Development milestones
 
 1. **Foundation:** React / TypeScript / Vite app, GitHub Pages workflow, home screen, Guess Who?, local progress, documentation.
-2. **Game variety:** Little Connections (2A) and Toon Rewind (2B) are playable; The 99 Files, Bazinga! Lab, and Pink Rush follow. Fact-check specifically **Indian CN broadcast history**.
+2. **Game variety:** Little Connections (2A), Toon Rewind (2B), the Phase 2C Passport expansion, and Bazinga! Lab (2D) are playable; The 99 Files and Pink Rush remain. Fact-check specifically **Indian CN broadcast history**.
 3. **Birthday Quest and coupons:** annual event, surprise reveal, wallet and redemption rules. Decide on a secure backend only if required.
 4. **Polish and QA:** test on phones, keyboard use, screen readers, scoring, storage failures, new-day rollovers and GitHub Pages URL.
 
@@ -95,7 +106,7 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 
 ## Arcade Passport (implemented in Phase 2C)
 
-Implemented as a personal scrapbook with achievements, total stars, games solved, daily streaks, and per-game records. Manual export/restore allows moving progress between devices. The eventual birthday coupon wallet remains a separate gift system, not a purchase mechanic. No login is needed for basic play.
+Implemented as a personal scrapbook with achievements, total stars, games solved, daily streaks, and per-game records. Manual export/restore allows moving progress between devices; as of Phase 2D it covers **four games** (v2), and imports prior v1 three-game backups. The eventual birthday coupon wallet remains a separate gift system, not a purchase mechanic. No login is needed for basic play.
 
 ## Future engineering considerations
 
@@ -103,3 +114,7 @@ Implemented as a personal scrapbook with achievements, total stars, games solved
 - Track question IDs, schema versions and migrations to avoid breaking saved progress after content updates.
 - Support optional reduced motion, offline mode / PWA and player-selected sounds after the core games work reliably.
 - Expand puzzle packs rather than replacing entire game code. Add reproducible logic tests and browser tests.
+
+## Session resumption
+
+**Read `DEVELOPMENT_HANDOFF.md` first.** It records the exact GitHub release milestone, testing commands, priorities and compatibility notes for the next session. This roadmap is conceptual; the handoff contains operational instructions.
