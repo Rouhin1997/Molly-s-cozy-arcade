@@ -46,7 +46,7 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
   const effectiveDifficulty = round?.difficulty ?? difficulty;
   const limit = connectionMistakeLimit(effectiveDifficulty);
   const left = round ? limit - round.mistakes : limit;
-  const difficultyLocked = !!round && (round.attempts.length>0 || round.solved.length>0 || round.selected.length>0 || round.status !== 'playing');
+  const difficultyLocked = !!round && (round.attempts.length>0 || round.solved.length>0 || round.selected.length>0 || round.status !== 'playing') && (mode === 'daily' || round.status === 'playing');
 
   function updateRound(transform: (r: ConnectionRound, p: ConnectionPuzzle) => ConnectionRound) {
     setProgress(prev => {
@@ -111,13 +111,15 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
   }
 
   function chooseDifficulty(level: Difficulty) {
-    if (difficultyLocked && round?.status==='playing') return;
+    if (difficultyLocked || level === effectiveDifficulty) return;
     setDifficulty(level);
     savePreferredDifficulty('connections',level);
-    if (mode==='daily' && !difficultyLocked) {
-      setProgress(prev=>({...prev,daily:{...prev.daily,[today]:{puzzleId: dailyPuzzle.id,round:newConnectionRound(level)}}}));
+    if (mode === 'daily') {
+      setProgress(prev => ({...prev,daily:{...prev.daily,[today]:{puzzleId:dailyPuzzle.id,round:newConnectionRound(level)}}}));
+    } else if (practicePuzzle) {
+      // Choosing a new tier before any selection begins a properly graded board.
+      newPractice(level);
     }
-    if (mode==='practice' && round?.status!=='playing') newPractice(level);
   }
 
   const solvedIndices = round?.solved ?? [];
@@ -138,8 +140,8 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
       <button className={mode === 'daily' ? 'selected' : ''} aria-pressed={mode === 'daily'} onClick={() => { setMode('daily'); setShuffleCount(0); }}>☀ Daily board</button>
       <button className={mode === 'practice' ? 'selected' : ''} aria-pressed={mode === 'practice'} onClick={() => { setMode('practice'); setShuffleCount(0); }}>✿ Practice boards</button>
     </div>
-    <DifficultyPicker value={effectiveDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && round?.status==='playing'}
-      lockedMessage="The puzzle has begun. Finish this board to choose a new difficulty." />
+    <DifficultyPicker value={effectiveDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked}
+      lockedMessage="This board has begun or is complete. Select a level before starting your next board." />
     <div className="mode-intro"><span>🧠</span><p><strong>Find four words that belong together.</strong> Cozy has five mistakes and approachable categories, Clever gives four, and Expert allows only three mistakes with trickier groups and no “one away” hint. Higher difficulty earns more stars!</p></div>
 
     {mode === 'practice' && !practicePuzzle ? <section className="start-panel">

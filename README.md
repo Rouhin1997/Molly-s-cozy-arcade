@@ -2,7 +2,7 @@
 
 A tiny, cheerful puzzle arcade built as a birthday gift, and designed to be fun all year long.
 
-**Status: Milestone 2C — Arcade Passport and game expansion.** Three playable games now feature adjustable challenge levels, expanded puzzle libraries, and arcade-wide achievements. A Birthday Quest (November 13), coupon wallet and three further themed games remain on the roadmap.
+**Status: Milestone 2D — Bazinga! Lab and difficulty consistency.** Four games are playable: Guess Who?, Little Connections, Toon Rewind, and Bazinga! Lab. The Passport tracks all four. Two more games and the November 13 Birthday Quest/coupon wallet remain on the roadmap.
 
 ## Play locally
 
@@ -35,12 +35,13 @@ For the first deployment, open the repository's **Settings → Pages** and selec
 
 ## What's playable so far?
 
-- A responsive arcade lobby showing all six games, with three playable.
+- A responsive arcade lobby showing all six games, with **four playable**.
 - **Guess Who?** with a daily mystery and 5-round randomized practice picnics.
 - Four progressive clues per mystery (three in Expert), difficulty-based guess limits, aliases and fun facts.
 - 48 original food / fruit / vegetable riddles, with lots of familiar Indian names.
 - **Little Connections**: 28 curated puzzles, a four-by-four word grid, four hidden categories, difficulty-specific mistake limits, "one away" feedback on non-Expert modes, daily boards and practice boards.
 - **Toon Rewind**: India-focused nostalgic TV with 35 shows, symbolic picture clues and original reveal posters, a reception-tuning remote, typed titles in Expert mode, six transmissions and early-answer star bonuses. Daily broadcasts and practice packs for early 2000s and 2005–2010.
+- **Bazinga! Lab**: 18 uniquely solvable logic cases, with four-, five- and six-person seating challenges. Assign people to chairs, satisfy every constraint, and use hints/attempts according to the chosen difficulty.
 - **Arcade Passport**: scrapbook-style achievements and unlocked stamps, lifetime game records, stars, best scores, and personal progress.
 - **Cozy / Clever / Expert** difficulty controls in each game. Higher difficulty increases the challenge and multiplies potential stars.
 - **Best-score rewards**: replaying the same puzzle only grants the improvement over its previously awarded high score. Older saved points remain unchanged.
@@ -67,6 +68,9 @@ src/
   lib/toon.ts           Toon scoring, session progression, and save rules
   lib/passport.ts       Difficulty, best reward and Passport achievements
   games/Passport.tsx   Passport screen, stamps and save export/import
+  games/BazingaLab.tsx  Interactive seating-constraint game
+  data/bazinga.ts      18 cases, logic clues and exhaustive solution validator
+  lib/bazinga.ts       Interaction rules, score caps and local progress
   components/DifficultyPicker.tsx  Shared difficulty selector
   data/extraQuestions.ts   Additional curated riddles
   data/extraConnections.ts  Additional authored Connections boards
@@ -79,7 +83,7 @@ GAME_DESIGN.md         Games and milestones, including future birthday mechanics
 
 ## Game-rule tests
 
-The repository runs `npm run build` and `npm test` on GitHub Actions for new game branches and pull requests. The test suite validates board uniqueness, scoring, daily scheduling, mistakes, one-away feedback, and earlier Guess Who? behaviour. The Toon Rewind test suite checks channel lineups, alternatives, scoring and tuning. The separate deployment workflow publishes successful changes on `main`.
+The repository runs `npm run build` and `npm test` on GitHub Actions for new game branches and pull requests. The test suite validates board uniqueness, scoring, daily scheduling, mistakes, one-away feedback, and earlier Guess Who? behaviour. The Toon Rewind test suite checks channel lineups, alternatives, scoring and tuning. Bazinga! Lab's test suite exhaustively checks every seating case has exactly one valid solution, and tests interaction, hints and anti-farming. The separate deployment workflow publishes successful changes on `main`.
 
 ## Adding content
 
@@ -96,6 +100,14 @@ The daily riddle is picked deterministically from the date in the player's local
 The initial build uses CSS, emoji and original puzzle copy. Later TV and music themed games should use licensed / permissioned images and audio, original illustrations, or legally appropriate links rather than hosting copied episodes, concert recordings or copyrighted stills without permission.
 
 Made with love, and a little bit of mischief. ♡
+
+## Difficulty switching contract
+
+For **all four games**, choose Cozy, Clever or Expert **before the first meaningful action**. Once a daily puzzle has begun, its difficulty cannot be changed or its earned result reset. A practice puzzle/session similarly locks after the first action; after the session ends, selecting another difficulty starts a new challenge. Switching before the first action immediately starts a fresh, correctly graded practice puzzle/session. A game's preferred difficulty is remembered for the next attempt. Locked rounds never silently receive an increased multiplier.
+
+## Next development session
+
+Read **`DEVELOPMENT_HANDOFF.md`** first. It contains the current code/release status, test and deployment commands, progress schema, milestone priorities and blockers. For detailed game mechanics and longer-term plans, see `GAME_DESIGN.md`.
 
 ## Cloud synchronization (not connected yet)
 

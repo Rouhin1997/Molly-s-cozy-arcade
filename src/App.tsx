@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type FormEvent, type Dispatch, type SetStateAction } from 'react';
 import Connections from './games/Connections';
 import ToonRewind from './games/ToonRewind';
+import BazingaLab from './games/BazingaLab';
+import { readBazingaProgress, writeBazingaProgress, type BazingaProgress, type BazingaStats } from './lib/bazinga';
 import Passport from './games/Passport';
 import DifficultyPicker from './components/DifficultyPicker';
 import { bestAward, readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from './lib/passport';
@@ -14,12 +16,11 @@ import {
   type Progress, type Round,
 } from './lib/game';
 
-type View = 'home' | 'guess' | 'connections' | 'toon' | 'passport' | 'vault';
+type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
   { icon: '🕵️', name: 'The 99 Files', tag: 'Detective', teaser: 'Solve little mysteries with the Nine-Nine.', theme: 'peach', detail: 'Explore case files, question witnesses and put together the evidence. Cool, cool, cool.' },
-  { icon: '⚛️', name: 'Bazinga! Lab', tag: 'Logic', teaser: 'A puzzle night with Sheldon and the gang.', theme: 'yellow', detail: 'Rearrange seats, decode rules and outsmart increasingly ridiculous roommate agreements.' },
   { icon: '🖤', name: 'Pink Rush', tag: 'Music', teaser: 'A high-energy challenge for a true BLINK.', theme: 'pink', detail: 'Match eras, order the setlist and race through song puzzles to build your combo.' },
 ];
 
@@ -41,12 +42,13 @@ function Logo({ onClick }: { onClick: () => void }) {
   </button>;
 }
 
-function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, today }: {
+function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, bazingaStats, today }: {
   onNavigate: (view: View, mode?: Mode) => void;
   onChooseGame: (name: string) => void;
   progress: Progress;
   connectionStats: ConnectionStats;
   toonStats: ToonStats;
+  bazingaStats: BazingaStats;
   today: string;
 }) {
   const daily = progress.daily[today];
@@ -85,8 +87,8 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
     </section>
 
     <section className="stats-strip" aria-label="Player progress">
-      <div><span className="stats-icon">🏆</span><span className="stats-number">{progress.stats.solved + connectionStats.solved + toonStats.solved}</span><span className="stats-label">puzzles solved</span></div>
-      <div><span className="stats-icon">✨</span><span className="stats-number">{progress.stats.points + connectionStats.stars + toonStats.stars}</span><span className="stats-label">stars collected</span></div>
+      <div><span className="stats-icon">🏆</span><span className="stats-number">{progress.stats.solved + connectionStats.solved + toonStats.solved + bazingaStats.solved}</span><span className="stats-label">puzzles solved</span></div>
+      <div><span className="stats-icon">✨</span><span className="stats-number">{progress.stats.points + connectionStats.stars + toonStats.stars + bazingaStats.stars}</span><span className="stats-label">stars collected</span></div>
       <div><span className="stats-icon">🔥</span><span className="stats-number">{progress.stats.bestStreak}</span><span className="stats-label">best daily streak</span></div>
       <div><span className="stats-icon">💝</span><span className="stats-number">{days === 0 ? 'Today!' : days}</span><span className="stats-label">{days === 0 ? 'happy birthday!' : 'days to birthday'}</span></div>
     </section>
@@ -96,7 +98,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <button className="btn btn-soft" onClick={() => onNavigate('passport')}>Open Passport ↗</button>
     </section>
     <section className="games-section" id="games">
-      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Three games ready, more magic in the making</span></div>
+      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Four games ready, more magic in the making</span></div>
       <div className="game-grid">
         <article className="game-card featured-card">
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 06</span></div>
@@ -116,8 +118,15 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
           <div className="card-content"><span className="card-category">CARTOON NETWORK INDIA • 2000s</span><h3>Toon Rewind</h3><p>Turn the dial on a nostalgic TV. Recognise six shows from their picture signals.</p>
             <button className="card-link" onClick={() => onNavigate('toon')}>Switch on the TV <span aria-hidden="true">↗</span></button></div>
         </article>
+        <article className="game-card game-card-yellow bazinga-card">
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">04 / 06</span></div>
+          <div className="game-emoji" aria-hidden="true">⚛️</div>
+          <div className="card-content"><span className="card-category">LOGIC & SEATING EXPERIMENTS</span><h3>Bazinga! Lab</h3>
+            <p>Arrange the gang around the table. One seating order satisfies every rule!</p>
+            <button className="card-link" onClick={() => onNavigate('bazinga')}>Enter the lab <span aria-hidden="true">↗</span></button></div>
+        </article>
         {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
-          <div className="card-topline"><span className="soon-pill">IN THE WORKS</span><span className="card-number">0{index + 4} / 06</span></div>
+          <div className="card-topline"><span className="soon-pill">IN THE WORKS</span><span className="card-number">0{index + 5} / 06</span></div>
           <div className="game-emoji" aria-hidden="true">{game.icon}</div>
           <div className="card-content"><span className="card-category">{game.tag.toUpperCase()}</span><h3>{game.name}</h3><p>{game.teaser}</p>
             <button className="card-link" onClick={() => onChooseGame(game.name)}>Sneak peek <span aria-hidden="true">↗</span></button></div>
@@ -210,7 +219,9 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   const playingRiddle = mode === 'daily' ? daily : practiceRiddle;
   const activeRound = mode === 'daily' ? dailyRound : practiceRound;
   const currentDifficulty = activeRound?.difficulty ?? (mode === 'daily' && !!progress.daily[today] ? 'easy' : difficulty);
-  const difficultyLocked = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
+  const hasStarted = !!activeRound && (activeRound.guesses.length>0 || activeRound.cluesShown>1 || activeRound.status !== 'playing');
+  const sessionStarted = mode === 'practice' && !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.guesses.length>0 || r.cluesShown>1 || r.status !== 'playing'));
+  const difficultyLocked = mode === 'daily' ? hasStarted : !!sessionStarted && !finished;
   const earned = session ? Object.values(session.rounds).reduce((total, r) => total + r.score, 0) : 0;
   const solved = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
@@ -220,11 +231,14 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   }
 
   function chooseDifficulty(level: Difficulty) {
-    if (difficultyLocked && activeRound?.status==='playing') return;
+    if (difficultyLocked || level === currentDifficulty) return;
     setDifficulty(level);
     savePreferredDifficulty('guess', level);
-    if (mode==='daily' && !difficultyLocked) setProgress(prev=>({...prev,daily:{...prev.daily,[today]:newRound(level)}}));
-    if (mode==='practice' && activeRound?.status!=='playing') newPractice(level);
+    if (mode === 'daily') {
+      setProgress(prev => ({...prev,daily:{...prev.daily,[today]:newRound(level)}}));
+    } else if (session) {
+      newPractice(level);
+    }
   }
 
   function updateRound(transform: (round: Round) => Round) {
@@ -265,10 +279,10 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
     <button className="back-link" onClick={onHome}>← Back to the game shelf</button>
     <div className="game-head"><div><div className="overline">THE LITTLE PUZZLE CLUB / GAME 01</div><h1><span aria-hidden="true">🍓</span> Guess Who?</h1><p>For curious minds and adventurous taste buds.</p></div><span className="decorative-berry" aria-hidden="true">✿</span></div>
     <div className="mode-tabs" role="tablist" aria-label="Game mode"><button role="tab" aria-selected={mode === 'daily'} className={mode === 'daily' ? 'selected' : ''} onClick={() => setMode('daily')}>☀ Today's riddle</button><button role="tab" aria-selected={mode === 'practice'} className={mode === 'practice' ? 'selected' : ''} onClick={() => setMode('practice')}>✿ Practice picnic</button></div>
-    <DifficultyPicker value={currentDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && activeRound?.status==='playing'}
-      lockedMessage="Difficulty is locked for this mystery. Start another practice session to switch levels."/>
+    <DifficultyPicker value={currentDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked}
+      lockedMessage="This mystery or practice set has started. Finish it, then select a new difficulty for your next session."/>
     {mode === 'daily' ? <div className="mode-intro"><span>🍯</span><p><strong>One mystery every day.</strong> The same puzzle waits for you all day, and your progress is saved automatically. Come back tomorrow for another!</p></div> : <div className="mode-intro"><span>🧺</span><p><strong>Five bites of fun.</strong> Play a little set of five randomly picked riddles. Collect stars and try to beat your score!</p></div>}
-    {mode === 'practice' && !session ? <div className="start-panel"><span>🧺</span><h2>Ready for a little picnic?</h2><p>Five mini mysteries, four guesses each. No pressure—just fun.</p><button className="btn btn-primary" onClick={()=>newPractice()}>Start a five-puzzle set ↗</button></div> : null}
+    {mode === 'practice' && !session ? <div className="start-panel"><span>🧺</span><h2>Ready for a little picnic?</h2><p>Five mini mysteries from your chosen difficulty. Each set locks its challenge level after the first move.</p><button className="btn btn-primary" onClick={()=>newPractice()}>Start a five-puzzle set ↗</button></div> : null}
     {mode === 'practice' && finished ? <div className="start-panel summary-panel"><span>🌷</span><h2>Picnic complete!</h2><p>You solved {solved} out of 5 little mysteries and collected <strong>{earned} stars</strong>.</p><div className="summary-stars">{session?.ids.map((id, i) => <span key={id} title={`Puzzle ${i + 1}: ${session.rounds[id]?.status === 'won' ? 'solved' : 'missed'}`}>{session.rounds[id]?.status === 'won' ? '⭐' : '☆'}</span>)}</div><button className="btn btn-primary" onClick={()=>newPractice()}>Play a fresh set ↗</button></div> : null}
     {playingRiddle && activeRound && <>
       {mode === 'practice' && session && <div className="progress-pebbles" aria-label={`Puzzle ${session.index + 1} of 5`}>{session.ids.map((_, index) => <span key={index} className={index < session.index ? 'completed' : index === session.index ? 'active' : ''}/>)}</div>}
@@ -289,6 +303,7 @@ function App() {
   const [progress, setProgress] = useState<Progress>(readProgress);
   const [connectionProgress, setConnectionProgress] = useState<ConnectionProgress>(readConnections);
   const [toonProgress, setToonProgress] = useState<ToonProgress>(readToonProgress);
+  const [bazingaProgress, setBazingaProgress] = useState<BazingaProgress>(readBazingaProgress);
   const [sneakPeek, setSneakPeek] = useState<string | null>(null);
   const [today, setToday] = useState(localDateKey);
   const selectedGame = useMemo(() => upcoming.find(g => g.name === sneakPeek), [sneakPeek]);
@@ -296,6 +311,7 @@ function App() {
   useEffect(() => { writeProgress(progress); }, [progress]);
   useEffect(() => { writeConnections(connectionProgress); }, [connectionProgress]);
   useEffect(() => { writeToonProgress(toonProgress); }, [toonProgress]);
+  useEffect(() => { writeBazingaProgress(bazingaProgress); }, [bazingaProgress]);
   useEffect(() => {
     const refresh = () => setToday(localDateKey());
     window.addEventListener('focus', refresh);
@@ -307,8 +323,8 @@ function App() {
     setView(next); setMode(nextMode); setSneakPeek(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'bazinga' ? 'nav-active' : ''} onClick={() => navigate('bazinga')}>Bazinga!</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;

@@ -69,10 +69,10 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
   const finished = !!session && session.index >= session.ids.length;
   const activeShow = session && !finished ? toonShows.find(s => s.id === session.ids[session.index]) : undefined;
   const round = session && activeShow ? currentToonRound(session) : undefined;
-  const effectiveDifficulty = session?.difficulty ?? 'easy';
+  const effectiveDifficulty = session ? (session.difficulty ?? 'easy') : difficulty;
   const choices = useMemo(() => activeShow && session ? optionsForShow(activeShow.id, session.seed, effectiveDifficulty === 'medium' ? 6 : 4) : [],
     [activeShow, session?.seed, effectiveDifficulty]); 
-  const difficultyLocked = !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.tuneLevel>1 || r.attempts.length>0 || r.status !== 'playing'));
+  const difficultyLocked = !!session && (session.index > 0 || Object.values(session.rounds).some(r=>r.tuneLevel>1 || r.attempts.length>0 || r.status !== 'playing')) && (mode === 'daily' || !finished);
   const sessionStars = session ? Object.values(session.rounds).reduce((n, r) => n + r.score, 0) : 0;
   const identified = session ? Object.values(session.rounds).filter(r => r.status === 'won').length : 0;
 
@@ -126,20 +126,25 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
       ? { ...prev, daily: { ...prev.daily, [today]: advanceToonSession(prev.daily[today] ?? newToonSession(`toon-daily-${today}`)) } }
       : prev.practice ? { ...prev, practice: advanceToonSession(prev.practice) } : prev);
   }
-  function startPractice(pack: ToonPack) {
+  function startPractice(pack: ToonPack, level: Difficulty = difficulty) {
     setChosenPack(pack);
     setTypedAnswer('');
     setProgress(prev => ({ ...prev,
-      practice: newToonSession(`toon-practice-${Date.now()}-${Math.random()}`, pack, difficulty) }));
+      practice: newToonSession(`toon-practice-${Date.now()}-${Math.random()}`, pack, level) }));
     setMode('practice');
   }
 
   function chooseDifficulty(next: Difficulty) {
-    if (difficultyLocked && !finished) return;
+    if (difficultyLocked || next === effectiveDifficulty) return;
     setDifficulty(next);
     savePreferredDifficulty('toon', next);
-    if (mode === 'daily') setProgress(prev => ({ ...prev,
-      daily: { ...prev.daily, [today]: newToonSession(`toon-daily-${today}`, 'all', next) } }));
+    setTypedAnswer('');
+    if (mode === 'daily') {
+      setProgress(prev => ({...prev,daily:{...prev.daily,[today]:newToonSession(`toon-daily-${today}`,'all',next)}}));
+    } else if (session) {
+      // Retune the entire six-channel session before any channel is attempted.
+      startPractice(session.pack, next);
+    }
   }
   function submitTyped(event: FormEvent) {
     event.preventDefault();
@@ -161,8 +166,8 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
       <button aria-pressed={mode === 'daily'} className={mode === 'daily' ? 'selected' : ''} onClick={() => setMode('daily')}>☀ Daily broadcast</button>
       <button aria-pressed={mode === 'practice'} className={mode === 'practice' ? 'selected' : ''} onClick={() => setMode('practice')}>✿ Free channel surfing</button>
     </div>
-    <DifficultyPicker value={effectiveDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && !finished}
-      lockedMessage="Difficulty is locked for this broadcast. Start a new practice session to change it."/>
+    <DifficultyPicker value={effectiveDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked}
+      lockedMessage="This broadcast has started or finished. Pick a new difficulty before your next six-channel session."/>
     <div className="mode-intro"><span>📡</span><p><strong>Six mystery transmissions.</strong> Cozy shows familiar symbols and four choices; Clever uses subtler clues and six choices; Expert hides the picture and asks you to type the title. Tune for more hints, but fewer clues earn more stars.</p></div>
 
     {mode === 'practice' && !session && <div className="toon-intro">

@@ -3,28 +3,31 @@ import { passportSummary } from '../lib/passport';
 import type { Progress } from '../lib/game';
 import type { ConnectionProgress } from '../lib/connections';
 import type { ToonProgress } from '../lib/toon';
+import type { BazingaProgress } from '../lib/bazinga';
 
 type Props = {
   guess: Progress;
   connections: ConnectionProgress;
   toon: ToonProgress;
+  bazinga: BazingaProgress;
   setGuess: Dispatch<SetStateAction<Progress>>;
   setConnections: Dispatch<SetStateAction<ConnectionProgress>>;
   setToon: Dispatch<SetStateAction<ToonProgress>>;
+  setBazinga: Dispatch<SetStateAction<BazingaProgress>>;
   onHome: () => void;
 };
 
-export default function Passport({ guess, connections, toon, setGuess, setConnections, setToon, onHome }: Props) {
-  const passport = passportSummary({ guess, connections, toon });
+export default function Passport({ guess, connections, toon, bazinga, setGuess, setConnections, setToon, setBazinga, onHome }: Props) {
+  const passport = passportSummary({ guess, connections, toon, bazinga });
   const inputRef = useRef<HTMLInputElement>(null);
   const [feedback, setFeedback] = useState('');
 
   function exportBackup() {
     const backup = {
       format: 'mollys-cozy-arcade',
-      version: 1,
+      version: 2,
       exportedAt: new Date().toISOString(),
-      guess, connections, toon,
+      guess, connections, toon, bazinga,
     };
     const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
     const link = document.createElement('a');
@@ -47,11 +50,13 @@ export default function Passport({ guess, connections, toon, setGuess, setConnec
       const parsed: unknown = JSON.parse(await file.text());
       if (!parsed || typeof parsed !== 'object') throw new Error('Invalid backup.');
       const data = parsed as Record<string, unknown>;
-      if (data.format !== 'mollys-cozy-arcade' || data.version !== 1) throw new Error('This is not a compatible Molly’s Arcade backup.');
+      if (data.format !== 'mollys-cozy-arcade' || (data.version !== 1 && data.version !== 2)) throw new Error('This is not a compatible Molly’s Arcade backup.');
       const g = data.guess as Progress, c = data.connections as ConnectionProgress, t = data.toon as ToonProgress;
+      const b = data.bazinga as BazingaProgress | undefined;
       if (g?.version !== 1 || c?.version !== 1 || t?.version !== 1 ||
         typeof g?.stats?.points !== 'number' || typeof c?.stats?.stars !== 'number' ||
-        typeof t?.stats?.stars !== 'number' || !g.daily || !c.daily || !t.daily) throw new Error('Some saved game data is missing.');
+        typeof t?.stats?.stars !== 'number' || !g.daily || !c.daily || !t.daily ||
+        (data.version === 2 && (b?.version !== 1 || typeof b.stats?.stars !== 'number' || !b.daily))) throw new Error('Some saved game data is missing.');
       if (!window.confirm('Replace this browser’s current arcade progress with the imported backup? This cannot be undone.')) {
         setFeedback('Import cancelled. Your current progress was kept.');
         return;
@@ -59,7 +64,8 @@ export default function Passport({ guess, connections, toon, setGuess, setConnec
       setGuess(g);
       setConnections(c);
       setToon(t);
-      setFeedback('Passport restored! Your game scores and stamps are back.');
+      if (b) setBazinga(b);
+      setFeedback(b ? 'All four games restored! Your stars and stamps are back.' : 'Older Passport restored! Existing Bazinga! Lab progress was kept.');
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : 'Unable to read that backup file.');
     }
@@ -100,7 +106,7 @@ export default function Passport({ guess, connections, toon, setGuess, setConnec
       </div>
     </section>
     <section className="passport-backup">
-      <div><span className="overline">KEEP YOUR MEMORIES SAFE</span><h2>Passport backup</h2><p>Your scores live in this browser, not on a server yet. Download a backup to keep, or restore one on another device. We'll support optional cloud sync later.</p></div>
+      <div><span className="overline">KEEP YOUR MEMORIES SAFE</span><h2>Passport backup</h2><p>Your scores live in this browser, not on a server yet. Download a backup of all four games, or restore a backup from another device (older three-game backups also work). We'll support optional cloud sync later.</p></div>
       <div className="passport-backup-actions">
         <button className="btn btn-primary" onClick={exportBackup}>↓ Export passport</button>
         <button className="btn btn-outline" onClick={()=>inputRef.current?.click()}>↑ Restore backup</button>

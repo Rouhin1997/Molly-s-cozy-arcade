@@ -1,6 +1,7 @@
 import type { Progress } from './game';
 import type { ConnectionProgress } from './connections';
 import type { ToonProgress } from './toon';
+import type { BazingaProgress } from './bazinga';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -26,6 +27,7 @@ export type ArcadeProgress = {
   guess: Progress;
   connections: ConnectionProgress;
   toon: ToonProgress;
+  bazinga?: BazingaProgress;
 };
 
 export type PassportStamp = {
@@ -37,9 +39,10 @@ export type PassportStamp = {
 };
 
 export function passportSummary(p: ArcadeProgress) {
-  const totalStars = p.guess.stats.points + p.connections.stats.stars + p.toon.stats.stars;
-  const solved = p.guess.stats.solved + p.connections.stats.solved + p.toon.stats.solved;
-  const played = p.guess.stats.played + p.connections.stats.played + p.toon.stats.played;
+  const bazinga = p.bazinga?.stats;
+  const totalStars = p.guess.stats.points + p.connections.stats.stars + p.toon.stats.stars + (bazinga?.stars??0);
+  const solved = p.guess.stats.solved + p.connections.stats.solved + p.toon.stats.solved + (bazinga?.solved??0);
+  const played = p.guess.stats.played + p.connections.stats.played + p.toon.stats.played + (bazinga?.played??0);
   const stamps: PassportStamp[] = [
     { id: 'hello', icon: '🎟️', name: 'First Ticket', description: 'Solve your first arcade puzzle.', earned: solved > 0 },
     { id: 'food', icon: '🍓', name: 'Food Sleuth', description: 'Solve five Guess Who? mysteries.', earned: p.guess.stats.solved >= 5 },
@@ -48,6 +51,8 @@ export function passportSummary(p: ArcadeProgress) {
     { id: 'master', icon: '🟪', name: 'Four of a Kind', description: 'Complete ten Connections boards.', earned: p.connections.stats.solved >= 10 },
     { id: 'toons', icon: '📺', name: 'Channel Surfer', description: 'Identify five cartoon broadcasts.', earned: p.toon.stats.solved >= 5 },
     { id: 'signal', icon: '📡', name: 'Perfect Reception', description: 'Recognise five shows at the first signal.', earned: p.toon.stats.perfectSignals >= 5 },
+    { id: 'logic', icon: '⚛️', name: 'Logic Rookie', description: 'Solve a Bazinga! Lab experiment.', earned: (bazinga?.solved??0) > 0 },
+    { id: 'theorem', icon: '🧠', name: 'Seating Theorem', description: 'Solve five Bazinga! Lab experiments.', earned: (bazinga?.solved??0) >= 5 },
     { id: 'collector', icon: '✨', name: 'Star Collector', description: 'Collect 1,000 stars across the arcade.', earned: totalStars >= 1000 },
     { id: 'streak', icon: '🔥', name: 'Daily Ritual', description: 'Reach a 3-day Guess Who? daily streak.', earned: p.guess.stats.bestStreak >= 3 },
     { id: 'superstar', icon: '🌟', name: 'Arcade Superstar', description: 'Solve 50 puzzles across the arcade.', earned: solved >= 50 },
@@ -61,6 +66,7 @@ export function passportSummary(p: ArcadeProgress) {
       { id: 'guess', icon: '🍓', name: 'Guess Who?', solved: p.guess.stats.solved, played: p.guess.stats.played, stars: p.guess.stats.points, best: p.guess.stats.bestStreak, bestLabel: 'Best daily streak' },
       { id: 'connections', icon: '🧩', name: 'Little Connections', solved: p.connections.stats.solved, played: p.connections.stats.played, stars: p.connections.stats.stars, best: p.connections.stats.bestScore, bestLabel: 'Best board' },
       { id: 'toon', icon: '📺', name: 'Toon Rewind', solved: p.toon.stats.solved, played: p.toon.stats.played, stars: p.toon.stats.stars, best: p.toon.stats.bestSignal, bestLabel: 'Best signal' },
+      { id: 'bazinga', icon: '⚛️', name: 'Bazinga! Lab', solved: bazinga?.solved??0, played: bazinga?.played??0, stars: bazinga?.stars??0, best: bazinga?.bestScore??0, bestLabel: 'Best theorem' },
     ],
   };
 }
