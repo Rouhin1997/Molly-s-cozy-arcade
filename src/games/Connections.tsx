@@ -4,9 +4,11 @@ import {
   pickPracticeConnection, shuffledConnectionWords, type ConnectionPuzzle,
 } from '../data/connections';
 import {
-  CONNECTION_MISTAKES, clearConnectionSelection, newConnectionRound, recordConnectionResult,
+  connectionMistakeLimit, clearConnectionSelection, newConnectionRound, recordConnectionResult,
   submitConnectionSelection, toggleConnectionTile, type ConnectionProgress, type ConnectionRound,
 } from '../lib/connections';
+import { bestAward, readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
+import DifficultyPicker from '../components/DifficultyPicker';
 
 type Mode = 'daily' | 'practice';
 
@@ -31,30 +33,42 @@ function GroupRow({ puzzle, index, revealed = false }: { puzzle: ConnectionPuzzl
 export default function Connections({ today, progress, setProgress, onHome }: Props) {
   const [mode, setMode] = useState<Mode>('daily');
   const [shuffleCount, setShuffleCount] = useState(0);
+  const [difficulty, setDifficulty] = useState<Difficulty>(()=>readPreferredDifficulty('connections'));
   const dailySaved = progress.daily[today];
   const dailyPuzzle = connectionPuzzles.find(p => p.id === dailySaved?.puzzleId) ?? dailyConnectionPuzzle(today);
   const practice = progress.practice;
   const practicePuzzle = connectionPuzzles.find(p => p.id === practice?.puzzleId);
   const puzzle = mode === 'daily' ? dailyPuzzle : practicePuzzle;
-  const round = mode === 'daily' ? (dailySaved?.round ?? newConnectionRound()) : practice?.round;
+  const round = mode === 'daily' ? (dailySaved?.round ?? newConnectionRound(difficulty)) : practice?.round;
   const boardSeed = mode === 'daily' ? `daily-${today}` : practice?.seed ?? 'practice';
   const tiles = useMemo(() => puzzle ? shuffledConnectionWords(puzzle, `${boardSeed}-${shuffleCount}`) : [],
     [puzzle, boardSeed, shuffleCount]);
-  const left = round ? CONNECTION_MISTAKES - round.mistakes : CONNECTION_MISTAKES;
+  const effectiveDifficulty = round?.difficulty ?? difficulty;
+  const limit = connectionMistakeLimit(effectiveDifficulty);
+  const left = round ? limit - round.mistakes : limit;
+  const difficultyLocked = !!round && (round.attempts.length>0 || round.solved.length>0 || round.selected.length>0 || round.status !== 'playing');
 
   function updateRound(transform: (r: ConnectionRound, p: ConnectionPuzzle) => ConnectionRound) {
     setProgress(prev => {
       if (mode === 'daily') {
         const stored = prev.daily[today];
         const currentPuzzle = connectionPuzzles.find(p => p.id === stored?.puzzleId) ?? dailyConnectionPuzzle(today);
-        const before = stored?.round ?? newConnectionRound();
+        const before = stored?.round ?? newConnectionRound(difficulty);
         const after = transform(before, currentPuzzle);
         if (after === before) return prev;
         const completed = before.status === 'playing' && after.status !== 'playing';
         return {
           ...prev,
           daily: { ...prev.daily, [today]: { puzzleId: currentPuzzle.id, round: after } },
-          stats: completed ? recordConnectionResult(prev.stats, after) : prev.stats,
+          ...(!completed ? {stats:prev.stats} : (() => {
+            const award = bestAward(prev.bestAwards, currentPuzzle.id, after.score);
+            const stats = recordConnectionResult(prev.stats, after);
+            const previousBest = prev.bestAwards?.[currentPuzzle.id] ?? 0;
+            return { bestAwards: award.awards, stats: { ...stats,
+              stars: prev.stats.stars + award.delta,
+              solved: prev.stats.solved + (after.status === 'won' && previousBest === 0 ? 1 : 0),
+            } };
+          })()),
         };
       }
       const existing = prev.practice;
@@ -66,26 +80,44 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
       return {
         ...prev,
         practice: { ...existing, round: after },
-        stats: completed ? recordConnectionResult(prev.stats, after) : prev.stats,
+        ...(!completed ? {stats:prev.stats} : (() => {
+          const award = bestAward(prev.bestAwards, currentPuzzle.id, after.score);
+          const stats = recordConnectionResult(prev.stats, after);
+          const previousBest = prev.bestAwards?.[currentPuzzle.id] ?? 0;
+          return { bestAwards: award.awards, stats: { ...stats,
+            stars: prev.stats.stars + award.delta,
+            solved: prev.stats.solved + (after.status === 'won' && previousBest === 0 ? 1 : 0),
+          } };
+        })()),
       };
     });
   }
 
-  function newPractice() {
+  function newPractice(level: Difficulty = difficulty) {
     setProgress(prev => {
       const recent = prev.practice?.recentIds ?? [];
-      const next = pickPracticeConnection(recent.slice(-5));
+      const next = pickPracticeConnection(recent.slice(-5), Math.random, level);
       return {
         ...prev,
         practice: {
           puzzleId: next.id, seed: `${Date.now()}-${Math.random()}`,
-          round: newConnectionRound(),
+          round: newConnectionRound(level),
           recentIds: [...recent, next.id].slice(-5),
         },
       };
     });
     setShuffleCount(0);
     setMode('practice');
+  }
+
+  function chooseDifficulty(level: Difficulty) {
+    if (difficultyLocked && round?.status==='playing') return;
+    setDifficulty(level);
+    savePreferredDifficulty('connections',level);
+    if (mode==='daily' && !difficultyLocked) {
+      setProgress(prev=>({...prev,daily:{...prev.daily,[today]:{puzzleId: dailyPuzzle.id,round:newConnectionRound(level)}}}));
+    }
+    if (mode==='practice' && round?.status!=='playing') newPractice(level);
   }
 
   const solvedIndices = round?.solved ?? [];
@@ -106,12 +138,14 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
       <button className={mode === 'daily' ? 'selected' : ''} aria-pressed={mode === 'daily'} onClick={() => { setMode('daily'); setShuffleCount(0); }}>☀ Daily board</button>
       <button className={mode === 'practice' ? 'selected' : ''} aria-pressed={mode === 'practice'} onClick={() => { setMode('practice'); setShuffleCount(0); }}>✿ Practice boards</button>
     </div>
-    <div className="mode-intro"><span>🧠</span><p><strong>Find four words that belong together.</strong> Pick four tiles, then submit. You get four mistakes before the board reveals its secrets. If you're one word away, we'll tell you!</p></div>
+    <DifficultyPicker value={effectiveDifficulty} onChange={chooseDifficulty} disabled={difficultyLocked && round?.status==='playing'}
+      lockedMessage="The puzzle has begun. Finish this board to choose a new difficulty." />
+    <div className="mode-intro"><span>🧠</span><p><strong>Find four words that belong together.</strong> Cozy has five mistakes and approachable categories, Clever gives four, and Expert allows only three mistakes with trickier groups and no “one away” hint. Higher difficulty earns more stars!</p></div>
 
     {mode === 'practice' && !practicePuzzle ? <section className="start-panel">
       <span>🧩</span><h2>Ready to make connections?</h2>
       <p>Sixteen themed puzzle boards, ranging from food to cartoons and sneaky wordplay. Every practice attempt picks a fresh board.</p>
-      <button className="btn btn-primary" onClick={newPractice}>Start a practice board ↗</button>
+      <button className="btn btn-primary" onClick={()=>newPractice()}>Start a practice board ↗</button>
     </section> : null}
 
     {puzzle && round && <section className="connections-board" aria-label="Little Connections puzzle board">
@@ -133,9 +167,9 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
 
       {round.status === 'playing' ? <>
         <div className="connections-controls">
-          <div className="connections-mistakes" aria-label={`${left} of 4 mistakes remaining`}>
+          <div className="connections-mistakes" aria-label={`${left} of ${limit} mistakes remaining`}>
             <span>Mistakes remaining</span>
-            <div aria-hidden="true">{Array.from({length: CONNECTION_MISTAKES}, (_, i) => <i key={i} className={i < left ? 'left' : ''}/>)}</div>
+            <div aria-hidden="true">{Array.from({length: limit}, (_, i) => <i key={i} className={i < left ? 'left' : ''}/>)}</div>
           </div>
           <span className="connections-selection-count">{round.selected.length} / 4 selected</span>
         </div>
@@ -156,14 +190,14 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
         </div>}
         <p className="connections-finale-note">✧ These connections are yours to remember.</p>
         <div className="connections-finale-actions">
-          <button className="btn btn-primary" onClick={newPractice}>Play another board ↗</button>
+          <button className="btn btn-primary" onClick={()=>newPractice()}>Play another board ↗</button>
           {mode === 'practice' && <button className="btn btn-outline" onClick={() => { setMode('daily'); setShuffleCount(0); }}>Today's puzzle</button>}
         </div>
       </div>}
     </section>}
     <section className="connections-help" aria-label="Connections scoring">
       <span>✿</span>
-      <p><strong>How scoring works:</strong> Solve all four groups to earn 180 stars, minus 30 for each wrong submission. Identical wrong guesses don't cost extra. Daily boards are saved until tomorrow; practice boards can be replayed with a fresh set.</p>
+      <p><strong>How scoring works:</strong> Solve all four groups to earn stars multiplied by difficulty (Cozy 1×, Clever 1.5×, Expert 2×), minus the mistake penalty. Identical wrong guesses don't cost extra. Daily boards are saved until tomorrow; practice boards can be replayed with a fresh set.</p>
     </section>
     <p className="privacy-note">✧ Your Connections results are saved in this browser, alongside your other arcade progress.</p>
   </main>;
