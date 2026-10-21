@@ -165,7 +165,10 @@ function hash(input: string): number {
 }
 
 export function dailyRiddle(dateKey: string): Riddle {
-  return riddles[hash(`molly-daily-${dateKey}`) % riddles.length];
+  // Preserve answers to daily games already played before the expansion.
+  // New question-bank versions must not silently change historic daily answers.
+  const pool = dateKey <= '2026-10-21' ? riddles.slice(0,24) : riddles;
+  return pool[hash(`molly-daily-${dateKey}`) % pool.length];
 }
 
 export function practiceRiddles(count = 5, difficulty?: Difficulty): Riddle[] {
