@@ -478,3 +478,38 @@
 .bazinga-room-guide-grid strong{font-size:10px;color:#6b5080}
 .bazinga-room-guide-grid span,.bazinga-room-guide p{font-size:10px;line-height:1.55;color:#87728e}
 @media(max-width:480px){.bazinga-room-guide-grid{grid-template-columns:1fr}}
+
+/* Phase 2F: airier furnished maps with no seat/fixture icon occlusion */
+.bazinga-room-map{min-width:650px;height:500px;background-size:40px 40px}
+.bazinga-room-prop{min-width:80px;min-height:62px;padding:6px 9px;border:2px solid #c9b6ac;border-radius:13px;background:#fffaf1e8;box-shadow:0 4px 0 #a37a8039;gap:2px}
+.bazinga-room-prop span{font-size:39px;line-height:1.05;filter:drop-shadow(0 2px 2px #795e7135)}
+.bazinga-room-prop small{background:transparent;color:#6e536b;font-weight:900;font-size:9px;padding:1px;letter-spacing:.02em}
+.room-prop-television{min-width:142px;min-height:83px;border:5px solid #55536f;background:linear-gradient(135deg,#f3c6db,#a5d7e6);border-radius:18px;box-shadow:inset 0 0 15px #58728a43,0 6px 0 #67627d}
+.room-prop-television span{font-size:47px}
+.room-prop-window{min-width:89px;min-height:77px;border:5px solid #e6e8fb;background:linear-gradient(135deg,#a1d9e6,#f6ebb8);box-shadow:0 4px 0 #9eb1cb}
+.room-prop-window span{font-size:43px}
+.room-prop-door,.room-prop-exit,.room-prop-entrance{min-width:82px;min-height:72px;background:linear-gradient(125deg,#d0a782,#f4dfbc);border:5px solid #956f68}
+.room-prop-kitchen,.room-prop-serving-counter,.room-prop-snacks{background:#ffead0;border-color:#d7a975;min-width:92px}
+.room-prop-new-comics,.room-prop-hero-posters,.room-prop-mystery-board{background:linear-gradient(140deg,#ffd2d9,#e5d8f9);border-color:#b99abe;min-width:106px}
+.room-prop-terminal,.room-prop-telescope,.room-prop-safety-shower{background:#deecf0;border-color:#aac7cf;min-width:97px}
+.room-prop-popcorn{background:#ffe9b2;border-color:#d8ba64}
+.room-prop-movie-screen{min-width:174px;min-height:79px;background:linear-gradient(140deg,#c2d0f6,#e6e5fc);border:5px solid #7b84b0;box-shadow:0 0 22px #e1deff83}
+.room-theme-cinema .bazinga-room-prop:not(.room-prop-movie-screen){background:#f2ecff;color:#3d3855}
+.room-theme-cinema .bazinga-room-prop small{color:#474064}
+.bazinga-map-seat{min-width:88px;max-width:95px;min-height:91px;border-width:3px;box-shadow:0 6px 0 #896c7547,0 1px 9px #7f4d6e29}
+.bazinga-room-guide strong{color:#634d73}
+.bazinga-room-guide summary{font-size:12px}
+.bazinga-world-clues li{padding:12px 12px;gap:10px}
+.bazinga-world-clues p{font-size:12px;line-height:1.65}
+.bazinga-world-rules{background:linear-gradient(155deg,#f6edf7,#efe4f0);border:2px solid #e4d4eb}
+.bazinga-lose-line{font-family:'Fraunces',Georgia,serif!important;font-weight:750!important;font-size:21px!important;color:#6d437a!important}
+.bazinga-solution-reveal{background:#fff9;border:1px solid #e7d5e6;border-radius:11px;padding:10px 12px;margin-top:9px;color:#776087}
+.bazinga-solution-reveal summary{font-size:11px;font-weight:800;cursor:pointer}
+.bazinga-solution-reveal p{font-size:11px;line-height:1.65;color:#85708b}
+@media(max-width:570px){.bazinga-room-map{height:500px;min-width:650px}.bazinga-room-prop span{font-size:35px}.bazinga-map-seat{min-height:88px}.bazinga-world-clues li{padding:10px 9px}}
+
+.bazinga-neighbour-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+.bazinga-neighbour-lines line{stroke:#704884;stroke-width:.75;stroke-linecap:round;stroke-dasharray:1.6 1.2;opacity:.62;vector-effect:non-scaling-stroke}
+.bazinga-neighbour-toggle{display:flex;align-items:center;gap:9px;margin-top:11px;padding:9px 12px;border-radius:10px;background:#efe7f4;color:#6a5280;font-weight:800;font-size:11px;line-height:1.5;cursor:pointer}
+.bazinga-neighbour-toggle input{accent-color:#77569b;width:16px;height:16px;flex:none}
+.bazinga-neighbour-toggle input:focus-visible{outline:3px solid #8063b8;outline-offset:2px}

@@ -4,7 +4,7 @@ import { BazingaSticker } from '../components/BazingaSticker';
 import { readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
 import { type BazingaProgress } from '../lib/bazinga';
 import {
-  rooms,roomCases,roomRules,roomRuleText,holdsRoomRule,dailyRoomCase,
+  rooms,roomCases,roomRules,roomRuleText,holdsRoomRule,roomNeighbourLinks,dailyRoomCase,
   type RoomCase,
 } from '../data/bazingaWorld';
 import {
@@ -24,7 +24,7 @@ const roomIcon:Record<string,string>={
   cafeteria:'🥪',lab:'🔬',comic:'📚',cinema:'🎬',
 };
 const roomTraits:Record<string,string>={
-  sofa:'sofa cushion', 'tv-view':'clear TV view',spot:"Sheldon's famous spot",
+  sofa:'sofa cushion', 'tv-view':'clear TV view',
   warm:'warm corner',breeze:'gentle cross-breeze',draft:'noticeable draft',
   uncomfortable:'less comfortable chair',kitchen:'near kitchen',snacks:'near snacks',
   window:'window-side',door:'door/exit-side',chair:'separate chair',
@@ -43,6 +43,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
   const [mode,setMode]=useState<'daily'|'practice'>('daily');
   const [difficulty,setDifficulty]=useState<Difficulty>(()=>readPreferredDifficulty('bazinga'));
   const [shelfOpen,setShelfOpen]=useState(false);
+  const [showNeighbours,setShowNeighbours]=useState(false);
   const daily=getWorldDaily(progress,today,difficulty);
   const round=mode==='daily'?daily:progress.worldPractice??null;
   const caseData=round?roomCases.find(c=>c.id===round.caseId):undefined;
@@ -164,7 +165,11 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
           <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong><small>Original schematic · not a studio blueprint</small></div>
           <div className="bazinga-map-scroll"><div className={`bazinga-room-map room-theme-${room.theme}`} role="group" aria-label="Room seats and furniture">
             <div className="room-floor-object" aria-hidden="true"/>
-            {room.props.map((item,i)=><div key={i} className="bazinga-room-prop" style={{left:`${item.x}%`,top:`${item.y}%`}} aria-label={item.label}>
+            {showNeighbours&&<svg className="bazinga-neighbour-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              {roomNeighbourLinks(caseData).map(({from,to})=><line key={`${from.id}-${to.id}`}
+                x1={from.x} y1={from.y} x2={to.x} y2={to.y}/>)}
+            </svg>}
+            {room.props.map((item,i)=><div key={i} className={`bazinga-room-prop room-prop-${item.label.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`} style={{left:`${item.x}%`,top:`${item.y}%`}} aria-label={item.label}>
               <span aria-hidden="true">{item.icon}</span><small>{item.label}</small>
             </div>)}
             {caseData.seatIds.map((id,i)=>{
@@ -172,7 +177,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               const name=round.placements[id],isFixed=round.fixed.includes(id);
               return <button type="button" key={id} className={`bazinga-map-seat ${name?'is-occupied':''} ${isFixed?'is-fixed':''} ${round.selected?'has-selection':''}`}
                 style={{left:`${s.x}%`,top:`${s.y}%`}} disabled={round.status!=='playing'||isFixed}
-                title={`${s.label} · ${s.tags.join(', ')}`}
+                title={s.label}
                 aria-label={`${s.label}: ${name??'empty'}${isFixed?', fixed by a hint':''}`}
                 onClick={()=>changeRound((r,c)=>placeWorldGuest(r,c,id))}>
                 <span className="bazinga-chair-number">{i+1}</span>
@@ -184,16 +189,20 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
           </div></div>
           <details className="bazinga-room-guide">
             <summary>🗺️ Inspect the seats: drafts, comfort and sightlines</summary>
+            <label className="bazinga-neighbour-toggle">
+              <input type="checkbox" checked={showNeighbours} onChange={event=>setShowNeighbours(event.target.checked)}/>
+              Draw lines between chairs the puzzle treats as neighbours
+            </label>
             <div className="bazinga-room-guide-grid">
               {caseData.seatIds.map((id,i)=>{
                 const chair=room.seats.find(s=>s.id===id)!;
                 return <div key={id}>
                   <strong>#{i+1} {chair.label}</strong>
-                  <span>{chair.tags.map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
+                  <span>{chair.tags.filter(tag=>tag!=='spot').map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
                 </div>;
               })}
             </div>
-            <p>Distances and neighbours are shown by their positions on the map. Seat properties are fixed; changing characters never changes the room.</p>
+            <p>“Next to” includes close diagonal positions. The optional connecting lines display the exact neighbour rule; they do not show who should sit there. Room properties stay fixed when characters move.</p>
           </details>
           <p className="bazinga-room-instruction">{round.selected?<><strong>{round.selected}</strong> is selected. Tap a seat to place or swap them.</>:'Select a sticker below, then tap a chair. You may also tap an occupied chair to clear it.'}</p>
           <div className="bazinga-world-cast" role="group" aria-label="Choose a character to place">
@@ -217,7 +226,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
           <div className="bazinga-rule-paper-intro">To preserve domestic peace, all {rules.length} clauses must hold at the same time.</div>
           <ol className="bazinga-world-clues">
             {rules.map((rule,i)=>{
-              const showFeedback=round.attempts>0&&round.status==='playing'&&allPlaced&&level!=='hard';
+              const showFeedback=round.attempts>0&&round.status==='playing'&&allPlaced&&level==='easy';
               return <li key={i}>
                 <span className="bazinga-clue-index">{i+1}</span>
                 <p>{roomRuleText(caseData,rule)}</p>
@@ -242,9 +251,17 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
         </div>
         <div className="bazinga-finale-copy">
           <span className="overline">{round.status==='won'?'THE ROOMMATE AGREEMENT IS SATISFIED':'A TECHNICAL OBJECTION HAS BEEN RAISED'}</span>
-          <h3>{round.status==='won'?'A rare Sheldon compliment!':'Bazinga!'}</h3>
-          <blockquote>“{round.status==='won'?caseData.winning:caseData.losing}”</blockquote>
-          <p>{round.status==='won'?`All ${rules.length} rules correct · ${round.score} stars earned.`:`The correct arrangement: ${caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${room.seats.find(s=>s.id===id)?.label})`).join(' · ')}`}</p>
+          <h3>{round.status==='won'?'An unusually generous assessment':'Bazinga!'}</h3>
+          {round.status==='won'?<>
+            <blockquote>“{caseData.winning}”</blockquote>
+            <p>All {rules.length} constraints satisfied · {round.score} stars earned.</p>
+          </>:<>
+            <p className="bazinga-lose-line">You lose!</p>
+            <details className="bazinga-solution-reveal">
+              <summary>See the correct seating arrangement</summary>
+              <p>{caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${room.seats.find(seat=>seat.id===id)?.label})`).join(' · ')}</p>
+            </details>
+          </>}
         </div>
         <button className="btn btn-primary" onClick={()=>{setMode('practice');randomCase(level)}}>Next episode ↗</button>
       </section>}

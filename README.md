@@ -2,7 +2,7 @@
 
 A tiny, cheerful puzzle arcade built as a birthday gift, and designed to be fun all year long.
 
-**Status: Milestone 2E — Bazinga! Room Adventures.** Four games remain playable, and Bazinga! Lab now includes eight original room maps, 18 BBT-inspired episodic spatial deduction puzzles and 18 preserved Classic Lab cases. The Passport still tracks all four games. The 99 Files, Pink Rush and the November 13 Birthday Quest/coupon wallet remain on the roadmap.
+**Status: Milestone 2F — Bazinga! deduction and lore polish.** Four games remain playable, and Bazinga! Lab now includes eight original room maps, 18 BBT-inspired episodic spatial deduction puzzles and 18 preserved Classic Lab cases. The Passport still tracks all four games. The 99 Files, Pink Rush and the November 13 Birthday Quest/coupon wallet remain on the roadmap.
 
 ## Play locally
 
@@ -109,6 +109,10 @@ Made with love, and a little bit of mischief. ♡
 ## Difficulty switching contract
 
 For **all four games**, choose Cozy, Clever or Expert **before the first meaningful action**. Once a daily puzzle has begun, its difficulty cannot be changed or its earned result reset. A practice puzzle/session similarly locks after the first action; after the session ends, selecting another difficulty starts a new challenge. Switching before the first action immediately starts a fresh, correctly graded practice puzzle/session. A game's preferred difficulty is remembered for the next attempt. Locked rounds never silently receive an increased multiplier.
+
+## Phase 2F difficulty and layout polish
+
+Room puzzles now favour **chains of deductions** over clue text that names a unique chair, especially in Expert. All 18 episodes have revised show-specific original dialogue and qualified Sheldon compliments. The famous Apartment 4A seat is no longer explicitly labeled with its occupant. Furnishings are larger and separated from interactive chairs, with regression-tested fixture clearance. The room guide includes an **optional neighbour-line overlay**, ensuring diagonal adjacency rules are transparent. Wrong guesses give a tally without individual clause checks on Clever and Expert. Losing says **“Bazinga! You lose!”** and offers the solution in an expandable panel. Classic Lab and existing scores stay intact.
 
 ## Room Adventures — maps and art
 

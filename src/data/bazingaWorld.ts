@@ -1,4 +1,5 @@
 import type { Difficulty } from '../lib/passport';
+import { polishRoomCases } from './bazingaPolish';
 
 /** Original top-down game maps inspired by recurring show settings.
  * These are playable schematics, NOT replicas, production blueprints or set photographs.
@@ -29,14 +30,14 @@ const prop=(icon:string,label:string,x:number,y:number):RoomProp=>({icon,label,x
 export const rooms: Record<RoomId,Room> = {
   'four-a': {id:'four-a',name:'Apartment 4A',subtitle:'The iconic couch, bookshelves, desk and TV',theme:'apartment',
     seats:[
-      seat('spot',"Sheldon's spot",27,60,['sofa','tv-view','spot','warm','breeze']),
+      seat('spot',"Sofa · left cushion",27,60,['sofa','tv-view','spot','warm','breeze']),
       seat('middle','Middle cushion',43,60,['sofa','tv-view','warm']),
       seat('right','Sofa end',59,60,['sofa','tv-view']),
       seat('armchair','Armchair',78,44,['chair','tv-view','door','draft']),
       seat('desk','Desk chair',77,76,['chair','desk','partial-view','uncomfortable']),
       seat('stool','Kitchen stool',14,77,['chair','kitchen','snacks','uncomfortable']),
     ],
-    props:[prop('📺','Television',46,13),prop('🪟','Window',12,27),prop('🚪','Door',89,23),prop('🍜','Kitchen',13,90),prop('📚','Shelves',47,90)],
+    props:[prop('📺','Television',46,13),prop('🪟','Window',12,27),prop('🚪','Door',89,23),prop('🍜','Kitchen',9,94),prop('📚','Shelves',47,90)],
   },
   'four-b': {id:'four-b',name:"Penny's Apartment 4B",subtitle:'A smaller, homier living room',theme:'penny',
     seats:[
@@ -47,7 +48,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('counter','Counter stool',13,79,['chair','kitchen','snacks','uncomfortable']),
       seat('entry','Entry stool',84,28,['chair','door','uncomfortable','far-corner']),
     ],
-    props:[prop('📺','Television',50,13),prop('🪟','Window',11,28),prop('🚪','Door',89,19),prop('🥧','Kitchen',12,94)],
+    props:[prop('📺','Television',50,13),prop('🪟','Window',11,7),prop('🚪','Door',91,7),prop('🥧','Kitchen',38,89)],
   },
   wolowitz:{id:'wolowitz',name:"Howard & Bernadette's House",subtitle:'Family dining room with kitchen access',theme:'dinner',
     seats:[
@@ -69,7 +70,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('window','Window corner',55,25,['chair','window','draft']),
       seat('entry','Entry stool',84,29,['chair','door','uncomfortable','far-corner']),
     ],
-    props:[prop('🕵️','Mystery board',51,10),prop('🥨','Snacks',12,20),prop('🪟','Window',54,11),prop('🚪','Door',92,13)],
+    props:[prop('🕵️','Mystery board',36,7),prop('🥨','Snacks',12,12),prop('🪟','Window',64,7),prop('🚪','Door',93,7)],
   },
   cafeteria:{id:'cafeteria',name:'Caltech Cafeteria',subtitle:'The usual lunch table, but with more equations',theme:'caltech',
     seats:[
@@ -91,7 +92,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('vent','Air-vent stool',50,75,['chair','draft','uncomfortable']),
       seat('exit','Exit workstation',83,74,['desk','door','lab-safe']),
     ],
-    props:[prop('🔭','Telescope',49,8),prop('🧯','Safety shower',11,10),prop('💻','Terminal',17,88),prop('🚪','Exit',92,85)],
+    props:[prop('🔭','Telescope',49,8),prop('🧯','Safety shower',11,10),prop('💻','Terminal',10,93),prop('🚪','Exit',95,92)],
   },
   comic:{id:'comic',name:"Stuart's Comic Book Store",subtitle:'Fresh issues, awkward queues and an ill-fated stool',theme:'comic',
     seats:[
@@ -102,7 +103,7 @@ export const rooms: Record<RoomId,Room> = {
       seat('beanbag','Cosplay beanbag',40,69,['chair','comic','warm']),
       seat('rickety','Rickety stool',14,75,['chair','uncomfortable','far-corner']),
     ],
-    props:[prop('📚','New comics',49,11),prop('🦸','Hero posters',89,42),prop('🚪','Entrance',90,86),prop('🎲','Game table',54,91)],
+    props:[prop('📚','New comics',49,5),prop('🦸','Hero posters',89,42),prop('🚪','Entrance',90,86),prop('🎲','Game table',54,91)],
   },
   cinema:{id:'cinema',name:'Pasadena Movie Theatre',subtitle:'A Star Wars screening with aisle-seat politics',theme:'cinema',
     seats:[
@@ -124,7 +125,7 @@ const has=(a:string,tag:string,text?:string):RoomRule=>({type:'has',a,tag,text})
 const adjacent=(a:string,b:string,text?:string):RoomRule=>({type:'adjacent',a,b,text});
 const far=(a:string,b:string,text?:string):RoomRule=>({type:'far-from-guest',a,b,text});
 
-export const roomCases:RoomCase[] = [
+const draftRoomCases:RoomCase[] = [
   // Cozy — four visible positions, rich hints, and instantly recognisable scenarios
   c('star-wars-4a','four-a',"Star Wars at Sheldon's",'The Prime Viewing Spot','easy',
     ['spot','middle','right','armchair'],['Sheldon','Leonard','Penny','Raj'],
@@ -275,9 +276,20 @@ export const roomCases:RoomCase[] = [
     'The particle of common sense has escaped this cafeteria. Bazinga!'),
 ];
 
+export const roomCases:RoomCase[] = polishRoomCases(draftRoomCases);
+
 /** Coordinate-based spatial semantics — no linear array assumptions. */
 const distance=(a:{x:number;y:number},b:{x:number;y:number})=>Math.hypot(a.x-b.x,a.y-b.y);
 function seats(c:RoomCase):RoomSeat[]{const map=rooms[c.room];return c.seatIds.map(id=>{const s=map.seats.find(t=>t.id===id);if(!s)throw Error(`No seat ${id} in ${c.room}`);return s})}
+/** Optional visual neighbour overlay uses exactly the same adjacency predicate as
+ * the solver. No ambiguity about which diagonal seat pairs count as adjacent. */
+export function roomNeighbourLinks(c:RoomCase){
+  const all=seats(c),pairs:{from:RoomSeat;to:RoomSeat}[]=[];
+  for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){
+    if(distance(all[i],all[j])<=34)pairs.push({from:all[i],to:all[j]});
+  }
+  return pairs;
+}
 function propPosition(c:RoomCase,label:string):RoomProp|undefined {return rooms[c.room].props.find(p=>p.label===label)}
 export function holdsRoomRule(c:RoomCase,order:readonly string[],r:RoomRule):boolean{
   const spots=seats(c),a=order.indexOf(r.a),b=r.b?order.indexOf(r.b):-1;
@@ -342,14 +354,26 @@ const rulesCache=new Map<string,RoomRule[]>();
 export function roomRules(c:RoomCase):RoomRule[]{
   const previous=rulesCache.get(c.id);if(previous)return previous;
   const chairs=seats(c), pool:RoomRule[]=[];
+  const tagFrequency=new Map<string,number>();
+  for(const tag of new Set(chairs.flatMap(s=>s.tags))){
+    tagFrequency.set(tag,chairs.filter(seat=>seat.tags.includes(tag)).length);
+  }
   // Narrative anchors are hand-authored and tested; the remaining clues are
   // real spatial facts derived from each venue's map, NOT seat indices.
   for(const name of c.solution){
     const seat=chairs[c.solution.indexOf(name)];
-    for(const tag of seat.tags)pool.push({type:'has',a:name,tag});
-    const allTags=new Set(chairs.flatMap(s=>s.tags));
-    for(const tag of allTags)if(!seat.tags.includes(tag))pool.push({type:'avoids',a:name,tag});
-    for(const p of rooms[c.room].props){
+    // Keep medium/expert property clues genuinely broad; do not translate a
+    // unique image label directly into a person's exact chair.
+    for(const tag of seat.tags){
+      if((tagFrequency.get(tag)??0)>=2)pool.push({type:'has',a:name,tag});
+    }
+    for(const tag of tagFrequency.keys()){
+      if(!seat.tags.includes(tag)&&(tagFrequency.get(tag)??0)>=2)
+        pool.push({type:'avoids',a:name,tag});
+    }
+    // Object-distance facts are harder to reason about than a name on a chair,
+    // but reserve single-location anchors mainly for Cozy puzzles.
+    if(c.difficulty==='easy')for(const p of rooms[c.room].props){
       for(const type of ['closest','farthest'] as const){
         const rule:RoomRule={type,a:name,prop:p.label};
         if(holdsRoomRule(c,c.solution,rule))pool.push(rule);
@@ -365,28 +389,71 @@ export function roomRules(c:RoomCase):RoomRule[]{
   const chosen=[...c.rules];
   let viable=candidates(c).filter(order=>chosen.every(r=>holdsRoomRule(c,order,r)));
   const order=shuffle(pool,c.id+'-deduction');
+  const relation=(r:RoomRule)=>['adjacent','not-adjacent','left','far-from-guest'].includes(r.type);
   while(viable.length>1){
-    let best:RoomRule|undefined,bestCount=viable.length;
-    for(const rule of order){
-      if(chosen.some(r=>uniqueKey(r)===uniqueKey(rule)))continue;
-      const count=viable.filter(candidate=>holdsRoomRule(c,candidate,rule)).length;
-      if(count>0&&count<bestCount){best=rule;bestCount=count}
-    }
-    if(!best)throw new Error(`Room case ${c.id} cannot be uniquely solved`);
-    chosen.push(best);
-    viable=viable.filter(candidate=>holdsRoomRule(c,candidate,best));
+    const usable=order.filter(r=>!chosen.some(cue=>uniqueKey(cue)===uniqueKey(r)))
+      .map(r=>({rule:r,count:viable.filter(candidate=>holdsRoomRule(c,candidate,r)).length}))
+      .filter(({count})=>count>0&&count<viable.length);
+    if(!usable.length)throw new Error(`Room case ${c.id} cannot be uniquely solved`);
+    // Expert clues are chosen for chained reasoning, not for instant solution.
+    // Target moderate information per clue instead of always taking the most
+    // brutally eliminating constraint. Relations take priority over seat tags.
+    const target=c.difficulty==='hard'?.45:c.difficulty==='medium'?.35:.20;
+    usable.sort((x,y)=>{
+      const weight=(v:typeof x)=>{
+        const ratio=v.count/viable.length;
+        const isRel=relation(v.rule);
+        const tooEasy=c.difficulty==='hard'&&ratio<.19?.38:0;
+        return Math.abs(ratio-target)+(isRel?0:c.difficulty==='hard'?.28:.11)+tooEasy;
+      };
+      return weight(x)-weight(y);
+    });
+    const next=usable[0];
+    chosen.push(next.rule);
+    viable=viable.filter(candidate=>holdsRoomRule(c,candidate,next.rule));
   }
-  // A minimum of different spatial types keeps even simpler sessions interesting.
-  const min=c.difficulty==='easy'?4:c.difficulty==='medium'?6:8;
-  for(const rule of order){
+  // Extra authentic room constraints make clue chains richer, without
+  // spoon-feeding exact positions after the deduction is already solved.
+  const min=c.difficulty==='easy'?4:c.difficulty==='medium'?7:9;
+  const supplementary=order.filter(r=>relation(r)&&!chosen.some(x=>uniqueKey(x)===uniqueKey(r)));
+  for(const rule of supplementary){
     if(chosen.length>=min)break;
-    if(chosen.some(r=>uniqueKey(r)===uniqueKey(rule)))continue;
+    // Avoid mirror-image duplicates: A beside B == B beside A.
+    if(['adjacent','not-adjacent'].includes(rule.type)&&
+       chosen.some(x=>x.type===rule.type&&x.a===rule.b&&x.b===rule.a))continue;
     chosen.push(rule);
   }
   const result=[...c.rules,...shuffle(chosen.slice(c.rules.length),c.id+'-present')];
   rulesCache.set(c.id,result);
   return result;
 }
+/** Diagnostic metrics are checked in tests so Expert does not regress into
+ * a collection of one-clue-one-chair instructions. */
+export function roomClueDiagnostics(c:RoomCase){
+  const rules=roomRules(c);
+  const all=candidates(c);
+  const firstThree=all.filter(order=>rules.slice(0,3).every(rule=>holdsRoomRule(c,order,rule))).length;
+  const positions=seats(c);
+  const directSeatClues=rules.filter(rule=>rule.type==='has'&&
+    positions.filter(pos=>pos.tags.includes(rule.tag??'')).length===1).length;
+  const relationshipClues=rules.filter(rule=>['adjacent','not-adjacent','left','far-from-guest'].includes(rule.type)).length;
+  return {firstThree,ruleCount:rules.length,directSeatClues,relationshipClues,initialOptions:all.length};
+}
+
+/** Prevent a decorative fixture from obscuring a real clickable seat.
+ * The normalized bounding boxes match the room's 650×500 min-size layout. */
+export function roomPropOverlaps(c:RoomCase):string[]{
+  const problems:string[]=[];
+  const map=rooms[c.room];
+  for(const fixture of map.props) for(const chair of seats(c)){
+    const wide=fixture.label==='Television'||fixture.label==='Movie screen'?150:110;
+    const dx=Math.abs(fixture.x-chair.x)*6.5,dy=Math.abs(fixture.y-chair.y)*5;
+    if(dx<(wide+90)/2+4 && dy<=(67+90)/2+2)
+      problems.push(`${fixture.label} overlaps ${chair.id}`);
+  }
+  return problems;
+}
+
 export function roomSolutions(c:RoomCase):string[][]{
   const rules=roomRules(c);
   return candidates(c).filter(order=>rules.every(r=>holdsRoomRule(c,order,r)));
