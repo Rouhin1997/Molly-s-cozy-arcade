@@ -15,7 +15,7 @@
 | Game | Core interaction | Status |
 |---|---|---|
 | Guess Who? | Free-text answer to gradually revealed clues about fruits, vegetables and food | **Milestone 1 playable** |
-| Toon Rewind | Channel surfing and visual recognition; only shows confirmed to have aired on **Cartoon Network India** c. 2000–2010 | Planned |
+| Toon Rewind | CRT-style channel surfing, visual prop recognition and tunable signals from Cartoon Network India c. 2000–2010 | **Milestone 2B playable** |
 | The 99 Files | Small detective cases; inspect evidence, interview witnesses and deduce the culprit | Planned |
 | Bazinga! Lab | Interactive constraint-solving and logic games inspired by The Big Bang Theory | Planned |
 | Pink Rush | Timed BLACKPINK setlist, era and performance-related puzzles; combos and sequencing | Planned |
@@ -46,7 +46,7 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 ## Development milestones
 
 1. **Foundation:** React / TypeScript / Vite app, GitHub Pages workflow, home screen, Guess Who?, local progress, documentation.
-2. **Game variety:** Little Connections is the first Phase 2 game; dedicated mechanics and curated content for Toon Rewind, The 99 Files, Bazinga! Lab, and Pink Rush follow. Fact-check specifically **Indian CN broadcast history**.
+2. **Game variety:** Little Connections (2A) and Toon Rewind (2B) are playable; The 99 Files, Bazinga! Lab, and Pink Rush follow. Fact-check specifically **Indian CN broadcast history**.
 3. **Birthday Quest and coupons:** annual event, surprise reveal, wallet and redemption rules. Decide on a secure backend only if required.
 4. **Polish and QA:** test on phones, keyboard use, screen readers, scoring, storage failures, new-day rollovers and GitHub Pages URL.
 
@@ -60,6 +60,18 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - A daily board rotates deterministically without adjacent-day repeats and is persisted by date. Practice selects a new board, avoiding the five most recently started.
 - Existing Guess Who? browser data uses a separate storage key and remains intact. The arcade lobby displays combined solved counts and stars.
 - Content, engine, UI, and automated tests live in independent modules; more boards can be added without rewriting rules.
+
+## Toon Rewind (Milestone 2B)
+
+- Retro cartoon-TV layout with an interactive tuning remote and symbolic visual clues, without licensed television frames.
+- 21 CN India classics and Toonami-era shows, chosen for Indian broadcast relevance (2000–2010) rather than American debuts.
+- Six transmissions per session, each with four possible shows and two incorrect guesses available.
+- One clue to start; tune reception twice to reveal the remaining two picture motifs. Score up to 120 stars for a first-signal identification, minus 25 for each extra motif and 20 per earlier incorrect guess.
+- One fixed daily broadcast for each local date and free six-show practice sessions across all shows, early 2000s, or 2005–2010.
+- Progress saved under an independent browser-local key; stars and identified shows contribute to the arcade lobby's combined totals.
+- Asset strategy: original emoji motifs and CSS, not reproduced CN artwork, copyrighted scenes, character portraits, theme music or logos.
+- Programming-history references: https://en.wikipedia.org/wiki/Cartoon_Network_(India) and https://en.wikipedia.org/wiki/List_of_programmes_broadcast_by_Cartoon_Network_(India).
+- The show catalogue is an initial curated set and can be improved after the user's India-specific nostalgia feedback.
 
 ## Arcade Passport (planned after the core games)
 
