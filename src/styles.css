@@ -71,3 +71,138 @@
  .connections-actions .btn-primary{min-width:105px;flex:1.2}
  .connections-help{padding:14px 12px}
 }
+
+
+/* -- Toon Rewind: a whimsical CRT-era channel-surfing minigame -- */
+.toon-page{max-width:1000px;margin:32px auto 78px}
+.toon-station{margin-top:22px;padding:30px 32px 34px;background:#fff;border:1px solid #eee5e6;border-radius:28px;box-shadow:0 16px 45px #65426a0e}
+.toon-station-head{display:flex;gap:14px;align-items:center;justify-content:space-between}
+.toon-station-head h2,.toon-intro h2,.toon-summary h2{font-family:'Fraunces',Georgia,serif;color:#493452;letter-spacing:-.6px;font-size:33px;margin:8px 0 0}
+.toon-progress-label{font-size:12px;color:#795e89;letter-spacing:.08em;font-weight:900;white-space:nowrap}
+.toon-progress-label span{color:#a89ab0}
+.toon-channel-progress{display:flex;gap:7px;margin:19px 0 25px}
+.toon-channel-progress>span{flex:1;height:7px;background:#f3e9f3;border-radius:6px}
+.toon-channel-progress>span.finished{background:#a6d4bf}
+.toon-channel-progress>span.current{background:#9672b1;box-shadow:0 1px 9px #9571b164}
+.toon-game-layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(220px,.9fr);gap:20px;align-items:stretch}
+.toon-television{padding:13px 13px 0;border-radius:28px;background:linear-gradient(145deg,#dbc4b7,#f4e6d3 47%,#d9c1b9);box-shadow:inset 0 3px 6px #fff8,inset 0 -5px 7px #956e7d3b,0 13px 25px #72546c2b;min-width:0;display:flex;flex-direction:column}
+.toon-bezel{border:9px solid #534357;border-radius:30px;background:#45344f;padding:3px;box-shadow:inset 0 0 0 3px #70576a,0 3px 8px #5d3c52a3}
+.toon-glass{border-radius:17px;min-height:270px;position:relative;overflow:hidden;display:flex;flex-direction:column;background:radial-gradient(circle at 22% 20%,#ffffffaa,transparent 54%),linear-gradient(135deg,var(--toon-colour-a),var(--toon-colour-b));border:2px solid #ffffff66}
+.toon-glass::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 36%,#382f4755 100%);z-index:1}
+.toon-scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#35274312 0,#35274312 2px,transparent 2px,transparent 6px);opacity:.8;z-index:2}
+.toon-screen-header,.toon-screen-footer{display:flex;justify-content:space-between;align-items:center;gap:7px;position:relative;z-index:3;padding:12px 15px;font-size:10px;font-weight:900;letter-spacing:.1em;color:#463c59}
+.toon-screen-header i{display:inline-block;width:7px;height:7px;background:#ec6579;border-radius:50%;margin-right:5px;box-shadow:0 0 5px #e26778}
+.toon-screen-footer{margin-top:auto;padding-top:3px}
+.toon-screen-picture{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;position:relative;z-index:3;align-items:stretch;flex:1;padding:17px 15px 11px}
+.toon-clue{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-height:150px;border:2px dashed #5c48633d;border-radius:14px;background:#ffffff76;text-align:center;padding:13px 7px;transition:background .2s,transform .2s}
+.toon-clue-ready{background:#fffaf0d4;border-style:solid;border-color:#ffffffa3;box-shadow:0 5px 14px #66466c14}
+.toon-clue-static{background:#fff5b137;border-color:#745f7650}
+.toon-clue-symbol{font-size:clamp(26px,3vw,45px);line-height:1;filter:drop-shadow(0 4px 4px #59455a25)}
+.toon-clue-static .toon-clue-symbol{font-family:monospace;opacity:.48;color:#665b75}
+.toon-clue-text{font-weight:800;font-size:10px;color:#493f56;line-height:1.45;min-height:29px;display:flex;align-items:center}
+.toon-clue-static .toon-clue-text{opacity:.55;letter-spacing:.08em;font-size:9px}
+.toon-tv-base{display:flex;align-items:center;gap:15px;justify-content:space-between;padding:14px 19px 16px}
+.toon-tv-speaker{display:flex;gap:4px;align-items:center}
+.toon-tv-speaker i{width:3px;height:17px;background:#9b8491;border-radius:4px}
+.toon-tv-brand{font-size:10px;font-weight:950;letter-spacing:.14em;color:#806675;text-align:center}
+.toon-tv-indicators{display:flex;gap:7px}
+.toon-tv-indicators i{width:10px;height:10px;background:#937588;border-radius:100%;box-shadow:inset 0 1px 3px #684f59}
+.toon-tv-indicators i:first-child{background:#8cbf99}
+.toon-remote-panel{border:1px solid #e5d8e8;background:linear-gradient(160deg,#faf5fb,#f1e9f7);border-radius:24px;padding:21px 19px;display:flex;flex-direction:column;gap:18px;min-width:0}
+.toon-remote-top{display:flex;gap:9px;align-items:center}
+.toon-remote-top>span{font-size:25px}
+.toon-remote-top strong{font-size:11px;color:#5b4668;letter-spacing:.09em}
+.toon-remote-top small{margin-left:auto;background:white;padding:7px;border-radius:6px;color:#795c91;font-weight:800;font-size:10px}
+.toon-tune-meter{display:flex;flex-direction:column;gap:8px}
+.toon-tune-meter>span,.toon-chances>span{font-size:11px;font-weight:800;color:#8b7690}
+.toon-tune-meter>div{display:flex;gap:5px}
+.toon-tune-meter i{background:#e1d6e8;border-radius:6px;flex:1;height:11px}
+.toon-tune-meter i.active{background:#9b7dbe;box-shadow:0 2px 7px #a380b771}
+.toon-tune-button{background:linear-gradient(135deg,#6f4c83,#9265ab);border:0;color:white;border-radius:16px;min-height:97px;box-shadow:0 5px 0 #50365f,0 9px 20px #7e52933d;font-size:17px;letter-spacing:.05em;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:13px;transition:transform .12s,box-shadow .12s}
+.toon-tune-button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 0 #50365f,0 12px 20px #7e52933d}
+.toon-tune-button:disabled{opacity:.5;cursor:default;box-shadow:none}
+.toon-tune-button>span{font-size:19px}
+.toon-tune-button small{font-size:10px;color:#f7eafe;font-weight:650;letter-spacing:0}
+.toon-remote-instruction{font-size:12px;line-height:1.6;color:#78657c;margin:0}
+.toon-chances{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #ded3e4;padding-top:15px}
+.toon-chances strong{display:grid;place-items:center;background:#fff;border-radius:9px;height:34px;width:34px;color:#6c517d;font-size:18px}
+.toon-remote-done{display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+.toon-remote-done span{font-size:33px}
+.toon-remote-done strong{font-size:18px;color:#59466c}
+.toon-remote-done small{font-size:11px;color:#856e8f}
+.toon-choice-section{padding-top:27px}
+.toon-choice-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px}
+.toon-choice-heading strong{font-family:'Fraunces',Georgia,serif;color:#4e3857;font-size:22px}
+.toon-choice-heading>span{color:#957e9b;font-size:11px;font-weight:700}
+.toon-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.toon-choice{display:flex;align-items:center;gap:11px;border:1px solid #e7dfe8;background:#fbf8fa;border-radius:14px;padding:14px 16px;min-height:65px;text-align:left;color:#523e60;transition:transform .14s,background .14s;min-width:0}
+.toon-choice:not(:disabled):hover{transform:translateY(-2px);background:#f3ebf7;border-color:#c9afd4}
+.toon-choice>span{display:grid;place-items:center;flex:none;width:31px;height:31px;border-radius:8px;background:#eee5f3;color:#8c68a5;font-weight:950;font-size:12px}
+.toon-choice strong{font-weight:800;font-size:13px;line-height:1.35}
+.toon-choice small{margin-left:auto;color:#9f899a;font-size:10px;white-space:nowrap}
+.toon-choice-used{opacity:.52;cursor:default;text-decoration:line-through}
+.toon-reveal-panel{display:flex;align-items:center;gap:19px;border-radius:19px;background:#eff8f0;border:1px solid #d9e9dc;margin-top:23px;padding:19px 24px}
+.toon-reveal-panel.is-loss{background:#fdf1f4;border-color:#efdce6}
+.toon-reveal-emoji{font-size:38px}
+.toon-reveal-panel h3{font-family:'Fraunces',Georgia,serif;font-size:25px;color:#4e3b59;margin:6px 0}
+.toon-reveal-panel p{font-size:12px;color:#6e5f74;line-height:1.6;margin:0}
+.toon-intro,.toon-summary{background:#fff;border:1px solid #ede2eb;border-radius:25px;padding:36px 30px;text-align:center;margin-top:22px}
+.toon-intro .toon-big-antenna,.toon-summary-icon{font-size:57px;display:block}
+.toon-intro p,.toon-summary>p{color:#806b86;font-size:14px;line-height:1.7}
+.toon-era-choices{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:22px 0}
+.toon-era-choices button{background:#f5eff7;color:#6f5b7a;font-weight:800;font-size:12px;padding:12px 16px;border:1px solid #e5d5e9;border-radius:30px}
+.toon-era-choices button.is-active{background:#6e527e;color:white;border-color:#6e527e}
+.toon-summary-reel{display:flex;gap:9px;justify-content:center;margin:22px 0}
+.toon-summary-reel>span{display:flex;flex-direction:column;align-items:center;gap:6px;color:#6b9a7a;background:#e5f3e7;border-radius:12px;padding:12px 13px;font-size:18px;font-weight:900}
+.toon-summary-reel>span.missed{background:#f8ebef;color:#b38092}
+.toon-summary-reel small{font-size:9px;letter-spacing:.07em}
+.toon-summary-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.toon-bottom-actions{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px}
+.toon-bottom-actions>span{font-weight:800;font-size:11px;color:#826b8a}
+.toon-bottom-actions button{padding:10px 13px;border:1px solid #decfe4;border-radius:15px;background:#fff;color:#745b83;font-weight:800;font-size:11px}
+.toon-bottom-actions button:hover:not(:disabled){background:#f7eff8}
+.toon-bottom-actions button:disabled{opacity:.4;cursor:default}
+.toon-smallprint{background:#f5eff9;border:1px solid #eadeee;border-radius:15px;display:flex;align-items:start;gap:12px;padding:14px 19px;margin-top:20px}
+.toon-smallprint>span{font-size:23px;color:#ae89ba}
+.toon-smallprint p{font-size:11px;line-height:1.65;color:#8a728e;margin:0}
+.toon-card{background:linear-gradient(135deg,#dcebf7,#e6dcfa)}
+@media(max-width:800px){
+ .toon-game-layout{grid-template-columns:1fr}
+ .toon-remote-panel{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:center}
+ .toon-remote-top,.toon-chances{grid-column:1/-1}
+ .toon-tune-button{min-height:84px}
+ .toon-remote-instruction{grid-column:1/-1}
+ .toon-remote-done{min-height:90px}
+}
+@media(max-width:550px){
+ .toon-page{margin:22px auto 60px}
+ .toon-station{padding:18px 12px 23px;border-radius:20px}
+ .toon-station-head h2{font-size:27px}
+ .toon-progress-label{font-size:9px}
+ .toon-television{border-radius:18px;padding:7px 7px 0}
+ .toon-bezel{border-width:6px;border-radius:19px}
+ .toon-glass{min-height:220px;border-radius:11px}
+ .toon-screen-picture{gap:5px;padding:11px 8px 6px}
+ .toon-clue{min-height:112px;gap:6px;padding:8px 3px;border-radius:10px}
+ .toon-clue-symbol{font-size:30px}
+ .toon-clue-text{font-size:9px;min-height:33px}
+ .toon-clue-static .toon-clue-text{font-size:8px}
+ .toon-screen-header,.toon-screen-footer{font-size:8px;padding:10px 9px}
+ .toon-tv-brand{font-size:8px}
+ .toon-tv-base{padding:11px}
+ .toon-remote-panel{padding:14px;gap:12px}
+ .toon-choice-grid{gap:7px}
+ .toon-choice{padding:10px 8px;gap:6px;border-radius:10px;min-height:72px}
+ .toon-choice>span{height:25px;width:25px;font-size:11px}
+ .toon-choice strong{font-size:11px}
+ .toon-choice-heading{align-items:start}
+ .toon-choice-heading strong{font-size:20px}
+ .toon-choice-heading>span{font-size:10px;max-width:132px;text-align:right}
+ .toon-summary-reel{gap:5px}
+ .toon-summary-reel>span{padding:10px 8px;font-size:15px}
+ .toon-reveal-panel{padding:14px}
+ .toon-reveal-panel h3{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){
+ .toon-choice,.toon-tune-button,.toon-clue{transition:none}
+}
