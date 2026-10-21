@@ -17,7 +17,7 @@
 | Guess Who? | Free-text answer to gradually revealed clues about fruits, vegetables and food | **Milestone 1 playable** |
 | Toon Rewind | CRT-style channel surfing, visual prop recognition and tunable signals from Cartoon Network India c. 2000–2010 | **Milestone 2B playable** |
 | The 99 Files | Small detective cases; inspect evidence, interview witnesses and deduce the culprit | Planned |
-| Bazinga! Lab | Hands-on, uniquely solvable seating arrangement logic puzzles with character chips and constraint cards | **Milestone 2D playable** |
+| Bazinga! Lab | Original room-map, character-sticker seating puzzles with BBT-flavored story rules, plus the preserved classic seating edition | **Milestone 2E Room Adventures playable** |
 | Pink Rush | Timed BLACKPINK setlist, era and performance-related puzzles; combos and sequencing | Planned |
 | Little Connections | Find four hidden groups of four words, using four mistakes and one-away feedback | **Milestone 2A playable** |
 
@@ -63,6 +63,20 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - Integrates into the game shelf and cumulative four-game Passport totals, with two new unlockable achievement stamps. New save key: `mollys-bazinga-v1`. Passport exports now use version 2 with all four games; older version 1 backups can still be imported without erasing the new game's data.
 - Asset note: stylized characters are original emoji and hand-coded CSS, not copied TV show character artwork or footage.
 - **Future difficulty refinements:** fresh hard-specific narrative puzzle packs, optional explicit confirmation before resetting a pristine practice board, mobile/keyboard tests, and accessibility focus improvements.
+
+## Phase 2E — Bazinga! Room Adventures (implemented)
+
+**Goal:** replace generic “linear seat order” as the default with a location-driven, explicitly *Big Bang Theory*-inspired episode adventure. Retain the original Classic Lab for nostalgia and backward-compatible saves.
+
+- **Room map families:** Apartment 4A (Sheldon's spot), Penny's Apartment 4B (cushion/sick guest), Howard & Bernadette's house (dinner table), Raj's apartment (murder mystery), Caltech cafeteria (lunch seating), Caltech lab (workstations), Stuart's comic shop (new issue/game night), Pasadena movie theatre (Star Wars screening). These are original **schematic** stage-inspired environments, not exact production floor plans.
+- **18 brand-new episodic cases:** six Cozy (four assigned guests), six Clever (five), six Expert (six); each scenario has authored lore-inflected conditions plus additional true spatial clues. 18 Classic Lab cases remain accessible separately.
+- **Geometry-aware logic:** room locations are % coordinates and stable seat IDs, with public tags (sofa, spot, window, TV sightline, unpleasant draft, uncomfortable stool, kitchen, snacks, exit, lab-safety). Rules include seat traits, exclusions, next-to/not-next-to measured in two dimensions, relative leftness, proximity to fixed room objects, and maximum distance from another character (e.g. Sheldon vs sick Raj). **All cases are proved unique by exhaustive permutation search in the test suite.**
+- **Discoverable information:** accessible on-map chair labels, visible furniture props, and a collapsible room guide listing seat properties mean no hidden metadata is required to solve a puzzle. A wrong check returns a rule tally; Cozy/Clever can show per-clause pass/fail, while Expert keeps that hidden.
+- **Character art:** eight bespoke hand-coded vector sticker portraits with original styling (not actor stills or copied official artwork). Losing reveals a large Sheldon sticker and a “Bazinga!” reaction; winning shows an original group illustration and a distinctive, newly written Sheldon-style compliment.
+- **Episodes and difficulty:** daily puzzle and freely browsable practice gallery, variable checks (4/3/2) and seat hints (2/1/0), higher star multipliers (1×/1.5×/2×), and best-awarded-score rewards only. Difficulty locks after first placement/hint; next practice episode can use a new tier.
+- **Save migration:** same `mollys-bazinga-v1` key; optional `worldDaily`, `worldPractice`, `worldRecent` properties added, leaving legacy `daily`, `practice`, `recent`, `stats` and `bestAwards` intact. Passport v2's four-game data export automatically carries optional new fields. Old backups remain importable.
+- **Rights strategy:** original art/locations/short dialogue, non-affiliated fan homage, no BBT stills or theme music. Details and reference URLs in `BAZINGA_ART_AND_SOURCES.md`.
+- **Post-release QA:** actual play-test in desktop and touch browsers, narrow-screen map panning, keyboard/tab focus, readability of venue details and clue challenge balance.
 
 ## Birthday-only experience (Milestone 3, not currently implemented)
 
