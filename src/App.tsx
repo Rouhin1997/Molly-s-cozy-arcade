@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent, type Dispatch, type SetStateAction } from 'react';
 import Connections from './games/Connections';
 import ToonRewind from './games/ToonRewind';
+import Passport from './games/Passport';
 import { readToonProgress, writeToonProgress, type ToonProgress, type ToonStats } from './lib/toon';
 import { readConnections, writeConnections, type ConnectionStats } from './lib/connections';
 import type { ConnectionProgress } from './lib/connections';
@@ -11,7 +12,7 @@ import {
   type Progress, type Round,
 } from './lib/game';
 
-type View = 'home' | 'guess' | 'connections' | 'toon' | 'vault';
+type View = 'home' | 'guess' | 'connections' | 'toon' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
@@ -88,6 +89,10 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <div><span className="stats-icon">💝</span><span className="stats-number">{days === 0 ? 'Today!' : days}</span><span className="stats-label">{days === 0 ? 'happy birthday!' : 'days to birthday'}</span></div>
     </section>
 
+    <section className="passport-home-invite">
+      <div><span>📖</span><div><strong>Molly's Arcade Passport</strong><small>Your stamps, achievements, game records and saved stars.</small></div></div>
+      <button className="btn btn-soft" onClick={() => onNavigate('passport')}>Open Passport ↗</button>
+    </section>
     <section className="games-section" id="games">
       <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Three games ready, more magic in the making</span></div>
       <div className="game-grid">
@@ -275,8 +280,8 @@ function App() {
     setView(next); setMode(nextMode); setSneakPeek(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;
