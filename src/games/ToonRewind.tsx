@@ -1,9 +1,9 @@
-import { useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { useMemo, useState, type CSSProperties, type Dispatch, type SetStateAction } from 'react';
 import {
   optionsForShow, toonShows, type ToonShow, type ToonPack,
 } from '../data/toon';
 import {
-  advanceToonSession, currentToonRound, freshToonRound, guessToonShow,
+  advanceToonSession, currentToonRound, guessToonShow,
   newToonSession, registerToonScore, tuneToonSignal, MAX_TUNES,
   MAX_WRONG_CHANNELS, type ToonProgress, type ToonRound, type ToonSession,
 } from '../lib/toon';
@@ -20,7 +20,7 @@ function Television({ show, round, number }: { show: ToonShow; round: ToonRound;
   const visible = revealed ? MAX_TUNES : round.tuneLevel;
   return <div className="toon-television" aria-label="Retro television revealing cartoon motifs">
     <div className="toon-bezel">
-      <div className="toon-glass" style={{ '--toon-colour-a': show.palette[0], '--toon-colour-b': show.palette[1] } as React.CSSProperties}>
+      <div className="toon-glass" style={{ '--toon-colour-a': show.palette[0], '--toon-colour-b': show.palette[1] } as CSSProperties}>
         <div className="toon-scanlines" aria-hidden="true"/>
         <div className="toon-screen-header"><span><i/> ON AIR</span><span>CN INDIA • 2000s</span></div>
         <div className="toon-screen-picture">
@@ -160,7 +160,7 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
       </div>
 
       {round.status === 'playing' ? <div className="toon-choice-section">
-        <div className="toon-choice-heading"><strong>Which show is this?</strong><span>Pick one broadcast • ${round.attempts.length ? 'One more chance' : 'Two chances'}</span></div>
+        <div className="toon-choice-heading"><strong>Which show is this?</strong><span>Pick one broadcast • {round.attempts.length ? 'One more chance' : 'Two chances'}</span></div>
         <div className="toon-choice-grid">
           {choices.map((id, i) => {const candidate=toonShows.find(show => show.id===id)!;const used=round.attempts.includes(id);
             return <button className={`toon-choice ${used ? 'toon-choice-used' : ''}`} key={id} disabled={used} onClick={() => updateRound((r,s)=>guessToonShow(r,s,id))}>
