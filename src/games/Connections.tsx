@@ -46,7 +46,7 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
   const effectiveDifficulty = round?.difficulty ?? difficulty;
   const limit = connectionMistakeLimit(effectiveDifficulty);
   const left = round ? limit - round.mistakes : limit;
-  const difficultyLocked = !!round && (round.attempts.length>0 || round.solved.length>0 || round.selected.length>0 || round.status !== 'playing');
+  const difficultyLocked = !!round && (round.attempts.length>0 || round.solved.length>0 || round.selected.length>0 || round.status !== 'playing') && (mode === 'daily' || round.status === 'playing');
 
   function updateRound(transform: (r: ConnectionRound, p: ConnectionPuzzle) => ConnectionRound) {
     setProgress(prev => {
@@ -116,7 +116,7 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
     savePreferredDifficulty('connections',level);
     if (mode === 'daily') {
       setProgress(prev => ({...prev,daily:{...prev.daily,[today]:{puzzleId:dailyPuzzle.id,round:newConnectionRound(level)}}}));
-    } else if (practicePuzzle && round?.status === 'playing') {
+    } else if (practicePuzzle) {
       // Choosing a new tier before any selection begins a properly graded board.
       newPractice(level);
     }
