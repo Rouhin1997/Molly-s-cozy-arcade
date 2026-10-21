@@ -37,7 +37,7 @@ function Logo({ onClick }: { onClick: () => void }) {
   </button>;
 }
 
-function Home({ onNavigate, onChooseGame, progress, today }: {
+function Home({ onNavigate, onChooseGame, progress, connectionStats, today }: {
   onNavigate: (view: View, mode?: Mode) => void;
   onChooseGame: (name: string) => void;
   progress: Progress;
