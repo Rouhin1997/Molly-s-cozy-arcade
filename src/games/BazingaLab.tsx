@@ -1,6 +1,6 @@
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useState, type CSSProperties, type Dispatch, type SetStateAction } from 'react';
 import DifficultyPicker from '../components/DifficultyPicker';
-import { bestAward, readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
+import { readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
 import {
   awardSeatingResult,bazingaAttempts,bazingaHints,checkSeating,getDailySeatingRound,
   isSeatingUntouched,newPracticeSeatingRound,newSeatingRound,revealSeatingHint,seatGuest,selectGuest,
@@ -116,7 +116,7 @@ export default function BazingaLab({today,progress,setProgress,onHome}:Props){
             {activeRoster.map(name=><button key={name} type="button"
               disabled={round.status!=='playing'||round.locked.some(i=>round.chairs[i]===name)}
               className={`bazinga-guest ${chosen===name?'selected':''} ${used.includes(name)?'already-seated':''}`}
-              style={{'--guest-bg':cast[name]?.tint??'#eee'} as React.CSSProperties}
+              style={{'--guest-bg':cast[name]?.tint??'#eee'} as CSSProperties}
               onClick={()=>changeRound(r=>selectGuest(r,name))} aria-pressed={chosen===name}>
               <span aria-hidden="true">{cast[name]?.icon??'⭐'}</span><strong>{name}</strong>
               {used.includes(name)&&<small>Seated</small>}
