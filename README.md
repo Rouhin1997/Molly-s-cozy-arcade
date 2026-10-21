@@ -2,7 +2,7 @@
 
 A tiny, cheerful puzzle arcade built as a birthday gift, and designed to be fun all year long.
 
-**Status: Milestone 2D — Bazinga! Lab and difficulty consistency.** Four games are playable: Guess Who?, Little Connections, Toon Rewind, and Bazinga! Lab. The Passport tracks all four. Two more games and the November 13 Birthday Quest/coupon wallet remain on the roadmap.
+**Status: Milestone 2E — Bazinga! Room Adventures.** Four games remain playable, and Bazinga! Lab now includes eight original room maps, 18 BBT-inspired episodic spatial deduction puzzles and 18 preserved Classic Lab cases. The Passport still tracks all four games. The 99 Files, Pink Rush and the November 13 Birthday Quest/coupon wallet remain on the roadmap.
 
 ## Play locally
 
@@ -41,7 +41,7 @@ For the first deployment, open the repository's **Settings → Pages** and selec
 - 48 original food / fruit / vegetable riddles, with lots of familiar Indian names.
 - **Little Connections**: 28 curated puzzles, a four-by-four word grid, four hidden categories, difficulty-specific mistake limits, "one away" feedback on non-Expert modes, daily boards and practice boards.
 - **Toon Rewind**: India-focused nostalgic TV with 35 shows, symbolic picture clues and original reveal posters, a reception-tuning remote, typed titles in Expert mode, six transmissions and early-answer star bonuses. Daily broadcasts and practice packs for early 2000s and 2005–2010.
-- **Bazinga! Lab**: 18 uniquely solvable logic cases, with four-, five- and six-person seating challenges. Assign people to chairs, satisfy every constraint, and use hints/attempts according to the chosen difficulty.
+- **Bazinga! Lab — Room Adventures**: 18 uniquely solvable BBT-themed episodes across eight original playable layouts (Apartment 4A/4B, Raj’s, Howard and Bernadette’s, Caltech cafeteria/lab, comic shop and movie theatre). Place original illustrated character stickers on actual room maps; solve spatial clues about Sheldon's spot, TV views, uncomfortable drafts, sick-day social distancing, snacks and Stuart's unfortunate seats. Each difficulty has 4, 5 or 6 guests, variable checks/hints and a different curated episode set. Sheldon-inspired original win compliments and a “Bazinga!” loss card accompany the solution. **Classic Lab** preserves the 18 original straight-line puzzles and their old saves.
 - **Arcade Passport**: scrapbook-style achievements and unlocked stamps, lifetime game records, stars, best scores, and personal progress.
 - **Cozy / Clever / Expert** difficulty controls in each game. Higher difficulty increases the challenge and multiplies potential stars.
 - **Best-score rewards**: replaying the same puzzle only grants the improvement over its previously awarded high score. Older saved points remain unchanged.
@@ -68,7 +68,12 @@ src/
   lib/toon.ts           Toon scoring, session progression, and save rules
   lib/passport.ts       Difficulty, best reward and Passport achievements
   games/Passport.tsx   Passport screen, stamps and save export/import
-  games/BazingaLab.tsx  Interactive seating-constraint game
+  games/BazingaLab.tsx  Edition switcher (new Room Adventures + preserved Classic Lab)
+  games/BazingaRoomGame.tsx  Spatial room-map gameplay and episode shelf
+  games/BazingaClassic.tsx  Previous original line-up puzzles
+  components/BazingaSticker.tsx  Original scalable character-sticker illustrations
+  data/bazingaWorld.ts  Eight room maps, 18 authored cases and unique-solution solver
+  lib/bazingaWorld.ts   New spatial controls, hints and reward logic
   data/bazinga.ts      18 cases, logic clues and exhaustive solution validator
   lib/bazinga.ts       Interaction rules, score caps and local progress
   components/DifficultyPicker.tsx  Shared difficulty selector
@@ -83,7 +88,7 @@ GAME_DESIGN.md         Games and milestones, including future birthday mechanics
 
 ## Game-rule tests
 
-The repository runs `npm run build` and `npm test` on GitHub Actions for new game branches and pull requests. The test suite validates board uniqueness, scoring, daily scheduling, mistakes, one-away feedback, and earlier Guess Who? behaviour. The Toon Rewind test suite checks channel lineups, alternatives, scoring and tuning. Bazinga! Lab's test suite exhaustively checks every seating case has exactly one valid solution, and tests interaction, hints and anti-farming. The separate deployment workflow publishes successful changes on `main`.
+The repository runs `npm run build` and `npm test` on GitHub Actions for new game branches and pull requests. The test suite validates board uniqueness, scoring, daily scheduling, mistakes, one-away feedback, and earlier Guess Who? behaviour. The Toon Rewind test suite checks channel lineups, alternatives, scoring and tuning. Bazinga! Lab's original and Room Adventures test suites exhaustively check each of the **36** authored seating cases for exactly one valid solution, and test interaction, spatial constraints, hints and anti-farming. The separate deployment workflow publishes successful changes on `main`.
 
 ## Adding content
 
@@ -104,6 +109,12 @@ Made with love, and a little bit of mischief. ♡
 ## Difficulty switching contract
 
 For **all four games**, choose Cozy, Clever or Expert **before the first meaningful action**. Once a daily puzzle has begun, its difficulty cannot be changed or its earned result reset. A practice puzzle/session similarly locks after the first action; after the session ends, selecting another difficulty starts a new challenge. Switching before the first action immediately starts a fresh, correctly graded practice puzzle/session. A game's preferred difficulty is remembered for the next attempt. Locked rounds never silently receive an increased multiplier.
+
+## Room Adventures — maps and art
+
+The new maps are **original, approximate playable floor plans**, not official or architecturally accurate replicas of actual production sets. Room geography and accessible seat guides expose usable clues about TV sightlines, window drafts, door positions and chair comfort. The art is a bespoke vector/chibi sticker set (not screenshots or official cast photos); win/loss scenes also use only those original stickers. Visit [art and reference notes](BAZINGA_ART_AND_SOURCES.md) for show-set lore references and copyright details.
+
+The fourth game's original progress key `mollys-bazinga-v1` remains unchanged. New `worldDaily`, `worldPractice` and `worldRecent` fields are optional additions; older data and Passport exports remain compatible.
 
 ## Next development session
 
