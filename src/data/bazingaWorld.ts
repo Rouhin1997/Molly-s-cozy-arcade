@@ -418,6 +418,33 @@ export function roomRules(c:RoomCase):RoomRule[]{
   rulesCache.set(c.id,result);
   return result;
 }
+/** Diagnostic metrics are checked in tests so Expert does not regress into
+ * a collection of one-clue-one-chair instructions. */
+export function roomClueDiagnostics(c:RoomCase){
+  const rules=roomRules(c);
+  const all=candidates(c);
+  const firstThree=all.filter(order=>rules.slice(0,3).every(rule=>holdsRoomRule(c,order,rule))).length;
+  const positions=seats(c);
+  const directSeatClues=rules.filter(rule=>rule.type==='has'&&
+    positions.filter(pos=>pos.tags.includes(rule.tag??'')).length===1).length;
+  const relationshipClues=rules.filter(rule=>['adjacent','not-adjacent','left','far-from-guest'].includes(rule.type)).length;
+  return {firstThree,ruleCount:rules.length,directSeatClues,relationshipClues,initialOptions:all.length};
+}
+
+/** Prevent a decorative fixture from obscuring a real clickable seat.
+ * The normalized bounding boxes match the room's 650×500 min-size layout. */
+export function roomPropOverlaps(c:RoomCase):string[]{
+  const problems:string[]=[];
+  const map=rooms[c.room];
+  for(const fixture of map.props) for(const chair of seats(c)){
+    const wide=fixture.label==='Television'||fixture.label==='Movie screen'?150:110;
+    const dx=Math.abs(fixture.x-chair.x)*6.5,dy=Math.abs(fixture.y-chair.y)*5;
+    if(dx<(wide+90)/2+4 && dy<=(67+90)/2+2)
+      problems.push(`${fixture.label} overlaps ${chair.id}`);
+  }
+  return problems;
+}
+
 export function roomSolutions(c:RoomCase):string[][]{
   const rules=roomRules(c);
   return candidates(c).filter(order=>rules.every(r=>holdsRoomRule(c,order,r)));
