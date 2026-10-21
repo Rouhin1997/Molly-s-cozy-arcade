@@ -1,5 +1,5 @@
 import { describe,expect,it,vi } from 'vitest';
-import { rooms, roomCases, roomRules, roomSolutions, validateRoomWorld, holdsRoomRule, dailyRoomCase, practiceRoomCase, roomRuleText } from '../src/data/bazingaWorld';
+import { rooms, roomCases, roomRules, roomSolutions, validateRoomWorld, holdsRoomRule, dailyRoomCase, practiceRoomCase, roomRuleText,roomClueDiagnostics,roomPropOverlaps } from '../src/data/bazingaWorld';
 import { newWorldRound,placeWorldGuest,selectWorldGuest,checkWorld,hintWorld,untouchedWorldRound,worldOrder,creditWorldRound,worldHints,worldAttempts } from '../src/lib/bazingaWorld';
 import { initialBazingaProgress,readBazingaProgress,writeBazingaProgress } from '../src/lib/bazinga';
 
@@ -17,6 +17,23 @@ describe('Eight original sitcom-inspired room maps',()=>{
       expect(roomRules(c).length).toBeGreaterThanOrEqual(c.difficulty==='hard'?8:c.difficulty==='medium'?6:4);
       expect(roomRules(c).every(r=>roomRuleText(c,r).length>15)).toBe(true);
     }
+  });
+  it('prevents clue giveaways and keeps expert deduction genuinely multi-step',()=>{
+    for(const c of roomCases){
+      const m=roomClueDiagnostics(c);
+      if(c.difficulty==='hard'){
+        expect(m.initialOptions).toBe(720);
+        expect(m.firstThree).toBeGreaterThan(3);
+        expect(m.directSeatClues).toBeLessThanOrEqual(1);
+        expect(m.relationshipClues).toBeGreaterThanOrEqual(4);
+      } else if(c.difficulty==='medium') {
+        expect(m.relationshipClues).toBeGreaterThanOrEqual(2);
+      }
+    }
+    expect(rooms['four-a'].seats.find(s=>s.id==='spot')?.label.toLowerCase()).not.toContain('sheldon');
+  });
+  it('keeps furniture panels clear of clickable seat stickers on every venue map',()=>{
+    for(const c of roomCases)expect(roomPropOverlaps(c)).toEqual([]);
   });
   it('makes room geography matter, especially Sheldon’s sacred seat and sick-day distance',()=>{
     const apartment=roomCases.find(c=>c.id==='star-wars-4a')!;
