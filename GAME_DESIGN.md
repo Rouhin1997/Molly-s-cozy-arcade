@@ -33,6 +33,26 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - Daily win streak tracks **daily** riddles only, not practice.
 - Completed puzzles reveal a fun fact and a next-step (practice) or the daily result.
 
+## Phase 2C — Passport & deeper games
+
+### Implemented
+- **Arcade Passport:** scrapbook view with 10 achievement stamps, unlocked from real saved statistics; per-game scores, stars, streaks and records.
+- **Manual backup/import:** a JSON download covering all three independently saved games and an explicit-confirmation restore workflow. User data stays in local browser storage; optional Supabase sync is *not yet connected*.
+- **Three challenge tiers per game:** Cozy (1×), Clever (1.5×), Expert (2×). Each game remembers a preferred difficulty in local browser storage.
+- **Guess Who?**: Cozy 5 guesses/4 clues, Clever 4/4, Expert 3/3; dedicated difficulty-curated practice pools and 48 hand-written riddles.
+- **Little Connections:** 28 curated boards with graded practice; Cozy 5 mistakes, Clever 4, Expert 3. One-away hints are disabled in Expert.
+- **Toon Rewind:** 35 Indian-CN-era shows, curated expert narrative hints; Cozy keeps four choices and familiar imagery, Clever uses subtler clues and six options, Expert requires a typed cartoon title and allows one wrong answer.
+- **Toon artwork:** a small original, show-specific poster assembled from motif artwork, with success transition; on failure, animated television interference transitions to the solution. These are **not copyrighted character stills**.
+- **Anti-farming:** per-puzzle best-awarded stars are stored; replay awards only the improved difference rather than full repeated points.
+- **Backward compatibility:** existing v1 browser saves are imported on load, previous scores preserved, completed rounds seeded into the best-reward ledger; historical daily puzzle schedules from before 2026-10-22 stay stable.
+
+### Next work
+- Real browser QA, especially on narrow phone screens and restoring a backup into a clean profile.
+- More authored level packs over time rather than flooding the game with low-quality filler.
+- Optional, authenticated Supabase synchronization if needed for cross-device durability; schema and RLS/security review first.
+- Licensed or permissioned show/character images can be plugged into individual reveal cards later; **never scrape and hotlink random copyrighted screenshots**.
+- Remaining Phase 2 games and Birthday Quest & coupon wallet are not in this release.
+
 ## Birthday-only experience (Milestone 3, not currently implemented)
 
 - Each **November 13**, offer a curated Birthday Quest that links several mechanics.
@@ -73,9 +93,9 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - Programming-history references: https://en.wikipedia.org/wiki/Cartoon_Network_(India) and https://en.wikipedia.org/wiki/List_of_programmes_broadcast_by_Cartoon_Network_(India).
 - The show catalogue is an initial curated set and can be improved after the user's India-specific nostalgia feedback.
 
-## Arcade Passport (planned after the core games)
+## Arcade Passport (implemented in Phase 2C)
 
-A personal player-profile screen displaying total stars, total puzzles solved, daily streaks, per-game bests, game-specific badges, and achievements. This will sit above all game engines and will not replace individual saves. The eventual birthday coupon wallet remains a separate gift system, not a purchase mechanic. Before cross-device syncing, plan explicit migrations from existing browser-local save formats and a one-time import option. Do not require login for the basic arcade.
+Implemented as a personal scrapbook with achievements, total stars, games solved, daily streaks, and per-game records. Manual export/restore allows moving progress between devices. The eventual birthday coupon wallet remains a separate gift system, not a purchase mechanic. No login is needed for basic play.
 
 ## Future engineering considerations
 
