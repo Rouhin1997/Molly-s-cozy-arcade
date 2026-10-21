@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type Dispatch, type SetStateAction } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { BazingaSticker } from '../components/BazingaSticker';
 import { readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
@@ -118,7 +118,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
       <div className="bazinga-shelf-heading">
         <div><span className="overline">PICK AN EPISODE</span><h2>The little episode guide</h2>
           <p>{available.length} {levelLabel[level]} adventures — each with its own seating puzzle.</p></div>
-        <button className="btn btn-outline" onClick={()=>setShelfOpen(v=>!v)}>{shelfOpen||!round?'Hide episodes':'Browse episodes'} ▾</button>
+        <button className="btn btn-outline" onClick={()=>setShelfOpen(v=>!v)}>{shelfOpen?'Hide episodes':'Browse episodes'} ▾</button>
       </div>
       {(shelfOpen||!round)&&<div className="bazinga-episode-grid">
         {available.map((c,index)=><button key={c.id} className={`bazinga-episode-card ${round?.caseId===c.id?'is-playing':''}`} onClick={()=>startCase(c)}>
@@ -170,7 +170,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
                 {isFixed&&<span className="bazinga-chair-fixed">✦</span>}
               </button>;
             })}
-          </div>
+          </div></div>
           <p className="bazinga-room-instruction">{round.selected?<><strong>{round.selected}</strong> is selected. Tap a seat to place or swap them.</>:'Select a sticker below, then tap a chair. You may also tap an occupied chair to clear it.'}</p>
           <div className="bazinga-world-cast" role="group" aria-label="Choose a character to place">
             {caseData.solution.map(name=>{
