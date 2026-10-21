@@ -4,3 +4,70 @@
 @media(max-width:960px){.site-header nav{gap:18px}.hero{grid-template-columns:1.1fr .9fr}.hero-copy{padding-left:36px}.hero h1{font-size:52px}.arcade-cabinet{transform:rotate(6deg) scale(.86)}.token-strawberry{left:-1px}.token-star{right:6px}.tiny-bubble{right:0}.game-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.birthday-banner{gap:23px;padding:25px 30px}.birthday-illustration{flex-basis:90px;width:90px;height:95px}.birthday-illustration>span:first-child{font-size:55px}}
 @media(max-width:680px){.site-header{height:75px}.header-inner{padding:0 18px}.brand-mark{width:42px;height:42px;font-size:28px}.brand strong{font-size:20px}.brand small{font-size:8px;letter-spacing:2px}.site-header nav{display:none}.header-cta{padding:12px 14px;font-size:12px}.page-content{padding:0 16px}.hero{margin:18px 0 14px;grid-template-columns:1fr;min-height:0;border-radius:24px}.hero-copy{padding:40px 27px 0}.hero h1{font-size:clamp(43px,10vw,61px);margin:21px 0 14px}.hero-copy>p{font-size:13px}.hero-actions{gap:10px}.hero-actions .btn{font-size:12px;padding:12px 17px}.hero-foot{margin-top:25px}.hero-art{min-height:285px;max-height:285px;margin-top:7px;transform:translateX(10px)}.arcade-cabinet{transform:rotate(6deg) scale(.69);transform-origin:center}.token-strawberry{top:36px;left:14%;transform:rotate(-14deg) scale(.73)}.token-star{right:10%;bottom:40px;transform:rotate(16deg) scale(.7)}.tiny-bubble{top:28px;right:13%;font-size:9px}.sparkle-top{top:20px;right:24px}.stats-strip{grid-template-columns:1fr 1fr;padding:13px 5px;gap:12px 0}.stats-strip>div{border-right:0;justify-content:start;padding-left:20px}.stats-strip>div:nth-child(odd){border-right:1px solid #f0e6ef}.stats-number{font-size:23px}.stats-label{font-size:10px}.stats-icon{font-size:25px}.games-section{padding-top:54px}.section-heading{align-items:start;display:block;margin-bottom:20px}.section-heading h2{font-size:35px}.section-note{display:block;margin-top:10px}.game-grid{grid-template-columns:1fr;gap:14px}.game-card{min-height:268px}.game-emoji{font-size:44px;margin:10px 0 4px}.featured-art{top:50px}.featured-art span{font-size:40px}.featured-art span:nth-child(2){font-size:50px}.birthday-banner{margin:36px 0 48px;padding:25px 24px;display:grid;gap:16px}.birthday-illustration{width:78px;height:78px;flex-basis:auto}.birthday-illustration>span:first-child{font-size:43px}.birthday-copy h2{font-size:26px}.birthday-banner .btn{width:max-content}.site-footer{width:calc(100% - 32px);padding:20px 0 25px;display:grid;gap:7px;font-size:10px}.game-page,.vault-page{margin:23px auto 60px}.game-head{margin:24px 0}.game-head h1{font-size:39px}.decorative-berry{display:none}.mode-tabs{width:100%;display:flex}.mode-tabs button{flex:1;padding:12px 7px;font-size:11px}.mode-intro{padding:15px}.puzzle-card{padding:24px 18px;border-radius:22px}.puzzle-card h2{font-size:42px}.puzzle-meta{gap:6px}.round-label{font-size:9px}.clue-item{gap:10px;padding:16px 12px;min-height:70px}.clue-number{font-size:20px}.clue-text{font-size:12px}.guess-input-row{flex-direction:column}.guess-input-row input{min-height:48px}.puzzle-actions{flex-direction:column;align-items:stretch}.text-button{padding:10px}.puzzle-support{font-size:10px}.result-panel{padding:20px}.vault-inner{padding:49px 23px}.vault-inner h1{font-size:36px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+
+/* --- Little Connections: its own little game table --- */
+.connections-page{max-width:960px;margin:32px auto 76px}
+.connections-board{background:#fff;border:1px solid #ede6e8;box-shadow:0 16px 45px #6049680c;border-radius:28px;padding:35px 38px 38px;margin-top:22px}
+.connections-board-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:25px}
+.connections-board-head h2{font-family:'Fraunces',Georgia,serif;font-size:35px;color:#443251;letter-spacing:-.8px;margin:8px 0 0}
+.connections-score{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:17px;background:#f5eef9;color:#8b67a5;padding:11px 18px;min-width:94px;font-size:12px}
+.connections-score strong{font-family:'Fraunces',Georgia,serif;font-size:24px;color:#4b3760;margin-top:2px}
+.connections-score span{font-size:9px;font-weight:800;color:#9783a1;white-space:nowrap}
+.connections-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.connections-tile{border:1px solid #ebe3e9;border-radius:14px;background:#f4eef1;color:#4b3c51;min-width:0;min-height:87px;display:grid;place-items:center;padding:10px 7px;text-align:center;font-weight:900;font-size:clamp(11px,1.15vw,14px);line-height:1.25;overflow-wrap:anywhere;letter-spacing:.1px;transition:background .14s,border-color .14s,transform .14s,box-shadow .14s}
+.connections-tile:hover{background:#eee1ed;transform:translateY(-2px)}
+.connections-tile.selected{background:#74558a;color:white;border-color:#654378;box-shadow:0 4px 0 #dac7e3}
+.connections-tile.selected:hover{background:#694b80}
+.connections-groups{display:grid;gap:9px;margin-bottom:11px}
+.connections-groups:empty{display:none}
+.connections-group{border-radius:14px;padding:15px 12px;text-align:center;display:flex;flex-direction:column;gap:5px;color:#47394f}
+.connections-group strong{font-size:13px;letter-spacing:.15px}
+.connections-group span{font-weight:750;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.connections-group small{font-size:11px;line-height:1.5;opacity:.75}
+.connections-yellow{background:#f6de89}
+.connections-green{background:#b9d7a4}
+.connections-blue{background:#aed3e8}
+.connections-purple{background:#d5bce5}
+.connections-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:23px}
+.connections-mistakes{display:flex;align-items:center;gap:12px;color:#776b7e;font-size:12px;font-weight:700}
+.connections-mistakes div{display:flex;gap:6px}
+.connections-mistakes i{width:12px;height:12px;background:#eee7ef;border-radius:50%;display:block;border:1px solid #e7dcea}
+.connections-mistakes i.left{background:#9575b1;border-color:#9575b1}
+.connections-selection-count{font-size:11px;font-weight:800;color:#917a97}
+.connections-feedback{min-height:23px;color:#876d91;text-align:center;font-size:12px;font-weight:750;margin:23px 0 13px}
+.connections-actions{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.connections-actions .btn{min-width:125px}
+.connections-actions .btn-primary{min-width:155px}
+.connections-finale{border-radius:18px;text-align:center;background:#f3f9f3;border:1px solid #d9eadc;padding:25px 21px 28px;margin-top:20px}
+.connections-finale.connections-lost{background:#fff6f3;border-color:#f0dcd5}
+.connections-finale-icon{font-size:42px}
+.connections-finale h3{font-family:'Fraunces',Georgia,serif;font-size:29px;letter-spacing:-.6px;color:#42344d;margin:7px 0 8px}
+.connections-finale>p{font-size:13px;line-height:1.6;color:#766779;max-width:540px;margin:0 auto 19px}
+.connections-finale .connections-finale-note{font-size:11px;margin:17px auto;color:#9a849e}
+.connections-reveal{display:grid;gap:9px;margin:20px 0}
+.connections-finale-actions{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
+.connections-help{background:#f5effb;border:1px solid #ece0f0;border-radius:16px;padding:16px 20px;display:flex;gap:14px;align-items:start;margin-top:18px}
+.connections-help>span{font-size:22px;color:#9f78b1}
+.connections-help p{font-size:12px;color:#806f85;line-height:1.65;margin:0}
+.connections-help strong{color:#584366}
+.connection-card{background:linear-gradient(135deg,#def3e9,#e5f1f9)}
+@media(max-width:680px){
+ .connections-page{margin:23px auto 60px}
+ .connections-board{padding:22px 13px 26px;border-radius:22px}
+ .connections-board-head h2{font-size:27px}
+ .connections-board-head .overline{font-size:9px}
+ .connections-score{min-width:72px;padding:8px 10px}
+ .connections-score strong{font-size:20px}
+ .connections-tiles{gap:6px}
+ .connections-tile{min-height:65px;padding:7px 3px;font-size:clamp(9px,2.5vw,12px);border-radius:9px}
+ .connections-group{padding:11px 6px}
+ .connections-group strong{font-size:12px}
+ .connections-group span{font-size:10px}
+ .connections-controls{flex-wrap:wrap}
+ .connections-mistakes{font-size:11px}
+ .connections-actions{gap:7px}
+ .connections-actions .btn{font-size:11px;min-width:0;flex:1;padding:12px 8px}
+ .connections-actions .btn-primary{min-width:105px;flex:1.2}
+ .connections-help{padding:14px 12px}
+}
