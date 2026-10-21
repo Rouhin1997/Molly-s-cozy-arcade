@@ -41,7 +41,6 @@ export default function Connections({ today, progress, setProgress, onHome }: Pr
   const tiles = useMemo(() => puzzle ? shuffledConnectionWords(puzzle, `${boardSeed}-${shuffleCount}`) : [],
     [puzzle, boardSeed, shuffleCount]);
   const left = round ? CONNECTION_MISTAKES - round.mistakes : CONNECTION_MISTAKES;
-  const isFinished = round && round.status !== 'playing';
 
   function updateRound(transform: (r: ConnectionRound, p: ConnectionPuzzle) => ConnectionRound) {
     setProgress(prev => {
