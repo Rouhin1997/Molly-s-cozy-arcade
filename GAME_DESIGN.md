@@ -64,6 +64,14 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - Asset note: stylized characters are original emoji and hand-coded CSS, not copied TV show character artwork or footage.
 - **Future difficulty refinements:** fresh hard-specific narrative puzzle packs, optional explicit confirmation before resetting a pristine practice board, mobile/keyboard tests, and accessibility focus improvements.
 
+## Phase 2F — Higher-quality BBT deduction and presentation (implemented)
+
+- Hand-curate the 18 episode stories and clue premises rather than revealing Sheldon's seat or automatically mapping guest → one unique location. Research calibrates details: the special couch cushion is comfortable across seasons because of temperature, cross-breeze and screen geometry; it is **not** uniformly a no-draft location. Wednesday comic-book/Halo nights and Roommate Agreement rituals are used as creative references, not as lifted teleplay dialogue.
+- Generator prioritizes informative **multi-person spatial relationships** and targets moderately revealing constraints instead of greedily selecting maximally narrowing properties. Uniqueness is *still exhaustively proven*. Expert-specific tests measure clue ambiguity and reject too many direct single-seat clues. Cozy remains intentionally more approachable.
+- Room art has enlarged 650×500 floor plans, large original TV/window/furniture plaques, improved decorative prop spacing and regression tests rejecting collisions with interactive seats.
+- A voluntary connection overlay draws the actual neighbours specified by the room engine so geometric clues (including diagonal adjacency) are interpretable without arbitrary guessing. Clever/Expert feedback no longer gives away pass/fail per clause; Cozy still does.
+- Every result card uses **new original, restrained Sheldon-style reluctant praise** on success; on loss the reaction is simply “Bazinga! You lose!” with an optional expandable answer. Preserve the previous Classic Lab unchanged and do not clear saved scores.
+
 ## Phase 2E — Bazinga! Room Adventures (implemented)
 
 **Goal:** replace generic “linear seat order” as the default with a location-driven, explicitly *Big Bang Theory*-inspired episode adventure. Retain the original Classic Lab for nostalgia and backward-compatible saves.
