@@ -132,7 +132,8 @@ export function dateIndex(dateKey: string): number {
 
 export function dailyConnectionPuzzle(dateKey: string): ConnectionPuzzle {
   // Rotate through the curated bank in order: no consecutive daily repeats.
-  return connectionPuzzles[((dateIndex(dateKey) % connectionPuzzles.length) + connectionPuzzles.length) % connectionPuzzles.length];
+  const pool = dateKey <= '2026-10-21' ? connectionPuzzles.slice(0,16) : connectionPuzzles;
+  return pool[((dateIndex(dateKey) % pool.length) + pool.length) % pool.length];
 }
 
 export function pickPracticeConnection(recentIds: string[], random = Math.random, difficulty?: Difficulty): ConnectionPuzzle {
