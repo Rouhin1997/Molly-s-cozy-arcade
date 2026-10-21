@@ -123,6 +123,17 @@ export function seatingRules(c: SeatingCase):SeatingRule[] {
     if(!best)throw new Error(`No unique solution for ${c.id}`);
     selected.push(best);viable=viable.filter(order=>ruleHolds(order,best));
   }
+  // The mathematically minimal clue set can be disappointingly short.
+  // Add varied, true-but-redundant constraints to enrich deduction and storytelling.
+  const minimum=c.difficulty==='easy'?3:c.difficulty==='medium'?5:6;
+  const extras=shuffled(pool.filter(r=>!selected.includes(r)),c.id+'-clue-variety');
+  const desiredTypes:SeatingRule['type'][]=['apart','before','next','immediately-before','seat'];
+  while(selected.length<minimum && extras.length){
+    const missing=desiredTypes.find(t=>!selected.some(r=>r.type===t));
+    const idx=missing?extras.findIndex(r=>r.type===missing):-1;
+    const extra=extras.splice(idx>=0?idx:0,1)[0];
+    if(extra)selected.push(extra);
+  }
   return shuffled(selected,c.id+'-rule-display');
 }
 export function validSeatingArrangements(c: SeatingCase):string[][] {
