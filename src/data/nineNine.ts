@@ -1,5 +1,5 @@
 import type { Difficulty } from '../lib/passport';
-import { auditedExhibitNotes } from './nineNineAudit';
+import { verifiedCases, verifiedCaseIssues, type VerifiedExhibit } from './nineNineVerified';
 
 /** Original, fictional case files inspired by the setting and running gags of
  * Brooklyn Nine-Nine. NOT reproductions of aired plots or official dialogue. */
@@ -26,42 +26,26 @@ type Seed={
 /** Evidence string syntax: emoji~category~title~description
  * Link string syntax: index,index~Deduction prompt~Verified reasoning
  * Clue meanings are authored; survivor sets are constructed separately and tested. */
-function unpackEvidence(raw:string,i:number):Evidence {
-  const parts=raw.split('~');
-  if(parts.length!==4)throw new Error('Malformed evidence '+raw);
-  return {id:'e'+i,icon:parts[0],kind:parts[1] as Evidence['kind'],title:parts[2],text:parts[3]};
-}
-function unpackLink(raw:string,i:number,s:Seed):Deduction {
-  const [pair,prompt,conclusion]=raw.split('~');
-  const [a,b]=pair.split(',').map(Number);
-  const others=s.suspects.filter(name=>name!==s.culprit);
-  const otherMethods=s.methods.filter(x=>x!==s.method);
-  const hard=s.difficulty==='hard';
-  const filters=hard?[
-    {possibleSuspects:[s.culprit,others[0],others[1]]},
-    {possibleSuspects:[s.culprit,others[1]],possibleMethods:[s.method,otherMethods[0]]},
-    {possibleSuspects:[s.culprit,others[2]]},
-    {possibleMethods:[s.method,otherMethods[1]]},
-  ]:[
-    {possibleSuspects:[s.culprit,others[0]]},
-    {possibleSuspects:[s.culprit,others[1]],possibleMethods:[s.method,otherMethods[0]]},
-    {possibleMethods:[s.method,otherMethods[1]]},
-  ];
-  if(!filters[i])throw new Error('Too many links '+s.id);
-  return {id:'link'+i,pair:['e'+a,'e'+b],prompt,conclusion,...filters[i]};
-}
+/** The edition-two casebook replaces the earlier mechanical survivor lists.
+ * Every rule now comes from a named, authored pair of actual evidence records,
+ * and each exclusion is independently justified in their combined text.
+ * Legacy case IDs and award ledgers remain unchanged. */
 function makeCase(s:Seed):NineCase {
-  const deductions=s.links.map((line,i)=>unpackLink(line,i,s));
-  const notes=auditedExhibitNotes[s.id];
-  if(!notes||notes.length!==deductions.length)throw new Error('Missing forensic audit notes for '+s.id);
-  const evidence=s.evidence.map(unpackEvidence);
-  deductions.forEach((d,i)=>{
-    const record=evidence.find(e=>e.id===d.pair[1]);
-    if(!record)throw new Error('Missing referenced report in '+s.id);
-    record.text+=' PRECINCT CROSS-CHECK: '+notes[i];
-  });
-  return {...s,track:s.track??'detective',evidence,deductions,
-    decisive:'link'+(s.links.length-1)};
+ const v=verifiedCases[s.id];
+ if(!v)throw new Error('Missing audited case '+s.id);
+ const count=v.links.length;
+ const toEvidence=(v:VerifiedExhibit,i:number):Evidence=>({
+   id:'e'+i,icon:v[0],kind:v[1],title:v[2],text:v[3],
+ });
+ // Interleave the records: the two halves of a connection aren't necessarily
+ // adjacent in the evidence grid. Pairing is determined by content, not order.
+ const evidence:Evidence[]=[...v.links.map(l=>l.a),...v.links.map(l=>l.b)].map(toEvidence);
+ const deductions:Deduction[]=v.links.map((l,i)=>({
+   id:'link'+i,pair:['e'+i,'e'+(count+i)],prompt:l.question,conclusion:l.inference,
+   possibleSuspects:s.suspects.filter(name=>!l.excludesSuspects.includes(name)),
+   possibleMethods:s.methods.filter(name=>!l.excludesMethods.includes(name)),
+ }));
+ return {...s,track:s.track??'detective',evidence,deductions,decisive:'link'+(count-1)};
 }
 
 export const nineCases:NineCase[]=[
@@ -289,6 +273,7 @@ export function caseCandidates(c:NineCase,solvedIds:readonly string[]=[]):{suspe
 export function allNineCaseIssues():string[]{
   const issues:string[]=[];
   if(new Set(nineCases.map(c=>c.id)).size!==nineCases.length)issues.push('duplicate IDs');
+  issues.push(...verifiedCaseIssues());
   for(const c of nineCases){
     const evIds=c.evidence.map(e=>e.id);
     if(c.suspects.length!==4||c.methods.length!==3||new Set(c.suspects).size!==4||new Set(c.methods).size!==3)
@@ -316,6 +301,21 @@ export function allNineCaseIssues():string[]{
     const finals=caseCandidates(c,all);
     if(finals.length!==1||finals[0]?.suspect!==c.culprit||finals[0]?.method!==c.method)
       issues.push(c.id+': case has '+finals.length+' final deductions');
+    // Every pair must contribute something essential, irrespective of which
+    // order a curious player connects the evidence.
+    for(let skipped=0;skipped<all.length;skipped++){
+      const without=all.filter((_,i)=>i!==skipped);
+      if(caseCandidates(c,without).length<2)issues.push(c.id+': optional link '+skipped);
+    }
+    // Even after *any* two (or three) connections, a Clever/Expert case
+    // must retain at least two real suspect identities, not merely methods.
+    if(c.difficulty!=='easy'){
+      for(let skipped=0;skipped<all.length;skipped++){
+        const grid=caseCandidates(c,all.filter((_,i)=>i!==skipped));
+        if(new Set(grid.map(v=>v.suspect)).size<2)
+          issues.push(c.id+': culprit known without link '+skipped);
+      }
+    }
     const prefix=all.slice(0,-1);
     if(caseCandidates(c,prefix).length<2)issues.push(c.id+': final link is unnecessary');
     if(c.deductions.length!==(c.difficulty==='hard'?4:3))issues.push(c.id+': wrong number of deductive connections');
