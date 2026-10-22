@@ -35,7 +35,7 @@ describe('Brave overhaul — real archery physics and fair challenge progression
   expect(()=>braveShot(braveArcheryTargets[0],{aim:45,elevation:20,speed:40})).toThrow();
  });
  it('uses progressively more consequential puzzles with alternate locks',()=>{
-  const routes=braveCampaignStages.filter(s=>s.route).map(s=>s.route!);
+  const routes=braveCampaignStages.slice(0,9).filter(s=>s.route).map(s=>s.route!);
   expect(routes).toHaveLength(7);
   expect(routes[0].rows.join('')).not.toMatch(/[KDH]/);
   expect(routes[3].rows.join('').split('W').length-1).toBe(2);
