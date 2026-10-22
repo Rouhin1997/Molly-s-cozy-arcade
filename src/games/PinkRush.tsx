@@ -2,7 +2,7 @@ import { useEffect,useRef,useState,type CSSProperties,type Dispatch,type SetStat
 import { pinkChallengeFor,pinkEncoreColors,pinkEncouragements } from '../data/pinkRush';
 import { choosePink } from '../lib/pinkRush';
 import { concertReaction,finaleFanfare } from '../lib/pinkConcertAudio';
-import { advancePink,applyPinkRound,choosePink,getActivePinkRound,pinkDailySession,pinkEncorePattern,pinkNextPractice,pinkShowScore,type PinkProgress } from '../lib/pinkRush';
+import { advancePink,applyPinkRound,getActivePinkRound,pinkDailySession,pinkEncorePattern,pinkNextPractice,pinkShowScore,type PinkProgress } from '../lib/pinkRush';
 
 type Props={today:string;progress:PinkProgress;setProgress:Dispatch<SetStateAction<PinkProgress>>;onHome:()=>void;onWallet:()=>void};
 const stageMembers=[
