@@ -1,5 +1,7 @@
 # Molly's Cozy Arcade ✿
 
+> **Copyright © 2026 Rouhin Nag. All rights reserved.** This is an unofficial fan-made project. Original project material is proprietary; public source access does not grant general reuse or commercial rights. Third-party characters, dependencies and other separately licensed material retain their own rights. Read the [LICENSE](LICENSE) for details.
+
 ## Phase 4B — Name suggestions for free-text game answers (22 October 2026)
 
 **Owner requested:** When typing in expert-level games (especially Toon Rewind and Guess Who?), help recall a forgotten show or ingredient name using a matching catalogue/autocomplete rather than requiring perfect spelling. Make this a lightweight usability aid rather than reducing the mystery to an automatically revealed solution.
