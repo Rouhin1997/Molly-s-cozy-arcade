@@ -1,5 +1,18 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 2K — Pink Rush 2.0 fan-festival, comeback stakes and coupon wallet
+
+**User testing findings:** The first BLACKPINK version was too discography-heavy, too pastel and too easy. Stage and controls were too far apart; the finale needed real spectacle; the decorative scrapbook felt pointless. User authorized a complete refactor plus a one-time real-life coupon system with explicit rules.
+
+- **12 acts in each fresh show:** 2 track memories, 1 chronology, 3 member-solo spotlights, 5 sourced fan-culture questions, 1 colour-lightstick encore. No global difficulty selector. About 70 factual items in rotating source-backed pools, with pets, brand ambassadors, public screen roles, World Cup single Goals, Coachella, Labubu and public career facts. Avoid unverified personal preferences, invented quotes and copied music.
+- Black/hot-pink concert stage, original CSS performer silhouettes, animated audience, sound-reactive spotlights, blinking progress bulbs and a stage that's **always visible during the gameplay** using side-by-side desktop and sticky compact mobile layout. Crowd reaction and finale fanfare synthesized from scratch in WebAudio; no samples or licensed music. User can mute sound; sound only starts after user interaction.
+- **Actual challenge:** wrong answer extinguishes the previous lit stage segment, steps back to the preceding act and resets it. The player must solve that round again before returning to the still-pending challenge. First act has no previous light to lose. The original per-challenge best-award ledger prevents repeat points. A successful encore triggers a fullscreen performance celebration and a link directly to the rewards.
+- **Meaningful tour log:** completed segments unlock clickable mini cards with explanatory notes and link to the wallet. Replaces the noninteractive pastel banner.
+- **Coupon state machine:** `locked → ready (one completed new show) → active (one of three blind cards chosen) → redeemed`, or `active → seeking (surrender) → ready (complete another FULL new show)`. `redeemed` is terminal even after further wins. Card permutations are deterministic per earned draw but hidden from the player until selection; other cards are revealed afterward. Exactly three offers: Rouhin learns a short BLACKPINK choreo, Rouhin sings a BLACKPINK/solo song, or Rouhin delivers a one-minute speech praising Lisa. No secret unlock codes are shipped.
+- `PinkWallet` is a dedicated reachable arcade view; the Passport always displays the coupon's status, and after redemption contains an archived gift panel that will remain visible. Passport v4 export includes coupons and import merges any existing terminal redemption marker; separate browser-localStorage redemption key prevents accidental rollback by stale backups on the same device. **No true secure one-time enforcement across devices without server-authenticated storage.**
+- Browser compatibility: `PinkProgress.version` and `mollys-pink-rush-v1` unchanged; old 8-act active sessions are still usable, while new shows have 12 acts.
+- New `tests/pinkRush.test.ts` exercises 12 acts, ~70 question checks, loss of lights, reclaiming prior act, star anti-farming, coupon selection, surrender and replay, irreversible redemption, old 8-act saves, stale backup safety.
+
 ## Phase 2J — Pink Rush! (implemented) and Brave (approved docket only)
 
 The user approved two new concepts. **Pink Rush!** (Game 06) launched first, while **Brave: The Wisps' Trail** (Game 07) must remain explicitly **Coming Soon** pending a separate future implementation green light.
