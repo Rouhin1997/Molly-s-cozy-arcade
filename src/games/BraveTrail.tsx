@@ -201,7 +201,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
    <section className="brave-keeper-panel">
     <div className="brave-keeper-symbol" aria-hidden="true">✧</div>
     <div><span className="brave-kicker">THE KEEPER’S JOURNAL</span><h2>A promise made in the moonlight</h2>
-     <p>{vowNote}</p><small>{save.inspected.length} of 6 places explored on this illustrated map · your promise is saved in this browser</small></div>
+     <p>{vowNote}</p><small>{save.inspected.length} paths explored · the wisps remember your promise</small></div>
     <button className="brave-dialogue-trigger" onClick={()=>setIntroOpen(true)}>Read the opening ↗</button>
    </section>
    <p className="brave-credits">An unofficial, fan-made storybook inspired by <i>Brave</i>, with an original new adventure for Molly.</p>
