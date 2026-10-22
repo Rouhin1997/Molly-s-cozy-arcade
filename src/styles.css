@@ -1352,3 +1352,110 @@
  .brave-crossing-key{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.brave-crossing-light{animation:none}}
+
+
+/* BRAVE · THREE-CHAPTER CONTINUOUS STORY CAMPAIGN
+   Responsive theatrical chapter pages with distinct weather and pacing. */
+.brave-banner-actions{display:flex;gap:12px;flex-wrap:wrap}
+.brave-banner-play{background:#d0e6ce;border-color:#9cbda1}
+.brave-journey{
+ scroll-margin-top:24px;--journey-ink:#2c5a52;
+ padding:25px 29px 20px;
+ background:radial-gradient(circle at 9% 2%,#fff9e5,transparent 35%),linear-gradient(145deg,#f2e5c9,#e3e6cc 70%,#deecdc);
+}
+.brave-journey-forest{--journey-ink:#2b6267;background:radial-gradient(circle at 12% 4%,#e6f1e0,transparent 32%),linear-gradient(125deg,#e9e8ce,#cdded2)}
+.brave-journey-witch{--journey-ink:#705344;background:radial-gradient(circle at 85% 10%,#fbe2b7,transparent 40%),linear-gradient(130deg,#f1e6cd,#ded9ba)}
+.brave-journey-heading{display:flex;justify-content:space-between;align-items:start;gap:18px}
+.brave-journey-heading h2{font-size:clamp(28px,3vw,43px);line-height:1.08;color:var(--journey-ink);margin:7px 0 10px}
+.brave-journey-heading p{font-size:13px;line-height:1.75;color:#567263;max-width:750px;margin:0 0 18px}
+.brave-journey-counter{display:grid;align-items:center;justify-content:center;flex:none;border:2px double #b7ac89;border-radius:50%;background:#fff7de;color:#607d6c;width:69px;height:69px;text-align:center;font:bold 29px Georgia,serif}
+.brave-journey-counter small{font:700 11px 'DM Sans',sans-serif;color:#8c9b80;margin-top:-26px}
+.brave-journey-chapters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:5px 0 13px}
+.brave-journey-chapters button{border:1px solid #a7bfa9;border-radius:10px;background:#f8eed8;color:#52766a;padding:12px 7px;font:bold 13px Georgia,serif;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px}
+.brave-journey-chapters button span{font-size:20px}
+.brave-journey-chapters button small{font:800 9px 'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.brave-journey-chapters button.is-active{background:#2f6a62;color:#fdf4d7;box-shadow:0 3px 9px #234e455e}
+.brave-journey-chapters button:disabled{opacity:.45;cursor:default}
+.brave-journey-landscape{width:100%;height:auto;aspect-ratio:980/245;display:block;object-fit:cover;border-radius:13px 13px 3px 3px;border:3px double #d9be8c;box-shadow:inset 0 0 20px #203d3963}
+.brave-journey-story{border:2px solid #d0bf96;border-top:0;border-radius:0 0 14px 14px;background:radial-gradient(circle at 85% 1%,#fffcf0,transparent 41%),#faf1d9;padding:22px 26px;box-shadow:0 8px 16px #5d5b4431}
+.brave-journey-story .brave-kicker{color:#7e866b}
+.brave-journey-story h3{font-size:clamp(25px,2.6vw,37px);color:#3d5f54;margin:6px 0 8px;line-height:1.07}
+.brave-journey-story>p{font-size:14px;line-height:1.8;color:#665f49;margin:0 0 16px}
+.brave-journey-voices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.brave-journey-voices blockquote{margin:0;padding:12px 15px;background:#e6eacf;border-left:3px solid #83ad9e;border-radius:0 10px 10px 0;display:flex;flex-direction:column;gap:5px}
+.brave-journey-voices blockquote:nth-child(2){background:#d9ede2;border-color:#80bfbc}
+.brave-journey-voices strong{font:900 9px 'DM Sans',sans-serif;letter-spacing:.12em;color:#597c6d}
+.brave-journey-voices span{font:italic 13px/1.65 Georgia,serif;color:#4b665a}
+.brave-journey-pages{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:6px;margin:16px 0}
+.brave-journey-pages button{display:flex;align-items:center;justify-content:center;gap:4px;padding:10px 0;border:1px solid #b5c2a6;border-radius:8px;background:#f8f0dd;color:#59776d;font:bold 14px Georgia,serif}
+.brave-journey-pages button span{font-size:11px}
+.brave-journey-pages button.is-current{background:#356c61;color:#fff4d8;border-color:#356c61}
+.brave-journey-pages button:disabled{cursor:default;opacity:.45}
+.brave-journey-playfield{padding:10px 0}
+.brave-journey-playfield .brave-crossing-tile.is-wall{background:linear-gradient(150deg,#62796c,#344e48)}
+.brave-journey-forest .brave-crossing-tile.is-wall{background:linear-gradient(145deg,#3d7462,#264c49);border-color:#a1b8a083}
+.brave-journey-witch .brave-crossing-tile.is-wall{background:linear-gradient(145deg,#947960,#524d45);border-color:#c0a58383}
+.brave-journey-forest .brave-crossing-grid-frame{background:linear-gradient(145deg,#25484b,#4e8171)}
+.brave-journey-witch .brave-crossing-grid-frame{background:linear-gradient(135deg,#544e42,#96775b)}
+.brave-journey-special{display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr);gap:20px;margin-top:10px}
+.brave-journey-target-art{position:relative;min-height:280px;border-radius:12px;border:4px double #c0ae84;display:flex;align-items:center;justify-content:center;gap:15px;background:radial-gradient(circle at 65% 40%,#c5d9b8,transparent 40%),linear-gradient(145deg,#66897e,#284f4b);overflow:hidden}
+.brave-journey-target-art:after{content:'';position:absolute;bottom:0;left:0;right:0;height:65px;background:#244d3c;clip-path:polygon(0 40%,25% 20%,47% 55%,72% 14%,100% 36%,100% 100%,0 100%)}
+.brave-journey-target-art>span{position:relative;z-index:1;text-shadow:0 5px 12px #183c3591}
+.brave-journey-target-art>span:nth-child(1){font-size:43px;align-self:end;margin-bottom:52px}
+.brave-journey-target-art>span:nth-child(2){font-size:90px;color:#e8d7b4}
+.brave-journey-target-art>span:nth-child(3){font-size:40px;align-self:start;margin-top:77px;color:#e7e8bf}
+.brave-journey-runes .brave-journey-target-art{background:radial-gradient(circle,#e4c393,#84715b 66%,#514e44)}
+.brave-journey-special-controls{background:#fff8e5b8;border:1px solid #b9bd9f;border-radius:12px;padding:19px 20px}
+.brave-journey-special-controls .brave-kicker{color:#769284}
+.brave-journey-special-controls h4{font-size:26px;color:var(--journey-ink);margin:7px 0}
+.brave-journey-special-controls p{font-size:13px;line-height:1.65;color:#617362}
+.brave-journey-weather{font-weight:700;background:#e2ebd7;border-radius:8px;padding:9px}
+.brave-journey-control-label{font:bold 12px Georgia,serif;color:#496e62;margin:14px 0 8px}
+.brave-journey-choice-row{display:flex;gap:7px;flex-wrap:wrap}
+.brave-journey-choice-row button{flex:1 1 auto;background:#e9edda;color:#436b5d;border:1px solid #aec3a7;border-radius:9px;padding:12px 8px;font:bold 12px Georgia,serif}
+.brave-journey-choice-row button[aria-pressed=true]{background:#2f6d61;border-color:#2f6d61;color:#fff3d1}
+.brave-journey-main-action{padding:12px 22px;border-radius:26px;border:2px solid #b7cda7;background:#315f54;color:#fff4d7;font:bold 15px Georgia,serif;box-shadow:0 4px 0 #173e36;cursor:pointer;margin:17px 0 4px}
+.brave-journey-main-action:hover{background:#46776b}
+.brave-journey-rune-dots{display:flex;gap:12px;margin:18px 0;color:#99ae98}
+.brave-journey-rune-dots span{font-size:28px}.brave-journey-rune-dots .is-complete{color:#3b9a8b;text-shadow:0 0 11px #7edccd}
+.brave-journey-runes .brave-journey-choice-row button{display:flex;gap:9px;justify-content:center;align-items:center}
+.brave-journey-runes .brave-journey-choice-row button span{font-size:21px}
+.brave-journey-hint{font:italic 12px/1.7 Georgia,serif;color:#6e7f6d;background:#fff6dcb8;border:1px dashed #c6c7a2;border-radius:9px;padding:10px 13px;margin:10px 0}
+.brave-journey-hint span{font-weight:bold;color:#4e8c7d}
+.brave-journey-end{text-align:center;border:4px double #bac4a3;border-radius:14px;padding:30px 24px;margin:14px 0;background:radial-gradient(circle at 50% 10%,#fffdf0,#dfebd7);box-shadow:0 10px 24px #345f4a2a}
+.brave-journey-end-sigil{font-size:38px;color:#71a89a;text-shadow:0 0 14px #7cdbd4}
+.brave-journey-end h3{font-size:30px;color:#376d5d;margin:7px 0}
+.brave-journey-end>p{font-size:15px;line-height:1.8;color:#536956;max-width:670px;margin:12px auto}
+.brave-journey-bridge{max-width:690px;margin:20px auto 6px;border-top:2px solid #c4c8a8;border-bottom:2px solid #c4c8a8;padding:13px 8px;color:#607765}
+.brave-journey-bridge>span{color:#76aaa0}
+.brave-journey-bridge p{font:italic 15px/1.8 Georgia,serif;margin:9px}
+.brave-journey-replay{display:block;margin:13px auto 0;padding:7px 10px;border:0;background:transparent;text-decoration:underline;color:#6a8d7c;font-size:12px}
+.brave-journey-to-be-continued{font-style:italic}
+.brave-journey-bottom-note{text-align:center;font:italic 11px Georgia,serif;color:#7c9081;margin:15px 0 0}
+@media(max-width:860px){
+ .brave-journey-special{grid-template-columns:1fr}
+ .brave-journey-target-art{min-height:190px}
+ .brave-journey-target-art>span:nth-child(1){margin-bottom:20px}
+ .brave-journey-target-art>span:nth-child(3){margin-top:34px}
+}
+@media(max-width:650px){
+ .brave-banner-actions{gap:8px}
+ .brave-banner-actions .brave-banner-cta{font-size:11px;padding:9px 13px}
+ .brave-journey{padding:15px 11px}
+ .brave-journey-heading p{font-size:12px}
+ .brave-journey-counter{width:51px;height:51px;font-size:23px}
+ .brave-journey-counter small{font-size:8px;margin-top:-21px}
+ .brave-journey-chapters button{flex-direction:column;font-size:10px;gap:2px;padding:9px 3px}
+ .brave-journey-chapters button small{font-size:8px}
+ .brave-journey-landscape{aspect-ratio:980/380;object-fit:cover}
+ .brave-journey-story{padding:17px 14px}
+ .brave-journey-voices{grid-template-columns:1fr}
+ .brave-journey-story>p{font-size:12px}
+ .brave-journey-voices span{font-size:12px}
+ .brave-journey-pages{gap:2px}
+ .brave-journey-pages button{font-size:10px;padding:8px 0;gap:1px;flex-direction:column}
+ .brave-journey-pages button span{font-size:9px}
+ .brave-journey-special-controls{padding:14px}
+ .brave-journey-end{padding:20px 12px}
+}
+@media(prefers-reduced-motion:reduce){.brave-journey *{scroll-behavior:auto}}
