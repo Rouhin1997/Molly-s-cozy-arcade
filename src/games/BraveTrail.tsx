@@ -148,7 +148,7 @@ function startBraveAmbience():()=>void{
  return ()=>{window.clearInterval(timer);void ctx.close()};
 }
 export default function BraveTrail({onHome}:{onHome:()=>void}){
- const [save,setSave]=useState<BravePreviewSave>(readBraveSave);
+ const [save,setSave]=useState<BravePreviewSave>(()=>({...readBraveSave(),soundEnabled:false}));
  const [active,setActive]=useState(braveChapters[0].id);
  const [introOpen,setIntroOpen]=useState(()=>!readBraveSave().prologueSeen);
  const [dialogueOpen,setDialogueOpen]=useState(false);
