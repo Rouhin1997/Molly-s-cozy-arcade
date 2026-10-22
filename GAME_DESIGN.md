@@ -1,5 +1,17 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 2I — Mystery construction standards (implemented)
+
+A mathematically unique case is **not automatically an interesting or fair detective mystery**. Every one of The 99 Files' 12 cases now follows these standards:
+
+1. Four suspects and three possible mechanisms start as twelve plausible hypotheses. Each evidence connection requires cross-reading **two distinct, freely inspectable documents**. Every exclusion must be grounded in those actual documents, not an invisible scripted list.
+2. **Every link is essential:** the intersection of any proper subset of the case's three or four links must leave more than one complete suspect/mechanism combination. Only all three (Cozy/Clever) or all four (Expert) may isolate the joint answer.
+3. For Clever and Expert, the intended natural order must leave **at least two plausible culprits** immediately before the final, incriminating link. Cozy leads a little more clearly and highlights a suggested source document.
+4. Difficulty comes from the *logic and linguistic subtlety* of the case, not from hiding question text. Expert's questions are now always visible. Complete evidence is never withheld and every successful connection has an intelligible written deduction.
+5. Each result offers a short original crime reconstruction and cites the exact decisive report pair. The evidence-first source has been reviewed separately from the computational solver.
+
+Added `src/data/nineNineVerified.ts`, exhaustive formal tests and safe migration for unfinished older browser saves. Revised Holt sticker to a properly shaved head and recognisable facial geometry. No official cast images or audio copied. Molly's private photo remains unpublished.
+
 ## Phase 2H — Evidence quality and portrait redesign (implemented)
 
 Nine-Nine uses original, individualized chibi sticker portraits; private user reference photos are never checked into GitHub. Detective Molly appears first in every case-specific squad. Cozy offers one suggested first exhibit, two optional hints and generous attempts; Clever uses questions without direct evidence anchors; Expert must uncover four sealed investigation threads, with no hints and stricter guessing. At every difficulty the full reports remain readable and completed deductions reveal paired document sources plus deductions, eliminated suspect/method options and the remaining candidate count from the actual solver.
