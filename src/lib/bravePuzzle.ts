@@ -51,10 +51,13 @@ export function bravePuzzleIssues(level:BraveLevel):string[]{
  if(level.rows.some(row=>row.length!==width))errors.push('Puzzle rows must have equal widths');
  const all=level.rows.join('');
  if(/[^#.SWAGE]/.test(all))errors.push('Unknown tile glyph');
- for(const glyph of ['S','E','W','A','G']){
-  const n=[...all].filter(c=>c===glyph).length;
-  if(n!==1)errors.push('Expected exactly one '+glyph+' tile');
+ for(const glyph of ['S','E']){
+  if([...all].filter(c=>c===glyph).length!==1)errors.push('Expected exactly one '+glyph+' tile');
  }
+ for(const glyph of ['W','A','G']){
+  if([...all].filter(c=>c===glyph).length>1)errors.push('Expected at most one '+glyph+' tile');
+ }
+ if(all.includes('G')&&!all.includes('A'))errors.push('Gates require a standing stone');
  return errors;
 }
 export function braveInitialState(level:BraveLevel):BravePuzzleState{
@@ -86,7 +89,7 @@ export function braveMove(level:BraveLevel,state:BravePuzzleState,dir:BraveDirec
  }
  const wisps=tile==='W'&&!state.wisps.includes(next)
   ?[...state.wisps,next].sort((a,b)=>a-b):state.wisps;
- const stones=tile==='A'&&wisps.length>0&&!state.stones.includes(next)
+ const stones=tile==='A'&&(wisps.length>0||!level.rows.join('').includes('W'))&&!state.stones.includes(next)
   ?[...state.stones,next].sort((a,b)=>a-b):state.stones;
  const result:BravePuzzleState={position:next,wisps,stones,moves:state.moves+1};
  const event=braveCompleted(level,result)?'finish'
