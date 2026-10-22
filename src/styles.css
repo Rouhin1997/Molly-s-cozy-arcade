@@ -1088,3 +1088,10 @@
 @keyframes pink-firework{0%{transform:scale(.45) rotate(-25deg);opacity:.15}60%{opacity:1}100%{transform:scale(1.55) rotate(40deg);opacity:.6}}
 @media(max-width:680px){.pink-finale-overlay-inner{min-height:395px;padding:35px 15px}.pink-finale-disco{font-size:33px}.pink-finale-overlay-inner p{font-size:12px}.pink-finale-overlay-actions .btn{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.pink-finale-disco,.pink-finale-sparks span{animation:none}}
+
+/* Phase 2L: keep the crowd control unobtrusive and readable. */
+.pink-stage-area{position:sticky}
+.pink-stage-area .pink-sound-toggle{position:absolute;right:12px;top:12px;z-index:12;display:grid;place-items:center;width:39px;height:39px;margin:0;padding:0;border:1px solid #ff81bd;border-radius:50%;background:#0c0610e8;color:#ffd6eb;font-size:19px;box-shadow:0 2px 14px #0009}
+.pink-stage-area .pink-sound-toggle:hover,.pink-stage-area .pink-sound-toggle:focus-visible{background:#6f2250;outline-color:#ff87c2}
+.pink-rush-game .privacy-note{font-size:11px;line-height:1.7;color:#d0a0bd!important;text-align:center;margin:20px auto 2px;max-width:760px}
+@media(max-width:740px){.pink-stage-area .pink-sound-toggle{width:32px;height:32px;right:7px;top:7px;font-size:16px}}
