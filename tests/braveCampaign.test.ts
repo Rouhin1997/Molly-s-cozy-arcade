@@ -63,15 +63,15 @@ describe('Brave three connected chapters — campaign acceptance',()=>{
    }
   }
  });
- it('accepts the three rune marks in story order without punishing wrong taps',()=>{
-  expect(braveRuneOrder).toEqual(['oak','light','hearth']);
+ it('solves four-rune carving after exploring the Witch’s clues, with a decoy',()=>{
+  expect(braveRuneOrder).toEqual(['oak','river','light','hearth']);
   let at=0;
-  at=braveRuneStep(at,'river',braveRuneOrder);expect(at).toBe(0);
+  at=braveRuneStep(at,'bear',braveRuneOrder);expect(at).toBe(0);
   at=braveRuneStep(at,'oak',braveRuneOrder);expect(at).toBe(1);
-  at=braveRuneStep(at,'oak',braveRuneOrder);expect(at).toBe(1);
-  at=braveRuneStep(at,'light',braveRuneOrder);expect(at).toBe(2);
-  at=braveRuneStep(at,'hearth',braveRuneOrder);expect(at).toBe(3);
-  at=braveRuneStep(at,'river',braveRuneOrder);expect(at).toBe(3);
+  at=braveRuneStep(at,'light',braveRuneOrder);expect(at).toBe(1);
+  at=braveRuneStep(at,'river',braveRuneOrder);expect(at).toBe(2);
+  at=braveRuneStep(at,'light',braveRuneOrder);expect(at).toBe(3);
+  at=braveRuneStep(at,'hearth',braveRuneOrder);expect(at).toBe(4);
  });
  it('unlocks stages in linear story order and permits replay without skipped chapters',()=>{
   let save=freshBraveJourney();
