@@ -1694,3 +1694,204 @@
  .brave-tapestry-patch-label{font-size:8px}
  .brave-tapestry-border-labels{font-size:8px}
 }
+
+
+/* PHASE 4 — compact expanding header / editorial navigation */
+.site-header{height:auto;min-height:88px;z-index:25}
+.site-header .header-inner{min-height:88px;max-width:1330px;gap:15px}
+.site-header nav.hub-nav{display:flex;flex:1;min-width:0;gap:5px;align-items:center;justify-content:flex-end}
+.hub-nav .hub-menu{position:relative}
+.hub-nav .hub-menu>summary{list-style:none}
+.hub-nav .hub-menu>summary::-webkit-details-marker{display:none}
+.site-header nav.hub-nav .hub-nav-trigger{
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 11px;
+ color:#62566e;font-size:12px;font-weight:750;border:1px solid transparent;border-radius:18px;
+ white-space:nowrap;background:none;cursor:pointer;min-height:43px
+}
+.site-header nav.hub-nav .hub-nav-trigger:hover,
+.site-header nav.hub-nav .hub-nav-trigger.is-active,
+.site-header nav.hub-nav .hub-menu[open]>.hub-nav-trigger{color:#6d489b;background:#f1e9f9;border-color:#e8d9f3}
+.hub-nav-icon{font-size:17px;line-height:1}
+.hub-chevron{font-size:17px;font-weight:400;margin-left:2px}
+.hub-mail-dot{width:6px;height:6px;background:#d99e8a;border-radius:50%;box-shadow:0 0 0 2px #fff}
+.hub-popover{
+ position:absolute;top:calc(100% + 11px);left:0;z-index:60;
+ width:min(365px,92vw);max-height:min(650px,75vh);overflow-y:auto;
+ background:#fffdf9;border:1px solid #e5d6e7;border-radius:20px;
+ box-shadow:0 22px 55px #30214138;padding:12px;color:#4e4358;
+ text-align:left
+}
+.hub-popover-games{width:min(380px,92vw)}
+.hub-popover-events,.hub-popover-mail{left:auto;right:0}
+.hub-popover-future{left:auto;right:0}
+.hub-popover-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 11px 13px;border-bottom:1px solid #eee7ed;margin-bottom:5px}
+.hub-popover-heading strong{font:700 16px 'Fraunces',Georgia,serif;color:#493454}
+.hub-popover-heading small{font-size:10px;color:#9a83a4;text-align:right}
+.hub-popover-list{display:grid;gap:1px}
+.site-header nav.hub-nav .hub-popover-item{
+ width:100%;display:flex;align-items:center;gap:10px;text-align:left;
+ background:none;color:#5e4f68;border:0;border-radius:12px;padding:10px;
+ min-height:57px;transition:background .15s
+}
+.site-header nav.hub-nav .hub-popover-item:hover,
+.site-header nav.hub-nav .hub-popover-item.is-current{background:#f5eff8}
+.hub-popover-emoji{font-size:22px;width:31px;flex:none;text-align:center}
+.hub-popover-item>span:nth-child(2){min-width:0;flex:1;display:grid;gap:4px}
+.hub-popover-item strong{font-size:12px;color:#503e60}
+.hub-popover-item small{font-size:10px;color:#91849b;font-weight:500}
+.hub-item-arrow{color:#986bb0;opacity:.8}
+.site-header nav.hub-nav .hub-menu-footer-link{display:block;width:100%;border:0;border-top:1px solid #eee7ed;border-radius:0;background:transparent;color:#7955a2;font-size:11px;text-align:left;padding:13px 11px 6px}
+.site-header nav.hub-nav .hub-event-item{display:flex;width:100%;align-items:flex-start;gap:12px;padding:13px 7px;border:0;border-bottom:1px solid #eee7e9;text-align:left;background:transparent;border-radius:10px}
+.site-header nav.hub-nav .hub-event-item:hover{background:#f9f2f9}
+.hub-event-date{width:63px;padding:9px 3px;background:#f0e7f7;border-radius:12px;flex:none;display:flex;flex-direction:column;align-items:center;gap:2px;color:#6a4e87}
+.hub-event-date strong{font:bold 21px Georgia,serif}
+.hub-event-date small{font-size:10px}
+.hub-event-item>div:nth-child(2){min-width:0}
+.hub-event-item>div:nth-child(2)>strong{font-size:13px;color:#554662}
+.hub-event-item p{font-size:11px;line-height:1.6;color:#806f89;margin:5px 0}
+.hub-event-item>div:nth-child(2)>span{font-size:10px;font-weight:800;color:#8f6ba2}
+.hub-note{padding:13px 10px;border-bottom:1px solid #ede5e9}
+.hub-note-top{display:flex;gap:9px;justify-content:space-between;align-items:baseline}
+.hub-note-top strong{font-size:12px;color:#563f62}
+.hub-note-top small{font-size:9px;color:#a2919e;text-align:right}
+.hub-note p{font-size:11px;color:#74677b;line-height:1.75;margin:7px 0 0}
+.hub-note-foot{font:italic 10px/1.6 Georgia,serif;color:#968b98;margin:10px}
+
+/* Independent upcoming concept shelf — no fake launch/play status */
+.future-shelf{padding:66px 0 40px;scroll-margin-top:25px}
+.future-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.future-card{border-radius:20px;padding:20px 18px;min-height:295px;display:flex;flex-direction:column;gap:10px;border:1px dashed #c9b8d2;box-shadow:0 5px 18px #604a6d0d}
+.future-card-top{display:flex;justify-content:space-between;align-items:center;gap:7px;color:#8e769b}
+.future-card-top span{font:800 9px/1.5 'DM Sans',sans-serif;letter-spacing:1px}
+.future-card-icon{font-size:54px;margin:14px 0 7px}
+.future-card>strong{font:700 20px/1.2 'Fraunces',Georgia,serif;color:#453352}
+.future-card p{font-size:12px;line-height:1.65;color:#6f6577;margin:0;flex:1}
+.future-card button{background:#fff8;border:1px solid #d8c9dc;border-radius:22px;padding:11px 13px;color:#765591;font-size:11px;font-weight:750;text-align:left}
+.arcade-events-home{padding:22px 0 44px}
+.arcade-event-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.arcade-event-card{display:flex;align-items:center;gap:14px;padding:22px 20px;border:1px solid #e9ddec;border-radius:20px;background:linear-gradient(125deg,#f3eaf7,#fdf1e9)}
+.arcade-event-emoji{font-size:33px}
+.arcade-event-card>div{flex:1}
+.arcade-event-card h3{margin:7px 0;color:#443351;font:700 19px 'Fraunces',Georgia,serif}
+.arcade-event-card p{font-size:11px;color:#746579;line-height:1.6;margin:5px 0}
+.arcade-event-card .btn{white-space:nowrap;font-size:10px;padding:12px}
+
+/* Keeper's Chronicle reward in Molly's Passport */
+.passport-chronicle{
+ display:grid;grid-template-columns:minmax(190px,.68fr) minmax(0,1.3fr);
+ gap:30px;align-items:center;background:radial-gradient(circle at 8% 15%,#fff9e3,#e4ead9 64%,#deecdf);
+ border:2px solid #c7c8a1;border-radius:25px;margin:31px 0;padding:28px;
+ box-shadow:0 13px 34px #415b4421
+}
+.passport-chronicle-cover{padding:18px;background:#cdba93;border-radius:15px;transform:rotate(-3deg);box-shadow:11px 11px 0 #5b765643,0 16px 32px #435a4040;aspect-ratio:3/4}
+.passport-chronicle-cover-frame{width:100%;height:100%;border:5px double #d9bb71;outline:3px solid #d6ba78;outline-offset:-13px;border-radius:8px;background:radial-gradient(circle at 35% 35%,#557a67,#243e42);color:#fff2ba;padding:20px 12px;display:flex;flex-direction:column;justify-content:space-around;align-items:center;text-align:center;gap:8px}
+.passport-chronicle-cover-frame>strong{font:700 clamp(19px,2vw,29px)/1.16 'Fraunces',Georgia,serif;text-shadow:0 3px 5px #1e362d}
+.passport-chronicle-cover-frame>span{font-size:25px}
+.passport-chronicle-cover-frame>small{font:800 9px/1.6 'DM Sans',sans-serif;letter-spacing:.13em}
+.passport-chronicle-copy .overline{color:#69917c}
+.passport-chronicle-copy h2{font:700 clamp(25px,3vw,39px) 'Fraunces',Georgia,serif;color:#3f6656;margin:9px 0 12px}
+.passport-chronicle-copy p{font-size:13px;line-height:1.8;color:#5b7362;max-width:590px}
+.passport-chronicle-copy>small{display:block;font-size:10px;color:#86947c;margin-top:13px;line-height:1.6}
+.passport-chronicle-copy .btn:disabled{background:#8d9a8c;cursor:not-allowed;box-shadow:none;opacity:.7}
+.passport-chronicle-progress{max-width:450px;margin:18px 0 21px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:#66816f;font-size:12px}
+.passport-chronicle-meter{width:100%;height:11px;border-radius:20px;background:#cad8c4;overflow:hidden}
+.passport-chronicle-meter span{height:100%;display:block;background:linear-gradient(90deg,#67a993,#e5c786);border-radius:20px}
+.brave-keeper-stamp.is-earned{background:linear-gradient(145deg,#eaf4dd,#d5ece0);border-color:#9cbea3}
+.brave-keeper-stamp.is-earned .passport-stamp-icon{color:#6aa18e;border-color:#88ab8b;font-size:38px}
+.brave-passport-record{background:#f1f5e7}
+
+/* Large illustrated chapter spreads, on openable book pages */
+.chronicle-overlay{position:fixed;inset:0;background:#192c2bc9;backdrop-filter:blur(6px);z-index:1000;overflow-y:auto;padding:20px;display:flex;justify-content:center;align-items:flex-start}
+.chronicle-dialog{width:min(1240px,100%);background:radial-gradient(circle at 40% 0,#e6e7ce,#dbd3b6);border:5px double #cbb583;border-radius:24px;box-shadow:0 28px 95px #0e1a194f;padding:16px 19px 15px}
+.chronicle-toolbar{display:flex;justify-content:space-between;align-items:center;gap:13px;padding:4px 9px 13px}
+.chronicle-toolbar>div{display:flex;align-items:center;gap:9px}
+.chronicle-rune{font-size:28px;color:#708871}
+.chronicle-brand{font:900 11px 'DM Sans',sans-serif;letter-spacing:.15em;color:#577666}
+.chronicle-close{border:1px solid #b8b89c;background:#f7f1d9;border-radius:25px;padding:11px 17px;color:#647866;font:700 12px Georgia,serif}
+.chronicle-book{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:0;background:#f8ecd0;border:2px solid #bda77c;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px #4f4b343d}
+.chronicle-illustration{display:flex;flex-direction:column;min-width:0;min-height:600px;position:relative;background:radial-gradient(circle,#d4dbc7,#a1b9a2);padding:22px 19px;justify-content:center;border-right:11px ridge #d8c297}
+.chronicle-illustration .brave-scene-backdrop{width:100%;height:auto;min-height:360px;aspect-ratio:3/4;object-fit:cover;border:9px double #e3c99e;border-radius:8px;box-shadow:0 12px 26px #263d3947;transform:rotate(-1deg)}
+.chronicle-art-caption{margin:24px auto 6px;text-align:center;font:italic 20px 'Fraunces',Georgia,serif;color:#4e7663}
+.chronicle-vine{text-align:center;font-size:24px;color:#a8ad81;letter-spacing:12px}
+.chronicle-pages-seal{position:absolute;bottom:19px;right:26px;color:#e1d4a2;font-size:31px}
+.chronicle-leaf{position:relative;padding:38px 38px 52px;background:radial-gradient(circle at 85% 12%,#fff8e8,#f8ecd1 69%,#e9d9ba);color:#574b41;min-height:600px;box-shadow:inset 9px 0 24px #82673a1a}
+.chronicle-eyebrow{font:900 10px 'DM Sans',sans-serif;letter-spacing:.16em;color:#9d8057}
+.chronicle-leaf h2{font:700 clamp(27px,2.7vw,40px)/1.2 'Fraunces',Georgia,serif;color:#526955;margin:14px 0 10px}
+.chronicle-flourish{font:16px Georgia,serif;color:#c7ac7d;margin:13px 0 23px;text-align:center}
+.chronicle-leaf>p{font:15px/1.95 Georgia,serif;color:#5d5146;margin:0 0 16px}
+.chronicle-first-paragraph:first-letter{font:bold 45px 'Fraunces',Georgia,serif;color:#5c866d;float:left;line-height:.93;margin:7px 8px 0 0}
+.chronicle-page-number{position:absolute;bottom:17px;right:30px;font:700 12px Georgia,serif;color:#968464}
+.chronicle-last-word{text-align:center;border-top:1px solid #c5ab7c;margin-top:25px;padding-top:17px;color:#5e7762}
+.chronicle-last-word>span{font:bold 15px Georgia,serif;letter-spacing:.15em}
+.chronicle-last-word p{font:italic 14px Georgia,serif}
+.chronicle-footer{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:17px 0 7px}
+.chronicle-footer>button{border:1px solid #9cad96;border-radius:25px;background:#f7f3db;color:#516d60;padding:12px 18px;font:bold 12px Georgia,serif}
+.chronicle-footer>button:last-child{justify-self:end}
+.chronicle-footer>button:disabled{opacity:.35;cursor:default}
+.chronicle-progress{display:flex;gap:5px;justify-content:center}
+.chronicle-progress button{border:1px solid #b5c29f;border-radius:50%;width:31px;height:31px;background:#e9efdb;color:#688471;font:bold 12px Georgia,serif}
+.chronicle-progress button.is-reading{background:#3f776b;color:#f8e9ca;border-color:#3f776b}
+.chronicle-help{text-align:center;color:#748675;font:italic 11px Georgia,serif;margin:9px 0 0}
+
+/* Responsive: navigation never disappears just because viewport is narrow. */
+@media(max-width:1080px){
+ .site-header .header-inner{padding:12px 20px;gap:10px;flex-wrap:wrap}
+ .site-header nav.hub-nav{order:3;width:100%;flex-basis:100%;justify-content:center}
+ .hub-nav .hub-menu{position:static}
+ .site-header nav.hub-nav .hub-popover{top:calc(100% - 5px);left:12px;right:12px;width:auto;transform:none}
+ .future-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .arcade-event-card{flex-wrap:wrap}
+}
+@media(max-width:680px){
+ .site-header{height:auto;min-height:0}
+ .site-header .header-inner{min-height:0;padding:12px 14px;gap:9px}
+ .site-header nav.hub-nav{display:flex;gap:2px;justify-content:space-between;flex-wrap:wrap}
+ .site-header nav.hub-nav .hub-nav-trigger{font-size:11px;padding:10px 7px;min-height:41px;gap:4px}
+ .hub-nav-icon{font-size:15px}
+ .hub-mail-label{display:none}
+ .hub-mail-dot{width:5px;height:5px}
+ .site-header nav.hub-nav .hub-popover{top:calc(100% - 4px);left:8px;right:8px;width:auto;max-height:65vh}
+ .site-header .header-cta{margin-left:auto;padding:11px 13px}
+ .future-grid{gap:11px}
+ .future-card{min-height:258px;padding:16px 14px}
+ .future-card-icon{font-size:39px}
+ .future-card>strong{font-size:16px}
+ .future-card p{font-size:11px}
+ .arcade-event-cards{grid-template-columns:1fr}
+ .arcade-event-card .btn{margin-left:45px}
+ .passport-chronicle{grid-template-columns:1fr;padding:19px;gap:23px}
+ .passport-chronicle-cover{max-width:235px;margin:auto;width:100%}
+ .chronicle-overlay{padding:5px}
+ .chronicle-dialog{padding:7px;border-radius:12px}
+ .chronicle-toolbar{padding:8px 5px}
+ .chronicle-brand{font-size:9px}
+ .chronicle-book{grid-template-columns:1fr}
+ .chronicle-illustration{min-height:0;border-right:0;border-bottom:10px ridge #d8c297;padding:15px 14px}
+ .chronicle-illustration .brave-scene-backdrop{aspect-ratio:16/9;min-height:0;max-height:270px}
+ .chronicle-art-caption{font-size:16px;margin-top:13px}
+ .chronicle-leaf{padding:24px 20px 43px;min-height:0}
+ .chronicle-leaf>p{font-size:14px;line-height:1.82}
+ .chronicle-footer{grid-template-columns:1fr 1fr}
+ .chronicle-progress{grid-column:1/-1;grid-row:1}
+ .chronicle-footer>button:first-child{grid-column:1;grid-row:2}
+ .chronicle-footer>button:last-child{grid-column:2;grid-row:2}
+ .chronicle-footer>button{font-size:11px;padding:11px}
+}
+@media(max-width:420px){
+ .hub-nav .hub-chevron{display:none}
+ .site-header nav.hub-nav .hub-nav-trigger{font-size:10px}
+ .future-grid{grid-template-columns:1fr 1fr}
+ .future-card-top span{font-size:8px}
+ .future-card{padding:13px 12px}
+}
+@media(prefers-reduced-motion:reduce){
+ .chronicle-dialog,.chronicle-book,.chronicle-illustration{animation:none}
+}
+
+
+/* Finale: a tangible reward reveal without interrupting the story. */
+.brave-chronicle-earned{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;margin:19px auto 12px;padding:20px 21px;max-width:580px;border-radius:15px;background:radial-gradient(circle at 55% 10%,#fff8d2,#dcecd6);border:3px double #c6b987;box-shadow:0 9px 27px #46694327}
+.brave-chronicle-earned>span{font-size:32px;color:#4e9177}
+.brave-chronicle-earned strong{font:700 19px 'Fraunces',Georgia,serif;color:#3c7165}
+.brave-chronicle-earned p{margin:0;font:italic 13px/1.7 Georgia,serif;color:#5b7566}
+.brave-chronicle-earned .brave-journey-main-action{margin:5px 0 0}

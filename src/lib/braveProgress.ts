@@ -38,3 +38,10 @@ export function chooseBraveStage(save:BraveJourneySave,id:string):BraveJourneySa
  const index=braveCampaignStages.findIndex(s=>s.id===id);
  return index<0||index>save.completed.length?save:{...save,current:id};
 }
+
+/** Read-only Passport reward: earned only when the complete canonical
+ * eighteen-scene prefix has been finished. Replays never take it away. */
+export function braveChronicleUnlocked(save:BraveJourneySave):boolean{
+ return save.completed.length===braveCampaignStages.length
+  && braveCampaignStages.every((scene,index)=>save.completed[index]===scene.id);
+}

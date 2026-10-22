@@ -6,6 +6,8 @@ import NineNine from './games/NineNine';
 import PinkRush from './games/PinkRush';
 import PinkWallet from './games/PinkWallet';
 import BraveTrail from './games/BraveTrail';
+import ArcadeNavigation from './components/ArcadeNavigation';
+import {comingSoonGames,upcomingArcadeEvents} from './data/arcadeHub';
 import { readPinkProgress,writePinkProgress,type PinkProgress,type PinkStats } from './lib/pinkRush';
 import { readNineProgress, writeNineProgress, type NineProgress, type NineStats } from './lib/nineNine';
 import { readBazingaProgress, writeBazingaProgress, type BazingaProgress, type BazingaStats } from './lib/bazinga';
@@ -25,9 +27,7 @@ import {
 type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'pink' | 'wallet' | 'brave' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
 
-const upcoming = [
-  { icon: '🏹', name: 'Brave: The Wisps’ Trail', tag: 'Magical adventure', teaser: 'Six illustrated Highland chapters, enchanted puzzles, archery, secret passages and a tapestry finale.', theme: 'mint', detail: 'Journey with Merida through DunBroch, the Whispering Wood, the Witch’s Workshop and the forgotten stones. Solve all eighteen story scenes and mend the golden tapestry.' },
-];
+const upcoming = comingSoonGames;
 
 function dateUntilBirthday(now = new Date()): number {
   let next = new Date(now.getFullYear(), 10, 13);
@@ -105,7 +105,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <button className="btn btn-soft" onClick={() => onNavigate('passport')}>Open Passport ↗</button>
     </section>
     <section className="games-section" id="games">
-      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Six games ready, plus a new storybook world to explore</span></div>
+      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Seven adventures ready to play</span></div>
       <div className="game-grid">
         <article className="game-card featured-card">
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 07</span></div>
@@ -146,11 +146,38 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
             <p>Recognize beloved songs, revisit eras, celebrate the four members, and light up Molly’s own encore!</p>
             <button className="card-link" onClick={() => onNavigate('pink')}>Enter the concert <span aria-hidden="true">↗</span></button></div>
         </article>
-        {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
-          <div className="card-topline"><span className="soon-pill">OPEN STORYBOOK</span><span className="card-number">0{index + 7} / 07</span></div>
-          <div className="game-emoji" aria-hidden="true">{game.icon}</div>
-          <div className="card-content"><span className="card-category">{game.tag.toUpperCase()}</span><h3>{game.name}</h3><p>{game.teaser}</p>
-            <button className="card-link" onClick={() => game.name.startsWith('Brave') ? onNavigate('brave') : onChooseGame(game.name)}>Open the storybook <span aria-hidden="true">↗</span></button></div>
+        <article className="game-card game-card-mint brave-live-card">
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">07 / 07</span></div>
+          <div className="game-emoji" aria-hidden="true">🏹</div>
+          <div className="card-content"><span className="card-category">ILLUSTRATED HIGHLAND ADVENTURE</span><h3>Brave: The Wisps’ Trail</h3>
+            <p>Six chapters, eighteen magical challenges, a complete finale—and a secret illustrated storybook reward.</p>
+            <button className="card-link" onClick={() => onNavigate('brave')}>Begin your adventure <span aria-hidden="true">↗</span></button></div>
+        </article>
+      </div>
+    </section>
+
+    <section className="future-shelf" id="coming-soon" aria-labelledby="future-shelf-title">
+      <div className="section-heading">
+        <div><span className="overline">DREAMING UP NEW WORLDS</span><h2 id="future-shelf-title">Still in the workshop <span aria-hidden="true">✧</span></h2></div>
+        <span className="section-note">Ideas for later · no release dates announced</span>
+      </div>
+      <div className="future-grid">
+        {upcoming.map(game=><article className={`future-card game-card-${game.theme}`} key={game.name}>
+          <div className="future-card-top"><span>CONCEPT · NOT PLAYABLE YET</span><span aria-hidden="true">✧</span></div>
+          <div className="future-card-icon" aria-hidden="true">{game.icon}</div>
+          <strong>{game.name}</strong><p>{game.teaser}</p>
+          <button onClick={()=>onChooseGame(game.name)}>A little sneak peek ↗</button>
+        </article>)}
+      </div>
+    </section>
+    <section className="arcade-events-home" aria-labelledby="arcade-events-home-title">
+      <div className="section-heading"><div><span className="overline">MARK YOUR CALENDAR</span><h2 id="arcade-events-home-title">Little occasions <span aria-hidden="true">✿</span></h2></div><span className="section-note">Next up, in calendar order</span></div>
+      <div className="arcade-event-cards">
+        {upcomingArcadeEvents().map(event=><article className="arcade-event-card" key={event.id}>
+          <span className="arcade-event-emoji" aria-hidden="true">{event.icon}</span>
+          <div><span className="overline">{event.date.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'})}</span>
+          <h3>{event.label}</h3><p>{event.summary}</p></div>
+          <button className="btn btn-soft" onClick={()=>onNavigate(event.route)}>{event.status==='playing'?'Explore the game':'See the preview'} ↗</button>
         </article>)}
       </div>
     </section>
@@ -348,8 +375,17 @@ function App() {
     setView(next); setMode(nextMode); setSneakPeek(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'bazinga' ? 'nav-active' : ''} onClick={() => navigate('bazinga')}>Bazinga!</button><button className={view === 'nine' ? 'nav-active' : ''} onClick={() => navigate('nine')}>The 99 Files</button><button className={view === 'pink' ? 'nav-active' : ''} onClick={() => navigate('pink')}>Pink Rush!</button><button className={view === 'wallet' ? 'nav-active' : ''} onClick={() => navigate('wallet')}>🎟️ Wallet</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : view === 'nine' ? <NineNine today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onWallet={() => navigate('wallet')}/> : view === 'wallet' ? <PinkWallet progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onPlay={() => navigate('pink')} onPassport={() => navigate('passport')}/> : view === 'brave' ? <BraveTrail onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onWallet={() => navigate('wallet')} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+  function comingSoonShelf(){
+    navigate('home');
+    window.setTimeout(()=>document.getElementById('coming-soon')?.scrollIntoView({behavior:'smooth',block:'start'}),70);
+  }
+
+  return <div className="site-shell"><header className="site-header"><div className="header-inner">
+    <Logo onClick={() => navigate('home')}/>
+    <ArcadeNavigation active={view} onNavigate={(route)=>navigate(route)} onPreview={setSneakPeek} onComingSoon={comingSoonShelf}/>
+    <button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button>
+   </div></header>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : view === 'nine' ? <NineNine today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onWallet={() => navigate('wallet')}/> : view === 'wallet' ? <PinkWallet progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onPlay={() => navigate('pink')} onPassport={() => navigate('passport')}/> : view === 'brave' ? <BraveTrail onHome={() => navigate('home')} onPassport={() => navigate('passport')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onWallet={() => navigate('wallet')} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;

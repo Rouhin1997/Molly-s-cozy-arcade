@@ -82,8 +82,8 @@ function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
   </div>
  </div>;
 }
-export default function BraveJourney({onChapterChange}:{
- onChapterChange:(id:string)=>void;
+export default function BraveJourney({onChapterChange,onPassport}:{
+ onChapterChange:(id:string)=>void;onPassport:()=>void;
 }){
  const [progress,setProgress]=useState<BraveJourneySave>(readBraveJourney);
  const initial=braveCampaignStages.findIndex(s=>s.id===progress.current);
@@ -231,6 +231,12 @@ export default function BraveJourney({onChapterChange}:{
         <span>✧ ✦ ✧</span>
         <h4>The Highlands remember Molly</h4>
         <p>Six chapters. One promise. The wisps are free to find their own paths again, and a new golden thread now marks yours among them.</p>
+        <div className="brave-chronicle-earned">
+         <span aria-hidden="true">📖 ✧</span>
+         <strong>A keepsake has awakened in your Passport!</strong>
+         <p>The Keeper’s Chronicle is now yours: an illustrated retelling of Molly and Merida’s journey, including their friendship farewell.</p>
+         <button className="brave-journey-main-action" onClick={onPassport}>Open the Chronicle in your Passport ↗</button>
+        </div>
         <button className="brave-journey-main-action" onClick={()=>go(0)}>✧ Open the storybook again</button>
       </div>
     : <button className="brave-journey-main-action" onClick={()=>go(currentIndex+1)}>
