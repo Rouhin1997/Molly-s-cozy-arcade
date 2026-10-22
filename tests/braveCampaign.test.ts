@@ -8,7 +8,7 @@ import {BRAVE_JOURNEY_KEY,freshBraveJourney,normalizeBraveJourney,
 describe('Brave three connected chapters — campaign acceptance',()=>{
  it('has exactly three coherent chapters and nine unique playable scenes',()=>{
   expect(braveCampaignStages).toHaveLength(18);
-  expect(new Set(braveCampaignStages.map(s=>s.id)).size).toBe(9);
+  expect(new Set(braveCampaignStages.map(s=>s.id)).size).toBe(18);
   expect(braveCampaignStages.map(s=>s.index)).toEqual(Array.from({length:18},(_,i)=>i));
   expect(braveCampaignStages.slice(0,9).map(s=>s.chapterId)).toEqual([
    'highland','highland','highland','forest','forest','forest','witch','witch','witch'
