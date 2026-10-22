@@ -13,7 +13,7 @@ export const comingSoonGames:readonly UpcomingGame[]=[
  detail:'A future spooky-comedy mystery with eccentric visitors, clue hunting and nervous bravery. We have not begun building the game yet and no date is confirmed.'},
  {name:'Toy Story',icon:'🧸',tag:'Friendship & toys',theme:'blue',
  teaser:'Tiny perspectives, enormous adventures, and a room full of secrets.',
- detail:'A future story-puzzle adventure inspired by the warmth, mischief and friendship of toys. This is a concept on the roadmap, not a playable game or release announcement.'},
+ detail:'A future story-puzzle adventure inspired by the warmth, mischief and friendship of toys. This is a concept on the roadmap, not a playable game, and no release date has been announced.'},
  {name:'The Addams Family',icon:'🕸️',tag:'Gothic puzzles',theme:'mint',
  teaser:'A delightfully peculiar mansion filled with riddles, secrets and dark humour.',
  detail:'A future playful-gothic puzzle adventure with a mystery mansion and oddball family charm. No game has launched and no date is set.'}
