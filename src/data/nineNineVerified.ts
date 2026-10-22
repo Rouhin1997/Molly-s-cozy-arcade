@@ -242,7 +242,7 @@ export const verifiedCases:Record<string,VerifiedCase>={
   L(e('📋','record','Jake’s briefing log','Jake spoke continuously during a mandatory evidence briefing from 14:08 to 14:26. No breaks or phone calls were logged.'),
     e('🎥','record','Briefing-room recording','At 14:19 Jake is shown leading the demonstration, while the disputed envelope travels through the precinct mail desk.'),
     'Which detective can be cleared using the synchronized briefing?',
-    'Jake was on-camera during the handoff and cannot be the envelope courier.',
+    'Jake is continuously visible giving the recorded briefing during the mail-desk handoff, so he could not have carried or exchanged either envelope.',
     ['Jake'],[]),
   L(e('🪪','record','Badge system self-test','The apparent second badge swipe was an automated badge-reader self-test at 14:19, not a human credential.'),
     e('🧪','forensics','Access panel inspection','No copied-card imprint or altered badge-authentication log exists, ruling out the claimed Badge clone. The reader’s test entry matches the manufacturer diagnostic code.'),
