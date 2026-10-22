@@ -130,6 +130,7 @@ export default function BraveJourney({onChapterChange}:{
    </div>
    <span className="brave-journey-counter">{currentIndex+1} <small>/ 09</small></span>
   </div>
+  {progress.completed.length>0&&<div className="brave-journey-review"><button className="brave-journey-replay-start" onClick={()=>go(0)}>↶ Begin again at Chapter I</button><span>The wisps remember every page you have unlocked.</span></div>}
   <div className="brave-journey-chapters" role="navigation" aria-label="Adventure chapters">
    {(['highland','forest','witch'] as const).map((id,i)=>{
     const first=i*3,unlocked=first<=progress.completed.length;
