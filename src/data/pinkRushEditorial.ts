@@ -52,7 +52,7 @@ export const pinkEditorial:Record<string,Edit>={
  'fan-coachella23':{title:'The headliner milestone',emoji:'🏟️',prompt:'Which year saw BLACKPINK return to Coachella as a main-stage headliner instead of performing on a smaller stage?'},
  'fan-jenniesolo':{title:'Desert solo stage',emoji:'🎸',prompt:'During Coachella 2025, which BLACKPINK member performed a separate Sunday solo set?',options:['JENNIE','JISOO','ROSÉ','LISA']},
  'fan-lisasolo':{title:'Another desert solo',emoji:'🌟',prompt:'Which member brought her own solo show to Coachella’s Sahara stage in April 2025?'},
- 'fan-coachellafact':{title:'Four years between stages',emoji:'🎡',prompt:'How many years passed between BLACKPINK’s first Coachella performance and their 2023 headlining set?',answer:'4',options:['2','3','4','5'],year:'FESTIVAL'},
+ 'fan-coachellafact':{title:'The headlining gap',emoji:'🎡',prompt:'How many years passed between BLACKPINK’s first Coachella performance and their 2023 headlining set?',answer:'4',options:['2','3','4','5'],year:'FESTIVAL'},
  'fan-white-lotus':{title:'HBO resort mystery',emoji:'🎬',prompt:'Which member appeared in the third season of HBO’s resort-set mystery comedy-drama?'},
  'fan-theidol':{title:'An HBO cameo',emoji:'📺',prompt:'Which BLACKPINK member appeared on screen in the 2023 music-industry drama The Idol?'},
  'fan-acting-pair':{title:'Screen debut mix-up',emoji:'🎞️',prompt:'Who joined the cast of The White Lotus, rather than The Idol, for a television acting debut?'},
