@@ -1576,3 +1576,121 @@
  .brave-world-atlas>summary span{font-size:9px;text-align:right}
  .brave-world-atlas .brave-illustrated-world{padding:8px}
 }
+
+
+/* BRAVE · ACT II (CHAPTERS IV–VI): moonlit castle, storm moor, dawn loom */
+.brave-journey-chapters{grid-template-columns:repeat(6,minmax(0,1fr))}
+.brave-journey-pages{grid-template-columns:repeat(9,minmax(0,1fr));row-gap:7px}
+.brave-journey-castle{
+ --journey-ink:#555c85;
+ background:radial-gradient(circle at 9% 4%,#e2e1ed,transparent 40%),linear-gradient(140deg,#e7e3e1,#d1d9e1)
+}
+.brave-journey-shadow{
+ --journey-ink:#465c64;
+ background:radial-gradient(circle at 82% 2%,#d5e4e2,transparent 33%),linear-gradient(145deg,#d9dedc,#b6c7c6)
+}
+.brave-journey-bond{
+ --journey-ink:#51816b;
+ background:radial-gradient(circle at 78% 5%,#fff4d0,transparent 43%),linear-gradient(140deg,#f9edcf,#d8e9d3)
+}
+.brave-journey-castle .brave-journey-story{background:linear-gradient(130deg,#f8f0df,#e7e4e5)}
+.brave-journey-shadow .brave-journey-story{background:linear-gradient(135deg,#e6e8df,#d0dede)}
+.brave-journey-bond .brave-journey-story{background:linear-gradient(130deg,#fff7e2,#e7f2dc)}
+.brave-journey-castle .brave-crossing-grid-frame{background:linear-gradient(145deg,#344d65,#667087)}
+.brave-journey-shadow .brave-crossing-grid-frame{background:linear-gradient(145deg,#293d45,#536970)}
+.brave-journey-bond .brave-crossing-grid-frame{background:linear-gradient(145deg,#4d7969,#83ab83)}
+.brave-journey-castle .brave-crossing-tile.is-wall{background:linear-gradient(150deg,#667387,#435568);border-color:#9eabbc}
+.brave-journey-shadow .brave-crossing-tile.is-wall{background:linear-gradient(150deg,#4d6265,#314b55);border-color:#778f91}
+.brave-journey-bond .brave-crossing-tile.is-wall{background:linear-gradient(150deg,#71967a,#3b7058);border-color:#bad2a4}
+.brave-journey-castle .brave-crossing-tile.is-path{background:radial-gradient(circle,#9e9e9d,#64737a)}
+.brave-journey-shadow .brave-crossing-tile.is-path{background:radial-gradient(circle,#72908b,#425f62)}
+.brave-journey-bond .brave-crossing-tile.is-path{background:radial-gradient(circle,#acc59f,#609479)}
+.brave-scene-castle,.brave-scene-shadow,.brave-scene-bond{aspect-ratio:1100/350;object-fit:cover}
+.brave-scene-castle{border-color:#aaaac0}
+.brave-scene-shadow{border-color:#7f9eab}
+.brave-scene-bond{border-color:#e1c98a}
+.brave-stealth-game,.brave-circle-game,.brave-tapestry-game{border-radius:17px;border:4px double #bba989;padding:17px;background:linear-gradient(135deg,#f7efd8,#dce4d5);box-shadow:inset 0 0 25px #596c5941}
+.brave-stealth-game{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(220px,.85fr);gap:20px}
+.brave-stealth-scene{border:3px double #abb1ba;background:#344659;border-radius:12px;padding:14px;min-width:0}
+.brave-stealth-caption{display:flex;flex-direction:column;gap:3px;padding:7px;color:#f4e7c4}
+.brave-stealth-caption span{font:900 10px 'DM Sans',sans-serif;letter-spacing:.16em;color:#afc7ce}
+.brave-stealth-caption strong{font:italic 14px Georgia,serif}
+.brave-stealth-board{display:grid;gap:3px;background:#263648;border:4px solid #8e969b;border-radius:10px;overflow:hidden}
+.brave-stealth-cell{aspect-ratio:1;min-width:0;display:grid;place-items:center;position:relative}
+.brave-stealth-cell.is-stone{background:linear-gradient(150deg,#78818c,#536274);box-shadow:inset 0 1px 0 #bfc5bd,inset 2px 0 #333f4b}
+.brave-stealth-cell.is-floor{background:linear-gradient(140deg,#af9f85,#8c867d);border:1px solid #c7bd9c55}
+.brave-stealth-cell.is-alcove{background:radial-gradient(circle,#788986,#455d65)}
+.brave-stealth-player,.brave-stealth-guard,.brave-stealth-door{position:absolute;z-index:1;font-size:clamp(12px,1.8vw,22px);text-shadow:0 2px 6px #111b28}
+.brave-stealth-guard{z-index:2}
+.brave-stealth-door{color:#f5e1a3;font-size:28px}
+.brave-stealth-legend{font:11px/1.8 Georgia,serif;color:#cfdbce;text-align:center;margin-top:10px}
+.brave-stealth-panel{border:1px solid #adb6a5;border-radius:13px;padding:15px;background:#fff9eab8}
+.brave-stealth-indicators{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.brave-stealth-indicators span{padding:8px;background:#dee5d8;color:#4c6c69;border-radius:8px;font:800 10px 'DM Sans',sans-serif}
+.brave-stealth-panel p{font:italic 13px/1.7 Georgia,serif;color:#596b64;min-height:56px}
+.brave-stealth-buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.brave-stealth-buttons button,.brave-stealth-reset{padding:11px 8px;border-radius:10px;border:1px solid #a6b3a6;background:#e5eddd;color:#446b60;font:700 12px Georgia,serif;cursor:pointer}
+.brave-stealth-buttons button:nth-last-child(1){background:#f1e5cd;color:#79664c}
+.brave-stealth-buttons button:disabled{opacity:.4;cursor:default}
+.brave-stealth-reset{margin-top:14px;background:#faf0d7}
+.brave-stealth-victory{color:#40846b!important}
+.brave-circle-legend{text-align:center;max-width:800px;margin:0 auto 16px}
+.brave-circle-legend h3{font:700 clamp(22px,3vw,32px) Georgia,serif;color:#56675d;margin:0 0 8px}
+.brave-circle-legend p{font:italic 14px/1.75 Georgia,serif;color:#62766b}
+.brave-circle-legend>span{font:11px/1.5 Georgia,serif;color:#728d85}
+.brave-circle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(125px,1fr));gap:12px;max-width:720px;margin:0 auto;background:radial-gradient(circle,#5a6e68,#324d4c);padding:18px;border:4px double #91a59d;border-radius:50%/30%}
+.brave-circle-stone{border:3px solid #a7b5a5;border-radius:18px;background:linear-gradient(145deg,#a1afa1,#60776e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:10px;box-shadow:inset 0 0 13px #273e365b;color:#f4f0d7;min-width:0}
+.brave-circle-stone.is-aligned{border-color:#f1e6b9;box-shadow:0 0 14px #a7e4c093}
+.brave-circle-stone-top{font:800 9px 'DM Sans',sans-serif;letter-spacing:.05em}
+.brave-circle-stone-arrow{font-size:42px;text-shadow:0 2px 13px #213f3d}
+.brave-circle-stone-caption{font:italic 11px/1.5 Georgia,serif;text-align:center}
+.brave-circle-stone.is-north{grid-area:1/2}
+.brave-circle-stone.is-west{grid-area:2/1}
+.brave-circle-stone.is-heart{grid-area:2/2}
+.brave-circle-stone.is-east{grid-area:2/3}
+.brave-circle-stone.is-south{grid-area:3/2}
+.brave-circle-altar{grid-area:3/1/4/2;color:#b3ddd0;display:flex;flex-direction:column;justify-content:center;align-items:center;font:38px Georgia,serif;opacity:.6}
+.brave-circle-altar span{font:800 9px 'DM Sans',sans-serif;letter-spacing:.07em;text-align:center}
+.brave-circle-foot{text-align:center}
+.brave-circle-foot>p{font:italic 13px/1.7 Georgia,serif;color:#557567}
+.brave-tapestry-game{background:radial-gradient(circle at 50% 0,#fff5d9,#e8e7ce 65%,#cce5d7)}
+.brave-tapestry-header{text-align:center;max-width:780px;margin:0 auto 17px}
+.brave-tapestry-header h3{font:700 clamp(25px,3vw,39px) Georgia,serif;margin:8px 0;color:#50766b}
+.brave-tapestry-header p{font:14px/1.8 Georgia,serif;color:#64796c}
+.brave-tapestry-frame{max-width:620px;margin:0 auto;background:linear-gradient(135deg,#7a765a,#5c695c);padding:22px;border:13px ridge #a88958;border-radius:8px;box-shadow:0 14px 20px #39574a5e}
+.brave-tapestry-grid{display:grid;gap:3px;aspect-ratio:1}
+.brave-tapestry-patch{position:relative;display:block;min-width:0;border:2px solid #a9906a;background:repeating-linear-gradient(0deg,#889988 0,#889988 3px,#8d9d8d 3px,#8d9d8d 5px);aspect-ratio:1;padding:0;cursor:pointer}
+.brave-tapestry-patch:nth-child(2n){background:repeating-linear-gradient(90deg,#a9a888 0,#a9a888 3px,#a4a68a 3px,#a4a68a 5px)}
+.brave-tapestry-patch svg{width:100%;height:100%;display:block;filter:drop-shadow(0 1px 3px #625b3b)}
+.brave-tapestry-patch:hover:not(:disabled){box-shadow:inset 0 0 15px #fff5c2;z-index:2}
+.brave-tapestry-patch:focus-visible{outline:4px solid #eafad2;outline-offset:-5px;z-index:3}
+.brave-tapestry-patch-label{position:absolute;top:3px;left:5px;font:800 10px 'DM Sans',sans-serif;color:#3c5c4a}
+.brave-tapestry-border-labels{display:flex;justify-content:space-between;gap:9px;margin-top:11px;font:700 10px Georgia,serif;color:#fff1bf}
+.brave-tapestry-controls{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:15px 0}
+.brave-tapestry-controls button{padding:11px 16px;border:1px solid #9db79e;border-radius:20px;background:#f4f1d8;font:700 12px Georgia,serif;color:#436e60}
+.brave-tapestry-controls button:disabled{opacity:.5}
+.brave-tapestry-feedback{text-align:center;font:italic 14px/1.7 Georgia,serif;color:#4c7264;max-width:720px;margin:0 auto 12px}
+.brave-tapestry-tally{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.brave-tapestry-tally span{padding:8px 13px;border:1px solid #bdc9af;border-radius:20px;background:#eef6e8;color:#5a7b6d;font:700 11px Georgia,serif}
+.brave-final-victory{padding:24px;margin:20px auto 0;border:4px double #d5c48e;border-radius:15px;background:radial-gradient(circle,#fff9d8,#e5f3da);max-width:720px}
+.brave-final-victory>span{font-size:29px;color:#8ea882}
+.brave-final-victory h4{font:bold clamp(24px,3vw,38px) Georgia,serif;color:#437967;margin:7px 0}
+.brave-final-victory p{font:italic 15px/1.8 Georgia,serif;color:#5f7966}
+@media(max-width:940px){
+ .brave-journey-chapters{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .brave-stealth-game{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ .brave-journey-pages{grid-template-columns:repeat(9,minmax(0,1fr))}
+ .brave-scene-castle,.brave-scene-shadow,.brave-scene-bond{aspect-ratio:1100/480}
+ .brave-circle-grid{gap:5px;padding:8px;border-radius:36px;grid-template-rows:repeat(3,minmax(110px,1fr))}
+ .brave-circle-stone{padding:5px;border-radius:9px;gap:5px}
+ .brave-circle-stone-top{font-size:8px}
+ .brave-circle-stone-caption{font-size:9px}
+ .brave-circle-stone-arrow{font-size:27px}
+ .brave-tapestry-game,.brave-circle-game,.brave-stealth-game{padding:9px}
+ .brave-tapestry-frame{padding:10px;border-width:8px}
+ .brave-tapestry-grid{gap:1px}
+ .brave-tapestry-patch-label{font-size:8px}
+ .brave-tapestry-border-labels{font-size:8px}
+}
