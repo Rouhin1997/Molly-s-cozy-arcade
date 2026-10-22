@@ -3,6 +3,8 @@ import Connections from './games/Connections';
 import ToonRewind from './games/ToonRewind';
 import BazingaLab from './games/BazingaLab';
 import NineNine from './games/NineNine';
+import PinkRush from './games/PinkRush';
+import { readPinkProgress,writePinkProgress,type PinkProgress,type PinkStats } from './lib/pinkRush';
 import { readNineProgress, writeNineProgress, type NineProgress, type NineStats } from './lib/nineNine';
 import { readBazingaProgress, writeBazingaProgress, type BazingaProgress, type BazingaStats } from './lib/bazinga';
 import Passport from './games/Passport';
@@ -18,11 +20,11 @@ import {
   type Progress, type Round,
 } from './lib/game';
 
-type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'passport' | 'vault';
+type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'pink' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
-  { icon: '🖤', name: 'Pink Rush', tag: 'Music', teaser: 'A high-energy challenge for a true BLINK.', theme: 'pink', detail: 'Match eras, order the setlist and race through song puzzles to build your combo.' },
+  { icon: '🏹', name: 'Brave: The Wisps’ Trail', tag: 'Magical adventure', teaser: 'Follow glowing wisps through the Highlands in a storybook adventure.', theme: 'mint', detail: 'Six chapters through the castle, enchanted forest, witch’s workshop, bear country and ancient stones. Solve magical pathways, archery puzzles and mend the tapestry. Coming soon!' },
 ];
 
 function dateUntilBirthday(now = new Date()): number {
@@ -43,7 +45,7 @@ function Logo({ onClick }: { onClick: () => void }) {
   </button>;
 }
 
-function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, bazingaStats, nineStats, today }: {
+function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, bazingaStats, nineStats, pinkStats, today }: {
   onNavigate: (view: View, mode?: Mode) => void;
   onChooseGame: (name: string) => void;
   progress: Progress;
@@ -51,6 +53,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
   toonStats: ToonStats;
   bazingaStats: BazingaStats;
   nineStats: NineStats;
+  pinkStats: PinkStats;
   today: string;
 }) {
   const daily = progress.daily[today];
@@ -89,8 +92,8 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
     </section>
 
     <section className="stats-strip" aria-label="Player progress">
-      <div><span className="stats-icon">🏆</span><span className="stats-number">{progress.stats.solved + connectionStats.solved + toonStats.solved + bazingaStats.solved + nineStats.solved}</span><span className="stats-label">puzzles solved</span></div>
-      <div><span className="stats-icon">✨</span><span className="stats-number">{progress.stats.points + connectionStats.stars + toonStats.stars + bazingaStats.stars + nineStats.stars}</span><span className="stats-label">stars collected</span></div>
+      <div><span className="stats-icon">🏆</span><span className="stats-number">{progress.stats.solved + connectionStats.solved + toonStats.solved + bazingaStats.solved + nineStats.solved + pinkStats.roundsSolved}</span><span className="stats-label">puzzles solved</span></div>
+      <div><span className="stats-icon">✨</span><span className="stats-number">{progress.stats.points + connectionStats.stars + toonStats.stars + bazingaStats.stars + nineStats.stars + pinkStats.stars}</span><span className="stats-label">stars collected</span></div>
       <div><span className="stats-icon">🔥</span><span className="stats-number">{progress.stats.bestStreak}</span><span className="stats-label">best daily streak</span></div>
       <div><span className="stats-icon">💝</span><span className="stats-number">{days === 0 ? 'Today!' : days}</span><span className="stats-label">{days === 0 ? 'happy birthday!' : 'days to birthday'}</span></div>
     </section>
@@ -100,42 +103,49 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <button className="btn btn-soft" onClick={() => onNavigate('passport')}>Open Passport ↗</button>
     </section>
     <section className="games-section" id="games">
-      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Five games ready, one more in the making</span></div>
+      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Six games ready, and more magic coming soon</span></div>
       <div className="game-grid">
         <article className="game-card featured-card">
-          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 06</span></div>
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 07</span></div>
           <div className="featured-art" aria-hidden="true"><span>🥑</span><span>🍓</span><span>🍜</span></div>
           <div className="card-content"><span className="card-category">FOOD & DEDUCTION</span><h3>Guess Who?</h3><p>Four clever clues. One mystery ingredient. How soon can you guess it?</p>
             <button className="card-link" onClick={() => onNavigate('guess', 'practice')}>Let's play <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-mint connection-card">
-          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">02 / 06</span></div>
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">02 / 07</span></div>
           <div className="game-emoji" aria-hidden="true">🧩</div>
           <div className="card-content"><span className="card-category">WORDS & PATTERNS</span><h3>Little Connections</h3><p>Sixteen words, four hidden connections and four chances to find them all.</p>
             <button className="card-link" onClick={() => onNavigate('connections')}>Find the links <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-blue toon-card">
-          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">03 / 06</span></div>
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">03 / 07</span></div>
           <div className="game-emoji" aria-hidden="true">📺</div>
           <div className="card-content"><span className="card-category">CARTOON NETWORK INDIA • 2000s</span><h3>Toon Rewind</h3><p>Turn the dial on a nostalgic TV. Recognise six shows from their picture signals.</p>
             <button className="card-link" onClick={() => onNavigate('toon')}>Switch on the TV <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-yellow bazinga-card">
-          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">04 / 06</span></div>
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">04 / 07</span></div>
           <div className="game-emoji" aria-hidden="true">⚛️</div>
           <div className="card-content"><span className="card-category">LOGIC & SEATING EXPERIMENTS</span><h3>Bazinga! Lab</h3>
             <p>Sheldon’s spot, Raj’s mystery night, comic-shop chaos: solve 18 story puzzles across eight familiar rooms!</p>
             <button className="card-link" onClick={() => onNavigate('bazinga')}>Enter the lab <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-peach nn-game-card">
-          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">05 / 06</span></div>
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">05 / 07</span></div>
           <div className="game-emoji" aria-hidden="true">🕵️</div>
           <div className="card-content"><span className="card-category">DETECTIVE CASE FILES & HALLOWEEN HEISTS</span><h3>The 99 Files</h3>
             <p>Investigate 12 original mysteries, connect evidence, and solve a three-stage Halloween Heist. Nine-Nine!</p>
             <button className="card-link" onClick={() => onNavigate('nine')}>Open case files <span aria-hidden="true">↗</span></button></div>
         </article>
+        <article className="game-card game-card-pink pink-home-card">
+          <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">06 / 07</span></div>
+          <div className="game-emoji" aria-hidden="true">🖤🩷🎤</div>
+          <div className="card-content"><span className="card-category">BLACKPINK · BLINK MEMORY-LANE CONCERT</span><h3>Pink Rush!</h3>
+            <p>Recognize beloved songs, revisit eras, celebrate the four members, and light up Molly’s own encore!</p>
+            <button className="card-link" onClick={() => onNavigate('pink')}>Enter the concert <span aria-hidden="true">↗</span></button></div>
+        </article>
         {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
-          <div className="card-topline"><span className="soon-pill">IN THE WORKS</span><span className="card-number">0{index + 6} / 06</span></div>
+          <div className="card-topline"><span className="soon-pill">COMING SOON</span><span className="card-number">0{index + 7} / 07</span></div>
           <div className="game-emoji" aria-hidden="true">{game.icon}</div>
           <div className="card-content"><span className="card-category">{game.tag.toUpperCase()}</span><h3>{game.name}</h3><p>{game.teaser}</p>
             <button className="card-link" onClick={() => onChooseGame(game.name)}>Sneak peek <span aria-hidden="true">↗</span></button></div>
@@ -314,6 +324,7 @@ function App() {
   const [toonProgress, setToonProgress] = useState<ToonProgress>(readToonProgress);
   const [bazingaProgress, setBazingaProgress] = useState<BazingaProgress>(readBazingaProgress);
   const [nineProgress, setNineProgress] = useState<NineProgress>(readNineProgress);
+  const [pinkProgress, setPinkProgress] = useState<PinkProgress>(readPinkProgress);
   const [sneakPeek, setSneakPeek] = useState<string | null>(null);
   const [today, setToday] = useState(localDateKey);
   const selectedGame = useMemo(() => upcoming.find(g => g.name === sneakPeek), [sneakPeek]);
@@ -323,6 +334,7 @@ function App() {
   useEffect(() => { writeToonProgress(toonProgress); }, [toonProgress]);
   useEffect(() => { writeBazingaProgress(bazingaProgress); }, [bazingaProgress]);
   useEffect(() => { writeNineProgress(nineProgress); }, [nineProgress]);
+  useEffect(() => { writePinkProgress(pinkProgress); }, [pinkProgress]);
   useEffect(() => {
     const refresh = () => setToday(localDateKey());
     window.addEventListener('focus', refresh);
@@ -334,8 +346,8 @@ function App() {
     setView(next); setMode(nextMode); setSneakPeek(null); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'bazinga' ? 'nav-active' : ''} onClick={() => navigate('bazinga')}>Bazinga!</button><button className={view === 'nine' ? 'nav-active' : ''} onClick={() => navigate('nine')}>The 99 Files</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : view === 'nine' ? <NineNine today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+  return <div className="site-shell"><header className="site-header"><div className="header-inner"><Logo onClick={() => navigate('home')}/><nav aria-label="Main navigation"><button className={view === 'home' ? 'nav-active' : ''} onClick={() => navigate('home')}>The arcade</button><button className={view === 'guess' ? 'nav-active' : ''} onClick={() => navigate('guess', 'daily')}>Guess Who?</button><button className={view === 'connections' ? 'nav-active' : ''} onClick={() => navigate('connections')}>Connections</button><button className={view === 'toon' ? 'nav-active' : ''} onClick={() => navigate('toon')}>Toon Rewind</button><button className={view === 'bazinga' ? 'nav-active' : ''} onClick={() => navigate('bazinga')}>Bazinga!</button><button className={view === 'nine' ? 'nav-active' : ''} onClick={() => navigate('nine')}>The 99 Files</button><button className={view === 'pink' ? 'nav-active' : ''} onClick={() => navigate('pink')}>Pink Rush!</button><button className={view === 'passport' ? 'nav-active' : ''} onClick={() => navigate('passport')}>My Passport</button><button className={view === 'vault' ? 'nav-active' : ''} onClick={() => navigate('vault')}>Birthday vault</button></nav><button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button></div></header>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : view === 'nine' ? <NineNine today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;

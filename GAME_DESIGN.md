@@ -1,5 +1,23 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 2J — Pink Rush! (implemented) and Brave (approved docket only)
+
+The user approved two new concepts. **Pink Rush!** (Game 06) launched first, while **Brave: The Wisps' Trail** (Game 07) must remain explicitly **Coming Soon** pending a separate future implementation green light.
+
+### Pink Rush — BLACKPINK memory-lane concert
+- **Single comfortable BLINK challenge level: no Cozy/Clever/Expert picker.** These puzzles should feel like nostalgic fan recognition, not obscure trivia or an investigative exam. No timers or game-over conditions.
+- Eight-round show loop per daily or practice concert: three group-song guesses from 20 crafted prompts; two three-release chronology puzzles from 8 timelines; two member solo-career memories from 12 hand-crafted prompts; final original four-lightstick pattern sequence with eight possible patterns and unlimited replay.
+- Factual song/album/solo details are checked against the official BLACKPINK YG discography and identified solo references, covering debut 2016 through DEADLINE 2026. Original descriptions, no lyric transcriptions or borrowed audio/video/image files.
+- Stage grows more spectacular after every victory: four silhouette performers, pink spotlights, riser lights, lightstick crowd, confetti and a customized VIP Molly finale. Original CSS illustrations and optional synthesised tones; no licensed media.
+- Wrong answers gently lower the score (60 − 9 points per mistake, minimum 22); player always progresses after finding the answer. Maximum 480 for eight perfect rounds. Date-fixed daily show and repeatable practice show; best-award ledger prevents repeated practice star farming.
+- New browser key `mollys-pink-rush-v1`. Passport v4 saves all six game states and adds VIP BLINK, Encore Superstar and Perfect Comeback stamps; old v1/v2/v3 backups remain accepted without clearing newer games. See [Pink Rush design and references](PINK_RUSH_GAME_AND_SOURCES.md). Automated `tests/pinkRush.test.ts` simulates complete shows and source-data invariants.
+- **Next QA:** have user and BLINK beta testers play complete shows; check difficulty *feel*, comfort on phones, timeline wording, finale satisfaction and optional audio. Correct any factual mistakes against official discography.
+
+### Brave — The Wisps' Trail
+- Future six-chapter interactive storybook adventure in the Scottish Highlands, with pathfinding as the backbone, strategy-based archery trials and a final tapestry reconstruction. 18 handcrafted levels (three/chapter), personal chapter map, evolving environmental rules and actual solver-verified routes.
+- Six approved chapter locations: Highland Games, Follow the Wisps, Witch’s Workshop, A Bear in the Castle, Mor’du’s Shadow and Mend the Bond.
+- Never recreate Disney Pixar copyrighted film stills, artwork, recorded soundtrack or dialogue. Build original storybook visuals; request user green light before any implementation. Complete docket is [BRAVE_THE_WISPS_TRAIL_PLAN.md](BRAVE_THE_WISPS_TRAIL_PLAN.md).
+
 ## Phase 2I — Mystery construction standards (implemented)
 
 A mathematically unique case is **not automatically an interesting or fair detective mystery**. Every one of The 99 Files' 12 cases now follows these standards:
@@ -37,7 +55,7 @@ Every case now has an original four-part story resolution (scene, motive, forens
 | Toon Rewind | CRT-style channel surfing, visual prop recognition and tunable signals from Cartoon Network India c. 2000–2010 | **Milestone 2B playable** |
 | The 99 Files | Hands-on detective evidence board, source-grounded deductions, culprit/method/proof accusations and a special three-stage Halloween Heist | **Milestone 2G playable** |
 | Bazinga! Lab | Original room-map, character-sticker seating puzzles with BBT-flavored story rules, plus the preserved classic seating edition | **Milestone 2E Room Adventures playable** |
-| Pink Rush | Timed BLACKPINK setlist, era and performance-related puzzles; combos and sequencing | Planned |
+| Pink Rush! | Untimed BLACKPINK track recognition, era chronology, solo spotlights and a lightstick finale; one friendly BLINK challenge level | **Phase 2J playable** |
 | Little Connections | Find four hidden groups of four words, using four mistakes and one-away feedback | **Milestone 2A playable** |
 
 Future possible packs: Bollywood, historical photographs, semantic word guessing.

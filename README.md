@@ -1,5 +1,13 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 2J — Pink Rush! is playable; Brave is Coming Soon
+
+**Pink Rush!** joins the arcade as Game 06: a fully playable, **no-difficulty-selector** BLACKPINK memory-lane concert. Molly answers three track memories, arranges two discography timelines, identifies two solo member spotlights and completes an original visual lightstick encore. Eight rounds illuminate an original four-member stage before a personalized grand finale. Each show is untimed and impossible to lose; wrong answers simply reduce that round's star score. The show spans SQUARE ONE (2016) through DEADLINE (2026), with verified official release facts rather than copyrighted lyric/audio clips.
+
+**Brave: The Wisps' Trail** is Game 07 on the **Coming Soon** shelf, with a six-chapter, 18-level Highlands pathfinding, archery and tapestry adventure drafted in [the Brave development docket](BRAVE_THE_WISPS_TRAIL_PLAN.md). Do **not** implement it until the user greenlights that game separately.
+
+The Passport exports six games in **format v4** and can still import versions 1/2/3 without replacing progress from games absent in those older backups. Three BLINK stamps have been added. [Pink Rush design, references, testing and rights notes](PINK_RUSH_GAME_AND_SOURCES.md) explain the release.
+
 ## Phase 2I — The 99 Files, redesigned for real deductions
 
 The Nine-Nine's 12 cases were audited for a more fundamental quality standard than mere unique solvability: **every connected pair of evidence must be necessary** for the complete culprit-and-method conclusion. Cozy cases remain approachable; Clever and Expert retain multiple suspects until their final decisive deduction. The evidence text and mini case stories have been comprehensively rewritten; no long alibi list may reveal one remaining culprit on its own. The player always sees the full question prompts (including Expert), and evidence-pairing links carry the detective reasoning.
@@ -15,7 +23,7 @@ Every one of the twelve cases has a concise four-part story resolution. The Hall
 
 A tiny, cheerful puzzle arcade built as a birthday gift, and designed to be fun all year long.
 
-**Status: Milestone 2H — Detective Molly and Nine-Nine polish.** Five games are playable. The 99 Files is a fully interactive detective game with 12 original evidence cases and a three-stage Halloween Heist. Bazinga has custom clue-panel titles for each scenario, improved seat naming and a lighter map presentation. Pink Rush and the November 13 Birthday Quest/coupon wallet remain planned.
+**Status: Milestone 2J — Six playable games with Pink Rush!** The 99 Files remains evidence-audited; Bazinga retains contextual room layouts and stories. Brave appears as Coming Soon. The November 13 Birthday Quest and coupon wallet remain separate future work.
 
 ## Play locally
 
@@ -128,7 +136,7 @@ Made with love, and a little bit of mischief. ♡
 
 ## Difficulty switching contract
 
-For **all five games**, choose Cozy, Clever or Expert **before the first meaningful action**. Once a daily puzzle has begun, its difficulty cannot be changed or its earned result reset. A practice puzzle/session similarly locks after the first action; after the session ends, selecting another difficulty starts a new challenge. Switching before the first action immediately starts a fresh, correctly graded practice puzzle/session. A game's preferred difficulty is remembered for the next attempt. Locked rounds never silently receive an increased multiplier.
+For the **five earlier games**, choose Cozy, Clever or Expert **before the first meaningful action**. **Pink Rush deliberately has no difficulty selector**—its eight rounds have a single welcoming BLINK challenge level. Once a daily puzzle has begun, its difficulty cannot be changed or its earned result reset. A practice puzzle/session similarly locks after the first action; after the session ends, selecting another difficulty starts a new challenge. Switching before the first action immediately starts a fresh, correctly graded practice puzzle/session. A game's preferred difficulty is remembered for the next attempt. Locked rounds never silently receive an increased multiplier.
 
 ## Phase 2F difficulty and layout polish
 
