@@ -1,5 +1,15 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 2L — Pink Rush final trivia and concert-sound polish (22 October 2026)
+
+Player testing caught overly obvious song clues and implausible alternatives (especially the Selena Gomez/Ice Cream question), performer clues which named potential answers in the question, and frequent repeats over three concerts. The full question bank has now received an **editorial clue-and-distractor audit** and grown from about **70 to 87** verified public-fact entries. The reviewed prompts are in `src/data/pinkRushEditorial.ts` and 17 additional sourced fan-life questions in `src/data/pinkRushFanExtra.ts`. New practice shows **prioritize unused songs, solo and fan-culture questions**, deliberately rotating away from recent concerts until each category is exhausted. Daily selections remain fixed for a date; existing completed and in-progress saves remain intact.
+
+The fake synthesized "crowd" has been replaced with **a real public-domain recording of cheering/clapping** from [Wikimedia Commons: *Clapping hurray* (starlite / PDsounds)](https://commons.wikimedia.org/wiki/File:Clapping_hurray.ogg). The recording streams directly from Wikimedia Commons when a right answer triggers a reaction, at increasing volume as the stage fills; a miss cuts the cheering. The old misleading crowd synthesizer is gone. Only the existing original musical finale stinger remains synthetic. The sound control is a **single small corner icon**. External sound needs network access and browser audio support; visual stage cues work without it.
+
+The in-game footer now says simply: “Unofficial fan-made BLACKPINK tribute, researched using YG’s official discography and independent sources.” No boilerplate about original graphics, licensing exclusions, browser saves or game difficulty appears there.
+
+Additional automated tests check for clue/answer leakage, comparable collaboration distractors, **four consecutive fresh practice concerts with no repeated regular question**, reliable score/reward preservation, and all existing game regressions. Pink Rush’s established coupon and finale mechanics are unchanged. Brave remains Coming Soon.
+
 ## Phase 2K — Pink Rush 2.0 · Fan Festival + One-Time Reward Wallet
 
 **Latest update (22 October 2026):** Pink Rush has been redesigned as a **12-act BLINK fan festival** with a black/hot-pink concert identity, stage and question controls visible together on desktop and phone (compact sticky stage on phones), original synthesized crowd/cheer pulses and a much stronger fullscreen encore finale. **It still has no difficulty picker.**
