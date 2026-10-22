@@ -2,6 +2,8 @@ import { describe,expect,it,vi } from 'vitest';
 import { rooms, roomCases, roomRules, roomSolutions, validateRoomWorld, holdsRoomRule, dailyRoomCase, practiceRoomCase, roomRuleText,roomClueDiagnostics,roomPropOverlaps,roomNeighbourLinks } from '../src/data/bazingaWorld';
 import { newWorldRound,placeWorldGuest,selectWorldGuest,checkWorld,hintWorld,untouchedWorldRound,worldOrder,creditWorldRound,worldHints,worldAttempts } from '../src/lib/bazingaWorld';
 import { initialBazingaProgress,readBazingaProgress,writeBazingaProgress } from '../src/lib/bazinga';
+import { seatLabelForCase } from '../src/data/bazingaPolish';
+import { casePanelTitles } from '../src/games/BazingaRoomGame';
 
 describe('Eight original sitcom-inspired room maps',()=>{
   it('provides eight different furniture maps and 18 authored levels',()=>{
@@ -9,6 +11,20 @@ describe('Eight original sitcom-inspired room maps',()=>{
     expect(roomCases).toHaveLength(18);
     for(const d of ['easy','medium','hard'] as const) expect(roomCases.filter(c=>c.difficulty===d)).toHaveLength(6);
     expect(validateRoomWorld()).toEqual([]);
+  });
+  it('uses story-specific panel names and case-appropriate seat labels, without naming the occupant',()=>{
+    for(const c of roomCases){
+      expect(casePanelTitles[c.id]?.title?.length).toBeGreaterThan(9);
+      const chairLabels=c.seatIds.map(id=>{
+        const roomSeat=rooms[c.room].seats.find(seat=>seat.id===id)!;
+        const text=seatLabelForCase(c,id,roomSeat.label);
+        expect(text.toLowerCase()).not.toContain('sheldon');
+        expect(text.toLowerCase()).not.toContain('raj');
+        expect(text.length).toBeGreaterThan(5);
+        return text;
+      });
+      expect(new Set(chairLabels).size).toBe(chairLabels.length);
+    }
   });
   it('guarantees exactly one answer for each scenario by exhaustive permutation',()=>{
     for(const c of roomCases){

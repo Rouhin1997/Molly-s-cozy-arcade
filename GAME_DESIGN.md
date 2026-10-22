@@ -16,7 +16,7 @@
 |---|---|---|
 | Guess Who? | Free-text answer to gradually revealed clues about fruits, vegetables and food | **Milestone 1 playable** |
 | Toon Rewind | CRT-style channel surfing, visual prop recognition and tunable signals from Cartoon Network India c. 2000–2010 | **Milestone 2B playable** |
-| The 99 Files | Small detective cases; inspect evidence, interview witnesses and deduce the culprit | Planned |
+| The 99 Files | Hands-on detective evidence board, source-grounded deductions, culprit/method/proof accusations and a special three-stage Halloween Heist | **Milestone 2G playable** |
 | Bazinga! Lab | Original room-map, character-sticker seating puzzles with BBT-flavored story rules, plus the preserved classic seating edition | **Milestone 2E Room Adventures playable** |
 | Pink Rush | Timed BLACKPINK setlist, era and performance-related puzzles; combos and sequencing | Planned |
 | Little Connections | Find four hidden groups of four words, using four mistakes and one-away feedback | **Milestone 2A playable** |
@@ -63,6 +63,27 @@ Future possible packs: Bollywood, historical photographs, semantic word guessing
 - Integrates into the game shelf and cumulative four-game Passport totals, with two new unlockable achievement stamps. New save key: `mollys-bazinga-v1`. Passport exports now use version 2 with all four games; older version 1 backups can still be imported without erasing the new game's data.
 - Asset note: stylized characters are original emoji and hand-coded CSS, not copied TV show character artwork or footage.
 - **Future difficulty refinements:** fresh hard-specific narrative puzzle packs, optional explicit confirmation before resetting a pristine practice board, mobile/keyboard tests, and accessibility focus improvements.
+
+## Phase 2G — The 99 Files and Bazinga finishing pass (implemented)
+
+**Job A: Bazinga**
+- Removed the duplicated “Original schematic · not a studio blueprint” micro-disclaimer from the game map title bar. The existing bottom-of-page unofficial/original-art notice remains.
+- All **18** room adventures have individually styled clue-panel titles and flavorful subtitles (e.g., The Lunch Protocol, the Roommate Agreement *only* for apartment 4A, the Mystery Dossier, and Bernadette's House Rules).
+- Story-sensitive but non-spoiling **seat labels** for all 18 scenarios: Row A/Row C seats for the cinema, tabletop positions for Caltech/Howard's, spatial couch/end-of-sofa seats for the apartments. Names never reveal an occupant. Icons/floor plans, character stickers, Classic Lab, award ledgers and saved progress remain untouched.
+- Automated tests now cover panel-title completeness and uniqueness/spoiler checks for seat labels, as well as the old exhaustive seating solver, geometric neighbour links, prop clearance and score/hint logic. A live browser review by the owner is still pending.
+- For future puzzle-writing polish, continue distinguishing **factually sufficient clue sets**, **human-readable natural language**, and **engaging deduction depth**. Unique-solution validation alone cannot guarantee the user enjoys the clues.
+
+**Job B: The 99 Files**
+- Fully playable fifth arcade game. Mechanic is **evidence inspection + pairing related exhibits on a corkboard + a three-part accusation (culprit, method, decisive proof)**. Not another trivia or seating game.
+- **12 original investigations** (four Cozy, four Clever, four Expert); each contains four suspects, three candidate methods, six or seven original evidence records, three or four paired-document deductions, and a case-specific fictional culprit/method/proof.
+- A chain-of-evidence validator verifies each deduction eliminates at least one candidate, **all** the deductions uniquely determine the answer, the penultimate deduction leaves multiple hypotheses, and every excluded person/method is explicitly supported by the contents of its paired exhibit records. Playthrough tests submit the actual winning accusation for every case.
+- **Hybrid Halloween Heist**: three separate original cases (Cozy → Clever → Expert) with a sequential campaign unlock, plus **nine independent practice cases**; daily cases rotate through all twelve with difficulty restrictions.
+- Lore: an homage to the Halloween Heists and Holt/Jake competition, Doug Judy and the Pontiac Bandit, the interrogation-room atmosphere of *The Box*, Amy's binders, Holt's corgi Cheddar, Terry's yogurt, Charles Boyle's food, and the Jimmy Jab games. All plots, clues and dialogue are original; no episodes or actual broadcast dialogue copied.
+- Original **vector detective portrait badges**, warm precinct desk/evidence sleeves, cream paper documents, corkboard deductions and playful but restrained detective-style reactions. Responsive mobile layout and keyboard buttons.
+- Daily and case browser, 1x/1.5x/2x star multipliers, grade-specific wrong-pair limits/hint limits/final accusation attempts. Incremental personal-best rewards disallow replay star farming.
+- Browser save: `mollys-99-files-v1`; Passport now includes five games and three new detective stamps. **Passport JSON export format v3** includes Nine-Nine, while existing v1 and v2 backups still import and leave absent new game data intact.
+- Asset/lore and manual QA records: `NINE_NINE_ART_LORE_AND_TESTING.md`; code: `src/data/nineNine.ts`, `src/data/nineNineAudit.ts`, `src/lib/nineNine.ts`, `src/games/NineNine.tsx`, `src/components/NineNinePortrait.tsx`; tests: `tests/nineNine.test.ts`.
+- **Next play-test:** user to investigate one Cozy case, one Clever interrogation, one Expert, and verify Halloween Heist 3-stage unlocking and Passport v3 backup from the browser. Specifically check whether each deduction's visible testimony *feels fair*, beyond mechanically satisfying the source-text audit.
 
 ## Phase 2F — Higher-quality BBT deduction and presentation (implemented)
 

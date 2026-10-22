@@ -1,5 +1,6 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import DifficultyPicker from '../components/DifficultyPicker';
+import { seatLabelForCase } from '../data/bazingaPolish';
 import { BazingaSticker } from '../components/BazingaSticker';
 import { readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
 import { type BazingaProgress } from '../lib/bazinga';
@@ -33,6 +34,26 @@ const roomTraits:Record<string,string>={
   comic:'near comic shelves',front:'front row',back:'back row',center:'centre seat',
   aisle:'aisle access',screen:'best straight-on screen angle',desk:'workstation',
   experiment:'near equipment','lab-safe':'safety-protected workstation',
+};
+export const casePanelTitles:Record<string,{title:string;note:string}>={
+  'star-wars-4a':{title:'The Roommate Agreement',note:'A new clause for the viewing-party emergency'},
+  'penny-pizza':{title:'Pizza Night Protocol',note:'Penny’s rules; Sheldon’s unsolicited amendments'},
+  'dinner-wolowitz':{title:'Bernadette’s House Rules',note:'Dinner service begins when the arguing stops'},
+  'comics-release':{title:'New Comic Day Checklist',note:'A first edition deserves careful handling'},
+  'cafeteria-lunch':{title:'The Lunch Protocol',note:'Caltech’s most unnecessary seating experiment'},
+  'movie-night':{title:'The Viewing Protocol',note:'No arguments after the opening crawl'},
+  'raj-mystery':{title:'The Mystery Dossier',note:'Suspects, seats and suspicious alibis'},
+  'sick-day':{title:'The Contagion Protocol',note:'An entirely excessive quarantine strategy'},
+  'halo-marathon':{title:'Halo Night House Rules',note:'The controller allocation has been contested'},
+  'wolowitz-thanksgiving':{title:'Bernadette’s Dinner Plan',note:'Final authority rests with the host'},
+  'lab-flag-show':{title:'Fun with Flags — Call Sheet',note:'A highly specialized filming schedule'},
+  'comic-tournament':{title:'Stuart’s Tournament Rules',note:'The tournament director objects to cheating'},
+  'sheldon-spot-war':{title:'Roommate Agreement Addendum',note:'The couch clause is under formal review'},
+  'cinema-empire':{title:'The Galactic Seating Directive',note:'The Empire demands an unobstructed screen'},
+  'raj-midnight':{title:'The Midnight Mystery Dossier',note:'Witness testimony must be reconciled'},
+  'nobel-banquet':{title:'The Dinner Seating Charter',note:'Peer review before the appetizers'},
+  'caltech-quantum':{title:'The Lab Safety Protocol',note:'A scientifically defensible workstation plan'},
+  'cafeteria-summit':{title:'The Cafeteria Summit Agenda',note:'Apparently lunch requires a committee'},
 };
 const zoneNames:Record<string,string>={
   apartment:'Apartment living room',penny:'Penny’s living room',dinner:'Family dining room',
@@ -162,7 +183,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
       </div>
       <div className="bazinga-world-layout">
         <section className="bazinga-room-card" aria-label={`Interactive seating map: ${room.name}`}>
-          <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong><small>Original schematic · not a studio blueprint</small></div>
+          <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong></div>
           <div className="bazinga-map-scroll"><div className={`bazinga-room-map room-theme-${room.theme}`} role="group" aria-label="Room seats and furniture">
             <div className="room-floor-object" aria-hidden="true"/>
             {showNeighbours&&<svg className="bazinga-neighbour-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -177,12 +198,12 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               const name=round.placements[id],isFixed=round.fixed.includes(id);
               return <button type="button" key={id} className={`bazinga-map-seat ${name?'is-occupied':''} ${isFixed?'is-fixed':''} ${round.selected?'has-selection':''}`}
                 style={{left:`${s.x}%`,top:`${s.y}%`}} disabled={round.status!=='playing'||isFixed}
-                title={s.label}
-                aria-label={`${s.label}: ${name??'empty'}${isFixed?', fixed by a hint':''}`}
+                title={seatLabelForCase(caseData,id,s.label)}
+                aria-label={`${seatLabelForCase(caseData,id,s.label)}: ${name??'empty'}${isFixed?', fixed by a hint':''}`}
                 onClick={()=>changeRound((r,c)=>placeWorldGuest(r,c,id))}>
                 <span className="bazinga-chair-number">{i+1}</span>
                 {name?<BazingaSticker name={name} size={55}/>:<span className="bazinga-chair-empty" aria-hidden="true">+</span>}
-                <strong>{name??s.label}</strong>
+                <strong>{name??seatLabelForCase(caseData,id,s.label)}</strong>
                 {isFixed&&<span className="bazinga-chair-fixed">✦</span>}
               </button>;
             })}
@@ -197,7 +218,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               {caseData.seatIds.map((id,i)=>{
                 const chair=room.seats.find(s=>s.id===id)!;
                 return <div key={id}>
-                  <strong>#{i+1} {chair.label}</strong>
+                  <strong>#{i+1} {seatLabelForCase(caseData,id,chair.label)}</strong>
                   <span>{chair.tags.filter(tag=>tag!=='spot').map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
                 </div>;
               })}
@@ -221,9 +242,9 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
         </section>
         <section className="bazinga-world-rules" aria-label="Roommate agreement clues">
           <div className="bazinga-rule-paper-head">
-            <span>📜</span><div><h3>Roommate Agreement</h3><small>The episode-specific seating clauses</small></div>
+            <span>📜</span><div><h3>{casePanelTitles[caseData.id]?.title??'The Ground Rules'}</h3><small>{casePanelTitles[caseData.id]?.note??'Episode-specific clues'}</small></div>
           </div>
-          <div className="bazinga-rule-paper-intro">To preserve domestic peace, all {rules.length} clauses must hold at the same time.</div>
+          <div className="bazinga-rule-paper-intro">To solve this episode, all {rules.length} conditions must hold at the same time.</div>
           <ol className="bazinga-world-clues">
             {rules.map((rule,i)=>{
               const showFeedback=round.attempts>0&&round.status==='playing'&&allPlaced&&level==='easy';
@@ -259,7 +280,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
             <p className="bazinga-lose-line">You lose!</p>
             <details className="bazinga-solution-reveal">
               <summary>See the correct seating arrangement</summary>
-              <p>{caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${room.seats.find(seat=>seat.id===id)?.label})`).join(' · ')}</p>
+              <p>{caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${seatLabelForCase(caseData,id,room.seats.find(seat=>seat.id===id)?.label??id)})`).join(' · ')}</p>
             </details>
           </>}
         </div>

@@ -327,15 +327,27 @@ const tagText:Record<string,string> = {
   center:'a centre seat',aisle:'an aisle seat',screen:'a seat squarely oriented to the screen',
   'far-corner':'a far-corner position', 'partial-view':'a place with a less convenient TV angle',
 };
-export function roomRuleText(_c:RoomCase,r:RoomRule):string {
+/** Worded clauses match their evaluated geometry; scene flavour never
+ * introduces extra unwritten restrictions (a common logic-puzzle failure). */
+export function roomRuleText(c:RoomCase,r:RoomRule):string {
   if(r.text)return r.text;
-  if(r.type==='has')return `${r.a} must sit in ${tagText[r.tag??'']??'the designated position'}.`;
-  if(r.type==='avoids')return `${r.a} refuses ${tagText[r.tag??'']??'that kind of chair'}.`;
-  if(r.type==='adjacent')return `${r.a} and ${r.b} insist on neighbouring seats.`;
-  if(r.type==='not-adjacent')return `${r.a} and ${r.b} need space between their seats.`;
-  if(r.type==='left')return `${r.a} sits to the left of ${r.b} on the room map.`;
-  if(r.type==='far-from-guest')return `${r.a} must be as far as possible from ${r.b} — statistically prudent.`;
-  return `${r.a} needs the ${r.type==='closest'?'nearest':'farthest'} seat from ${r.prop}.`;
+  const occasion=c.room==='four-a'||c.room==='four-b'?'living-room negotiations':
+    c.room==='wolowitz'?'dinner etiquette':c.room==='raj'?'Raj’s elaborate party game':
+    c.room==='comic'?'the comic-shop proceedings':c.room==='cinema'?'the screening':
+    c.room==='lab'?'the experiment':'the Caltech lunch experiment';
+  if(r.type==='has')return `${r.a} has requested a position with ${tagText[r.tag??'']??'the specified seat property'} during ${occasion}.`;
+  if(r.type==='avoids')return `${r.a} refuses any position described as ${tagText[r.tag??'']??'that kind of chair'}.`;
+  if(r.type==='adjacent'){
+    if(c.room==='raj')return `${r.a} and ${r.b} must occupy neighbouring chairs so they can quietly compare mystery notes.`;
+    if(c.room==='lab')return `${r.a} and ${r.b} need neighbouring workstations to share the experiment log.`;
+    if(c.room==='cinema')return `${r.a} and ${r.b} have tickets for immediately neighbouring seats, including close diagonals where the floor plan allows.`;
+    if(c.room==='cafeteria')return `${r.a} and ${r.b} sit close enough to pass lunch notes without changing chairs — they must be neighbours.`;
+    return `${r.a} and ${r.b} need neighbouring places for ${occasion}.`;
+  }
+  if(r.type==='not-adjacent')return `The seating arrangement forbids ${r.a} and ${r.b} from occupying neighbouring positions. Someone insists on personal space.`;
+  if(r.type==='left')return `Looking at the room map from above, ${r.a} must be somewhere to the left of ${r.b}.`;
+  if(r.type==='far-from-guest')return `${r.a} has insisted on the greatest possible distance from ${r.b} (measured on this room map).`;
+  return `${r.a} has requested the ${r.type==='closest'?'nearest':'farthest'} available seat relative to ${r.prop}.`;
 }
 const permutations=(names:string[]):string[][]=>{
   if(names.length===0)return [[]];
