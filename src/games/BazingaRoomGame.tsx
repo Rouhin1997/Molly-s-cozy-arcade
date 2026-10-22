@@ -1,5 +1,6 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import DifficultyPicker from '../components/DifficultyPicker';
+import { seatLabelForCase } from '../data/bazingaPolish';
 import { BazingaSticker } from '../components/BazingaSticker';
 import { readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
 import { type BazingaProgress } from '../lib/bazinga';
@@ -197,12 +198,12 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               const name=round.placements[id],isFixed=round.fixed.includes(id);
               return <button type="button" key={id} className={`bazinga-map-seat ${name?'is-occupied':''} ${isFixed?'is-fixed':''} ${round.selected?'has-selection':''}`}
                 style={{left:`${s.x}%`,top:`${s.y}%`}} disabled={round.status!=='playing'||isFixed}
-                title={s.label}
-                aria-label={`${s.label}: ${name??'empty'}${isFixed?', fixed by a hint':''}`}
+                title={seatLabelForCase(caseData,id,s.label)}
+                aria-label={`${seatLabelForCase(caseData,id,s.label)}: ${name??'empty'}${isFixed?', fixed by a hint':''}`}
                 onClick={()=>changeRound((r,c)=>placeWorldGuest(r,c,id))}>
                 <span className="bazinga-chair-number">{i+1}</span>
                 {name?<BazingaSticker name={name} size={55}/>:<span className="bazinga-chair-empty" aria-hidden="true">+</span>}
-                <strong>{name??s.label}</strong>
+                <strong>{name??seatLabelForCase(caseData,id,s.label)}</strong>
                 {isFixed&&<span className="bazinga-chair-fixed">✦</span>}
               </button>;
             })}
@@ -217,7 +218,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
               {caseData.seatIds.map((id,i)=>{
                 const chair=room.seats.find(s=>s.id===id)!;
                 return <div key={id}>
-                  <strong>#{i+1} {chair.label}</strong>
+                  <strong>#{i+1} {seatLabelForCase(caseData,id,chair.label)}</strong>
                   <span>{chair.tags.filter(tag=>tag!=='spot').map(tag=>roomTraits[tag]??tag).join(' · ')}</span>
                 </div>;
               })}
@@ -279,7 +280,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
             <p className="bazinga-lose-line">You lose!</p>
             <details className="bazinga-solution-reveal">
               <summary>See the correct seating arrangement</summary>
-              <p>{caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${room.seats.find(seat=>seat.id===id)?.label})`).join(' · ')}</p>
+              <p>{caseData.seatIds.map((id,i)=>`${i+1}. ${caseData.solution[i]} (${seatLabelForCase(caseData,id,room.seats.find(seat=>seat.id===id)?.label??id)})`).join(' · ')}</p>
             </details>
           </>}
         </div>
