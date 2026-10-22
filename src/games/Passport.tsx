@@ -4,7 +4,7 @@ import type { Progress } from '../lib/game';
 import type { ConnectionProgress } from '../lib/connections';
 import type { ToonProgress } from '../lib/toon';
 import type { BazingaProgress } from '../lib/bazinga';
-import type { NineProgress } from '../lib/nineNine';
+import { normalizeNineProgress, type NineProgress } from '../lib/nineNine';
 
 type Props = {
   guess: Progress;
@@ -70,7 +70,7 @@ export default function Passport({ guess, connections, toon, bazinga, nine, setG
       setConnections(c);
       setToon(t);
       if (b) setBazinga(b);
-      if (n) setNine(n);
+      if (n) setNine(normalizeNineProgress(n));
       setFeedback(n ? 'All five arcade games restored! Stars and stamps are back.' : 'Legacy Passport restored! Newer games missing from this backup were left unchanged.');
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : 'Unable to read that backup file.');

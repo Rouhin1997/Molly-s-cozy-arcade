@@ -112,7 +112,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
    {mode!=='heist'?<DifficultyPicker value={level} onChange={chooseDifficulty} disabled={locked}
      lockedMessage="This case is underway or closed. Select a new difficulty for your next practice investigation."/>:
      <div className="nn-heist-difficulty"><span>🔐</span><p>The heist grows harder as the squad advances: <strong>Cozy → Clever → Expert.</strong> Finish a stage to unlock the next one.</p></div>}
-   <div className="mode-intro"><span>🔎</span><p><strong>Detective Molly, you're on the case.</strong> Read the exhibits, pair two documents to establish a deduction, and submit the culprit, method and decisive proof. {mode==='heist'?'Tonight the usual precinct rules come with a Halloween twist.':level==='easy'?'Cozy offers a suggested first document, two hints and generous retries.':level==='medium'?'Clever gives you the questions but lets you find the evidence pairs.':'Expert offers only unidentified investigation threads; you must discover their links yourself.'}</p></div>
+   <div className="mode-intro"><span>🔎</span><p><strong>Detective Molly, you're on the case.</strong> Read the exhibits, pair two documents to establish a deduction, and submit the culprit, method and decisive proof. {mode==='heist'?'Tonight the usual precinct rules come with a Halloween twist.':level==='easy'?'Cozy offers a suggested first document, two hints and generous retries.':level==='medium'?'Clever gives you the questions but lets you find the evidence pairs.':'Expert keeps the full questions visible but requires deeper cross-checks, four independent links and no hints.'}</p></div>
 
    {mode==='cases'&&<section className="nn-files-shelf">
      <div className="nn-shelf-title"><div><span className="overline">DETECTIVE CASE ARCHIVE</span><h2>The open files</h2>
@@ -204,7 +204,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
                const first=c.evidence.find(e=>e.id===d.pair[0])!;
                const second=c.evidence.find(e=>e.id===d.pair[1])!;
                return <li className={done?'is-solved':''} key={d.id}>
-                 <div><span>{done?'✓':String(i+1)}</span><strong>{done||level!=='hard'?d.prompt:`Sealed investigation thread ${i+1}`}</strong></div>
+                 <div><span>{done?'✓':String(i+1)}</span><strong>{d.prompt}</strong></div>
                  {done?<div className="nn-deduction-explain">
                    <p><strong>Compare:</strong> {first.title} + {second.title}</p>
                    <p><strong>Deduction:</strong> {d.conclusion}</p>
@@ -214,8 +214,8 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
                      <strong>{impact.after} possible combination{impact.after===1?'':'s'} remain.</strong>
                    </p>}
                  </div>:<p>{level==='easy'? `Cozy tip: start with ${first.title}; find a supporting or contradictory report.`:
-                   level==='medium'?'Inspect the reports and decide which two records establish this claim.':
-                   'Investigate the exhibits to discover the two records behind this sealed thread.'}</p>}
+                   level==='medium'?'Find the two reports that together settle this question. Do not mistake a possible opportunity for proof of guilt.':
+                   'Several suspects may remain plausible. Compare records for hard exclusions, timing contradictions and the positive proof at the end.'}</p>}
                </li>;
              })}
            </ol>
