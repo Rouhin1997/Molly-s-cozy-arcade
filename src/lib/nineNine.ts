@@ -4,6 +4,8 @@ import { caseCandidates, dailyNineCase, nineCases, practiceNineCase, type NineCa
 export const NINE_STORAGE_KEY='mollys-99-files-v1';
 export type NineRound={
   caseId:string;difficulty:Difficulty;
+  /** Added in the evidence-first casebook: legacy active rounds need restarting. */
+  revision?:2;
   inspected:string[];selected:string[];linked:string[];
   wrongPairs:number;hints:number;attempts:number;
   suspect:string;method:string;proof:string;
@@ -24,7 +26,7 @@ export function freshNineProgress():NineProgress {
     stats:{played:0,solved:0,stars:0,bestScore:0,perfect:0},bestAwards:{}};
 }
 export function newNineRound(c:NineCase):NineRound {
-  return {caseId:c.id,difficulty:c.difficulty,inspected:[],selected:[],linked:[],
+  return {caseId:c.id,difficulty:c.difficulty,revision:2,inspected:[],selected:[],linked:[],
     wrongPairs:0,hints:0,attempts:0,suspect:'',method:'',proof:'',
     status:'playing',score:0,feedback:'Read the evidence, then pair documents that reveal the same hidden truth.'};
 }
@@ -97,16 +99,30 @@ export function creditNineResult(p:NineProgress,r:NineRound):NineProgress{
     perfect:p.stats.perfect+(r.status==='won'&&r.wrongPairs===0&&r.hints===0&&r.attempts===1&&prior===0?1:0),
   }};
 }
+/** Restart only unfinished pre-audit investigations. Leave won/lost results,
+ * personal-best awards, completed Heists and all other arcade saves intact. */
+export function normalizeNineProgress(p:NineProgress):NineProgress{
+ if(p.version!==1||!p.daily||!p.heist||!p.stats||typeof p.stats.stars!=='number')return freshNineProgress();
+ const migrate=(r:NineRound|null|undefined):NineRound|null=>{
+  if(!r)return null;
+  if(r.status!=='playing'||r.revision===2)return r;
+  const c=nineCases.find(c=>c.id===r.caseId);
+  if(!c)return r;
+  return {...newNineRound(c),feedback:'This unsolved case was updated with a fully rewritten evidence trail. Previously earned stars and solved cases are preserved.'};
+ };
+ const daily=Object.fromEntries(Object.entries(p.daily).map(([date,r])=>[date,migrate(r)]).filter(([,r])=>r!==null)) as Record<string,NineRound>;
+ const heist=Object.fromEntries(Object.entries(p.heist).map(([id,r])=>[id,migrate(r)]).filter(([,r])=>r!==null)) as Record<string,NineRound>;
+ return {...p,daily,heist,practice:migrate(p.practice),
+  bestAwards:p.bestAwards??{},recent:Array.isArray(p.recent)?p.recent:[]};
+}
 export function readNineProgress():NineProgress{
-  try{
-    const raw=localStorage.getItem(NINE_STORAGE_KEY);
-    if(!raw)return freshNineProgress();
-    const unknown:unknown=JSON.parse(raw);
-    if(!unknown||typeof unknown!=='object')return freshNineProgress();
-    const p=unknown as NineProgress;
-    if(p.version!==1||!p.daily||!p.heist||!p.stats||typeof p.stats.stars!=='number')return freshNineProgress();
-    return {...p,practice:p.practice??null,bestAwards:p.bestAwards??{},recent:Array.isArray(p.recent)?p.recent:[]};
-  }catch{return freshNineProgress();}
+ try{
+  const raw=localStorage.getItem(NINE_STORAGE_KEY);
+  if(!raw)return freshNineProgress();
+  const unknown:unknown=JSON.parse(raw);
+  if(!unknown||typeof unknown!=='object')return freshNineProgress();
+  return normalizeNineProgress(unknown as NineProgress);
+ }catch{return freshNineProgress();}
 }
 export function writeNineProgress(p:NineProgress){
   try{localStorage.setItem(NINE_STORAGE_KEY,JSON.stringify(p))}catch{/* no storage still playable */}
