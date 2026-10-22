@@ -1,6 +1,22 @@
 # Molly's Cozy Arcade — Development Handoff
 
-**Checkpoint:** 22 October 2026, Phase 2G — five playable games, refined Bazinga UI and launched The 99 Files
+## Latest release — Phase 2H: Detective Molly and Nine-Nine polish (22 October 2026)
+
+**This release** comes after the user play-tested the first Nine-Nine build and requested recognizable character avatars, a photo-inspired Detective Molly, dynamic squad assignments, clearer deduction explanations, deeper case endings and a special Halloween Heist setting. No change to existing score or local-save schemas.
+
+- **GitHub workflow:** the authenticated GitHub connector can read/write `Rouhin1997/Molly-s-cozy-arcade` directly. Do not use terminal `git clone` in the isolated workspace and do not ask for a ZIP; this was an incorrect tool choice during an earlier turn.
+- `src/components/NineNinePortrait.tsx`: new, more distinctive original SVG stickers for Jake, Holt, Amy, Rosa, Terry, Boyle, Gina and Cheddar, plus **Detective Molly**, whose checked-blazer, dark side-parted hairstyle and smile were drawn from a privately shared reference. The **original photo was never copied into the public repo**, and is not used on the public webpage.
+- `src/data/nineNinePresentation.ts`: **12** episode-specific Molly-led cast lists (Molly + three case-relevant Nine-Nine characters), custom team banter and short four-part case stories (incident, plausible motivation, fact-supported reconstruction and humorous epilogue).
+- `nineDeductionImpact` calculates *real* suspect/method exclusions from the case solver, given whichever clues Molly resolved first. `src/games/NineNine.tsx` displays the paired source documents, conclusion, eliminated suspects/methods, and remaining possible combinations following every successful deduction.
+- Better **tier identity**: Cozy provides one clearly highlighted starting evidence file and two optional hints, Clever provides question prompts but no selected-document guidance and one hint, Expert shows only unlabeled investigation threads until they are resolved, with four mandatory links, no hints and tighter mistake limits. All evidence is readable in all tiers.
+- **Read the verified case solution** now provides four small narrative chapters and identifies the culprit, exact method and uniquely decisive report pair. The team panel no longer contains the redundant “original squad artwork” subtitle.
+- **Halloween Heist** visually transforms the precinct with twilight purple, orange-gold badge accents, pumpkins, bat/spider decorations, different evidence surfaces and a campaign banner; the original three-stage unlock/retry logic and saves are unchanged.
+- `src/styles.css` contains scoped and mobile-responsive Phase 2H styling. `tests/nineNinePresentation.test.ts` validates all 12 solution stories, Molly participation in every cast, authentic solver-derived exclusions and scripted complete case walkthroughs.
+
+**Next session:** user tests improved character likeness and the investigation logic in a real browser. Refine feedback if needed. Then start **Pink Rush**, followed by the November 13 Birthday Quest. Maintain Passport v3 backwards compatibility and all existing score keys. No manual visual QA has been completed by the assistant.
+
+
+**Checkpoint:** 22 October 2026, Phase 2H — Detective Molly, portrait redesign, stronger investigation explanations and themed Halloween Heist
 **Repository:** https://github.com/Rouhin1997/Molly-s-cozy-arcade
 **Live arcade:** https://rouhin1997.github.io/Molly-s-cozy-arcade/
 **Default branch:** `main`; GitHub Actions publishes `main` to GitHub Pages
