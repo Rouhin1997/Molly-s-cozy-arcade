@@ -74,7 +74,7 @@ export const ninePresentation:Record<string,NinePresentation>={
   teamNote:'The annual heist begins. Holt monitors the rules; Jake and Amy are already arguing over who has a better plan.',
   scene:'The Halloween medal vanished from an intact case just before the precinct’s annual contest opened.',
   motivation:'Amy prepared a perfect opening gambit with an innocent-looking stand-in—precisely the kind of elaborate preparation she loves.',
-  reconstruction:'The locked vent was paint-sealed and the glass case was unbroken. Rosa was on corridor duty, Charles was at a meeting, and Jake remained near security during the crucial interval. Amy had rehearsed the award presentation and commissioned the resin duplicate; the residue left inside the case identifies the substitution.',
+  reconstruction:'The locked vent was paint-sealed and the glass case was unbroken. Rosa was on corridor duty, Charles was at a meeting, and Jake remained near security during the crucial interval. Amy had rehearsed the award presentation and commissioned the medal duplicate; the residue left inside the case identifies the substitution.',
   closing:'Jake demands a rematch. Holt merely writes down the result and opens the next heist envelope.',
  },
  'heist-two':{
@@ -82,7 +82,7 @@ export const ninePresentation:Record<string,NinePresentation>={
   teamNote:'Cheddar is considered a very good boy. Rosa is considered difficult to interrogate.',
   scene:'The heist trophy reached the evidence-locker corridor along a route no cart could explain.',
   motivation:'Rosa preferred a quiet, precise diversion while everyone else argued over loud decoys and fake emergencies.',
-  reconstruction:'The locker cart was empty long before the alarm, and the false radio message arrived too late. Jake was in the interrogation room, Gina hosted the briefing and Terry was with the K9 handler. The harness clip, pet hair and matching paw prints show how Cheddar moved the prize to the locker latch while Rosa orchestrated the route.',
+  reconstruction:'The locker cart was empty long before the alarm, and the false radio message arrived too late. Jake was in the interrogation room, Gina hosted the briefing and Terry was with the K9 handler. The dog harness clip, pet hair and matching paw prints show how Cheddar moved the prize to the locker latch while Rosa orchestrated the route.',
   closing:'Holt formally reminds everyone that Cheddar has committed no wrongdoing. The heist continues.',
  },
  'heist-three':{
