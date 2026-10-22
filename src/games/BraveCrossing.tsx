@@ -13,6 +13,8 @@ const messages={
  wisp:'A little blue wisp settles beside you. Its light is yours to carry.',
  stone:'The ancient stone wakes. Far away, a mossy gate begins to glow.',
  gate:'The gate remembers the light and quietly swings open.',
+ key:'A golden key rests in your hand.',
+ door:'The carved wooden door swings inward.',
  finish:'The far glen opens before you. The first crossing is complete!'
 };
 export default function BraveCrossing(){
