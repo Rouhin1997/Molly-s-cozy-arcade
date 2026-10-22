@@ -1520,3 +1520,43 @@
 @media(prefers-reduced-motion:reduce){
  .brave-scene-backdrop,.brave-backdrop-wisp,.brave-archery-wind,.brave-archery-flight{animation:none}
 }
+
+
+/* Witch's hand-carved logic table */
+.brave-rune-workshop{padding:15px;border:4px double #bea47e;border-radius:15px;background:linear-gradient(145deg,#e8dac0,#f7e6c8);box-shadow:inset 0 0 20px #9a764331}
+.brave-rune-book{border:1px solid #bd9a70;border-radius:11px;padding:18px 22px;background:radial-gradient(circle at 83% 19%,#fdf7dd,#ecddbb);text-align:center}
+.brave-rune-book .brave-kicker{color:#947151}
+.brave-rune-book p{max-width:620px;margin:12px auto;font:italic 20px/1.7 Georgia,serif;color:#775838}
+.brave-rune-book small{display:block;color:#89755e;font:12px/1.65 Georgia,serif}
+.brave-rune-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.brave-rune-slot{border:3px double #b6a184;border-radius:12px;background:linear-gradient(160deg,#82684c,#4c574b);color:#f4dfb2;min-height:135px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;box-shadow:inset 0 0 19px #282b2d6b}
+.brave-rune-slot.is-placed{background:linear-gradient(160deg,#59766c,#4b564d);border-color:#acc5aa}
+.brave-rune-slot small{font:800 9px 'DM Sans',sans-serif;letter-spacing:.1em}
+.brave-rune-slot>span{font:40px Georgia,serif;text-shadow:0 0 12px #d4d7b690}
+.brave-rune-slot strong{font:700 12px Georgia,serif;text-align:center}
+.brave-rune-piece-tray{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.brave-rune-piece-tray button{flex:1 1 105px;border:2px solid #a98764;border-radius:12px;padding:15px 7px;background:linear-gradient(155deg,#eed3a4,#b99a6f);color:#664d39;display:flex;flex-direction:column;gap:5px;align-items:center}
+.brave-rune-piece-tray button>span{font:32px Georgia,serif}
+.brave-rune-piece-tray button strong{font:700 12px Georgia,serif}
+.brave-rune-piece-tray button:disabled{opacity:.35;cursor:default}
+.brave-rune-actions{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:15px 0}
+.brave-rune-actions>button:not(.brave-journey-main-action){padding:11px 15px;border:1px solid #b7ad91;border-radius:22px;background:#f6efd7;color:#70674b;font:700 12px Georgia,serif}
+.brave-rune-actions .brave-journey-main-action{margin:0}
+.brave-rune-actions button:disabled{opacity:.5;cursor:default}
+.brave-rune-feedback{text-align:center;font:italic 13px/1.7 Georgia,serif;color:#5d7760;margin:14px auto}
+.brave-journey-hint-panel{text-align:center;margin:16px auto}
+.brave-journey-hint-toggle{border:1px solid #99afa3;border-radius:22px;background:#eef5dd;color:#47766c;font:bold 12px Georgia,serif;padding:11px 18px}
+.brave-journey-hint-panel .brave-journey-hint{margin:10px auto;max-width:700px}
+.brave-journey-replay-start{border:1px solid #a7b8a7;border-radius:19px;background:#f9f1da;color:#5b7a6b;padding:9px 13px;font:bold 11px Georgia,serif}
+@media(max-width:650px){
+ .brave-rune-workshop{padding:9px}
+ .brave-rune-book{padding:12px}
+ .brave-rune-book p{font-size:16px}
+ .brave-rune-slots{gap:3px}
+ .brave-rune-slot{min-height:104px;gap:5px}
+ .brave-rune-slot small{font-size:7px}
+ .brave-rune-slot>span{font-size:27px}
+ .brave-rune-slot strong{font-size:9px}
+ .brave-rune-piece-tray{gap:5px}
+ .brave-rune-piece-tray button{flex-basis:76px;padding:10px 4px}
+}
