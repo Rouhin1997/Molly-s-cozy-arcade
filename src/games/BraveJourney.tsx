@@ -2,7 +2,8 @@ import {useRef,useState,type KeyboardEvent} from 'react';
 import {braveCampaignStages,braveChapterBridges,braveArcheryTargets,braveRuneOptions,braveRuneOrder,type BraveStage} from '../data/braveCampaign';
 import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,braveTile,type BravePuzzleState,type BraveDirection} from '../lib/bravePuzzle';
 import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,type BraveJourneySave} from '../lib/braveProgress';
-import {braveShotIsCorrect,braveRuneStep,type BraveAim,type BraveDraw} from '../lib/braveChallenges';
+import {braveRuneStep} from '../lib/braveChallenges';
+import BraveArcheryRange from './BraveArcheryRange';
 
 const roman:Record<string,string>={highland:'I',forest:'II',witch:'III'};
 const directions:Record<string,BraveDirection>={
@@ -66,19 +67,20 @@ function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
  const state=history[history.length-1],done=braveCompleted(level,state);
  const position=bravePosition(level,state.position);
  return <div className="brave-crossing-content brave-journey-playfield">
-  <div className="brave-crossing-grid-frame">
+  <div className="brave-crossing-grid-frame brave-journey-maze-scroll" role="region" aria-label="Scrollable illustrated puzzle labyrinth" tabIndex={0}>
    <div className="brave-crossing-grid" style={{gridTemplateColumns:'repeat('+braveWidth(level)+',minmax(0,1fr))'}} aria-hidden="true">
     {level.rows.join('').split('').map((_,i)=>{
      const tile=braveTile(level,i),at=i===state.position;
      const found=tile==='W'&&state.wisps.includes(i);
      const awake=tile==='A'&&state.stones.includes(i);
-     const gateOpen=tile==='G'&&state.stones.length>0;
-     const kind=tile==='#'?'wall':tile==='G'?(gateOpen?'gate-open':'gate-closed'):
-       tile==='E'?'exit':tile==='A'?'stone':tile==='W'?'wisp':'path';
+     const gateOpen=(tile==='G'&&state.stones.length>0)||(tile==='H'&&state.stones.length>=2)||(tile==='D'&&state.keys.length>0);
+     const kind=tile==='#'?'wall':['G','H','D'].includes(tile)?(gateOpen?'gate-open':'gate-closed'):
+       tile==='E'?'exit':tile==='A'?'stone':tile==='W'?'wisp':tile==='K'?'key':'path';
      return <div key={i} className={'brave-crossing-tile is-'+kind+(at?' has-traveller':'')}>
       {tile==='W'&&!found&&<span className="brave-crossing-light">✧</span>}
       {tile==='A'&&<span className={'brave-crossing-rune'+(awake?' is-lit':'')}>ᚱ</span>}
-      {tile==='G'&&<span className="brave-crossing-gate">{gateOpen?'✧':'▥'}</span>}
+      {(tile==='G'||tile==='H'||tile==='D')&&<span className="brave-crossing-gate">{gateOpen?'✧':tile==='H'?'❖':tile==='D'?'▣':'▥'}</span>}
+      {tile==='K'&&!state.keys.includes(i)&&<span className="brave-crossing-key-icon">⚿</span>}
       {tile==='E'&&<span className="brave-crossing-exit">✦</span>}
       {at&&<span className="brave-crossing-traveller">🏹</span>}
      </div>;
@@ -90,8 +92,9 @@ function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
     <span>THE PATH WHISPERS</span>
     <p aria-live="polite" aria-atomic="true">{notice}</p>
     <div className="brave-crossing-tally">
-     {level.rows.join('').includes('W')&&<span>✧ {state.wisps.length?'Light carried':'Find the light'}</span>}
-     {level.rows.join('').includes('A')&&<span>ᚱ {state.stones.length?'Stone awake':'Stone sleeping'}</span>}
+     {level.rows.join('').includes('W')&&<span>✧ Wisps {state.wisps.length}/{level.rows.join('').split('W').length-1}</span>}
+     {level.rows.join('').includes('A')&&<span>ᚱ Stones {state.stones.length}/{level.rows.join('').split('A').length-1}</span>}
+     {level.rows.join('').includes('K')&&<span>⚿ Key {state.keys.length?'found':'hidden'}</span>}
      <span>↝ {state.moves} steps</span>
      <span className="brave-crossing-coordinate">Row {position.row+1} · Column {position.col+1}</span>
     </div>
@@ -118,8 +121,6 @@ export default function BraveJourney({onChapterChange}:{
  const [history,setHistory]=useState<BravePuzzleState[]>(()=>openingHistory(braveCampaignStages[initial<0?0:initial]));
  const [notice,setNotice]=useState('A path opens in the heather. Listen for the little light.');
  const [finished,setFinished]=useState(()=>progress.completed.includes(progress.current));
- const [aim,setAim]=useState<BraveAim>('centre');
- const [draw,setDraw]=useState<BraveDraw>('gentle');
  const [shots,setShots]=useState(0);
  const [runeSteps,setRuneSteps]=useState(0);
  const sectionRef=useRef<HTMLElement|null>(null);
@@ -138,7 +139,7 @@ export default function BraveJourney({onChapterChange}:{
   setCurrentIndex(index);
   setHistory(openingHistory(next));
   setNotice('Take the path at your own pace. The wisps will wait.');
-  setAim('centre');setDraw('gentle');setShots(0);setRuneSteps(0);setFinished(false);
+  setShots(0);setRuneSteps(0);setFinished(false);
   onChapterChange(next.chapterId);
   sectionRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
  }
@@ -150,7 +151,9 @@ export default function BraveJourney({onChapterChange}:{
   setHistory([...history,result.state]);
   if(result.event==='wisp')setNotice('The little light settles beside you. Carry it onward.');
   else if(result.event==='stone')setNotice('The rune wakes beneath your feet. A distant gate shimmers.');
-  else if(result.event==='gate')setNotice('The gate recognizes the light and opens.');
+  else if(result.event==='gate')setNotice('The old lock recognizes the awakened runes and opens.');
+  else if(result.event==='key')setNotice('A golden key gleams in your hand. Somewhere a carved door waits.');
+  else if(result.event==='door')setNotice('The wooden door yields to the key.');
   else if(result.event==='finish'){
    setNotice('The way ahead is clear.');markFinished();
   }else setNotice('The trail winds onward through the Highlands.');
@@ -160,21 +163,6 @@ export default function BraveJourney({onChapterChange}:{
    const dir=directions[event.key]??directions[event.key.toLowerCase()];
    if(dir){event.preventDefault();move(dir)}
   }
- }
- function shoot(){
-  if(finished)return;
-  const target=braveArcheryTargets[shots];
-  if(!target)return;
-  if(!braveShotIsCorrect(target,aim,draw)){
-   const rightAim=target.wind===1?'left':target.wind===-1?'right':'centre';
-   setNotice(aim!==rightAim
-    ?'The crosswind carries your arrow aside. Aim into the wind to correct it.'
-    :'The arrow falls short or flies too hard. Match the draw to the distance.');
-   return;
-  }
-  setShots(shots+1);
-  if(shots+1===braveArcheryTargets.length){setNotice('Three clean shots. Merida grins beneath the banners.');markFinished()}
-  else setNotice('A perfect shot! The wind turns as the next ribbon lifts.');
  }
  function rune(id:string){
   if(finished)return;
@@ -226,24 +214,15 @@ export default function BraveJourney({onChapterChange}:{
    {stage.kind==='route'&&<JourneyRoute stage={stage} history={history} onMove={move} notice={notice}
     onUndo={()=>{if(history.length>1){setHistory(history.slice(0,-1));setNotice('You retrace your last step.')} }}
     onRestart={()=>{setHistory(openingHistory(stage));setNotice('The journey begins anew.')}}/>}
-   {stage.kind==='archery'&&<div className="brave-journey-special">
-    <div className="brave-journey-target-art" aria-hidden="true"><span>🏹</span><span>◎</span><span>➶</span></div>
-    <div className="brave-journey-special-controls">
-     <span className="brave-kicker">TARGET {shots+1} OF 3</span>
-     <h4>{braveArcheryTargets[shots].name}</h4>
-     <p>{braveArcheryTargets[shots].description} The target is {braveArcheryTargets[shots].range==='near'?'nearby':'far across the glen'}.</p>
-     <p className="brave-journey-weather">Wind: {braveArcheryTargets[shots].wind===1?'→ EAST':braveArcheryTargets[shots].wind===-1?'← WEST':'· STILL'}</p>
-     <div className="brave-journey-control-label">Where will you aim?</div>
-     <div className="brave-journey-choice-row">
-      {(['left','centre','right'] as const).map(value=><button key={value} aria-pressed={aim===value} onClick={()=>setAim(value)}>{value==='centre'?'Straight':value==='left'?'← Left':'Right →'}</button>)}
-     </div>
-     <div className="brave-journey-control-label">How strong is your draw?</div>
-     <div className="brave-journey-choice-row">
-      {(['gentle','strong'] as const).map(value=><button key={value} aria-pressed={draw===value} onClick={()=>setDraw(value)}>{value==='gentle'?'Gentle draw':'Strong draw'}</button>)}
-     </div>
-     <button className="brave-journey-main-action" onClick={shoot}>Loose the arrow ↗</button>
-     <p role="status" aria-live="polite">{notice}</p>
+   {stage.kind==='archery'&&<div className="brave-archery-series">
+    <div className="brave-archery-progress" aria-label="Archery targets">
+      {braveArcheryTargets.map((t,i)=><span key={t.name} className={i<shots?'is-complete':i===shots?'is-current':''}>{i<shots?'✦':i+1}</span>)}
     </div>
+    <BraveArcheryRange key={shots} target={braveArcheryTargets[shots]} onHit={()=>{
+      const next=shots+1;setShots(next);
+      if(next===braveArcheryTargets.length){setNotice('Three arrows find their mark.');markFinished()}
+      else setNotice('The next pennant rises in the changing wind.');
+    }}/>
    </div>}
    {stage.kind==='runes'&&<div className="brave-journey-special brave-journey-runes">
     <div className="brave-journey-target-art" aria-hidden="true"><span>❧</span><span>✧</span><span>♨</span></div>
