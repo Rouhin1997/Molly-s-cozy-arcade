@@ -9,6 +9,20 @@ import {
 } from '../lib/toon';
 import { bestAward, readPreferredDifficulty, savePreferredDifficulty, type Difficulty } from '../lib/passport';
 import DifficultyPicker from '../components/DifficultyPicker';
+import AnswerAssistInput from '../components/AnswerAssistInput';
+
+const toonAnswerCatalogue=toonShows.map(show=>({
+ label:show.title,value:show.title,
+ aliases:[show.id.replace(/-/g,' '),...({
+  scooby:['scooby doo','scooby doo where are you'],
+  dexter:['dexters lab'],dbz:['dbz'],
+  'ben10-af':['ben 10 alien force'],
+  powerpuff:['powerpuff girls'],
+  'ed-edd-eddy':['ed edd and eddy'],
+  'billy-mandy':['billy and mandy'],
+  knd:['kids next door','codename kids next door']
+ } as Record<string,string[]>)[show.id]??[]]
+}));
 
 type Props = {
   today: string;
@@ -228,7 +242,8 @@ export default function ToonRewind({ today, progress, setProgress, onHome }: Pro
         <div className="toon-choice-heading"><strong>Which show is this?</strong><span>{effectiveDifficulty === 'hard' ? 'Expert: type the show title' : `${choices.length} choices · ${toonWrongLimit(round.difficulty)-round.attempts.length} chances`}</span></div>
         {effectiveDifficulty === 'hard' ? <form className="toon-expert-form" onSubmit={submitTyped}>
           <label htmlFor="toon-expert-answer">Name the cartoon</label>
-          <input id="toon-expert-answer" value={typedAnswer} maxLength={80} autoComplete="off" spellCheck="false" onChange={e=>setTypedAnswer(e.target.value)} placeholder="Type the show’s name…"/>
+          <AnswerAssistInput id="toon-expert-answer" value={typedAnswer} onChange={setTypedAnswer}
+            options={toonAnswerCatalogue} minChars={3} placeholder="Type the show’s name…" maxLength={80}/>
           <button className="btn btn-primary" type="submit" disabled={!typedAnswer.trim()}>Lock in answer ↗</button>
         </form> : <div className="toon-choice-grid">
           {choices.map((id, i) => {const candidate=toonShows.find(show => show.id===id)!;const used=round.attempts.includes(id);
