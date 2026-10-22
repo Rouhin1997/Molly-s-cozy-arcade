@@ -192,7 +192,17 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
      <span className="brave-world-stamp">6 PLACES TO DISCOVER<br/>18 ADVENTURES PLANNED</span>
     </div>
     <div className="brave-world-layout">
-     <HighlandMap active={active} onSelect={selectChapter}/>
+     <div className="brave-map-column">
+       <div className="brave-map-scroll" role="region" aria-label="Explore the illustrated Highlands map" tabIndex={0}>
+         <HighlandMap active={active} onSelect={selectChapter}/>
+       </div>
+       <p className="brave-swipe-tip">⇆ Follow the winding paths across the map</p>
+       <nav className="brave-chapter-shortcuts" aria-label="Select a storybook chapter">
+         {braveChapters.map(c=><button key={c.id} onClick={()=>selectChapter(c.id)}
+           className={active===c.id?'is-selected':''} aria-current={active===c.id?'step':undefined}>
+           <span>{c.icon}</span><small>Chapter {c.roman}</small></button>)}
+       </nav>
+     </div>
      <article className="brave-chapter-scroll" aria-live="polite" key={chapter.id}>
       <div className="brave-scroll-ornament">❧ ─── ✦ ─── ❧</div>
       <span className="brave-scroll-chapter">CHAPTER {chapter.roman} · {chapter.location}</span>
@@ -218,7 +228,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
      <p>{vowNote}</p><small>{save.inspected.length} of 6 places explored on this illustrated map · your promise is saved in this browser</small></div>
     <button className="brave-dialogue-trigger" onClick={()=>setIntroOpen(true)}>Read the opening ↗</button>
    </section>
-   <p className="brave-credits">An original fan-made storybook adventure inspired by <i>Brave</i>. Locations and characters are referenced with affection; the artwork, story and music are newly created for Molly.</p>
+   <p className="brave-credits">An unofficial, fan-made storybook inspired by <i>Brave</i>, with an original new adventure for Molly.</p>
    {introOpen&&<div className="brave-overlay" role="presentation"><section className="brave-prologue" role="dialog" aria-modal="true" aria-labelledby="brave-prologue-title">
     <div className="brave-prologue-stars" aria-hidden="true">✦ &nbsp; ✧ &nbsp; ✦</div>
     <span className="brave-kicker">PROLOGUE · THE KEEPER OF THE WISPS</span>
