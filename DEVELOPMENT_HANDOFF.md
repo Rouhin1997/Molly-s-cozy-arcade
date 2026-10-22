@@ -1,5 +1,22 @@
 # Molly's Cozy Arcade — Development Handoff
 
+## Latest development — Phase 3A: Brave world-first modular preview (22 October 2026)
+
+**User direction:** Fully greenlit Brave, specifically a **beautiful illustrated storybook** with original gentle Celtic-style harp tones, soft wind ambience and a small mute icon. Shortly afterward the user *explicitly slowed down the workflow*: **break development into careful modules and build them one by one; patience and impeccable world/atmosphere building are essential.** Do not attempt all eighteen playable levels in a single run. The authoritative nine-module roadmap and quality/review gates live at **`BRAVE_MODULAR_PRODUCTION.md`**.
+
+**Module 01 COMPLETE IN CODE — world preview, not chapter gameplay:**
+- `src/data/braveWorld.ts`: six scene-rich original location briefs and chapter map coordinates, 18 **proposed future level names**, bespoke new Merida and wisp lines, four environmental motifs per chapter. Save model `BravePreviewSave` version 1 isolated at `mollys-brave-wisps-v1`, holding Keeper vow and inspected locations only. No Passport point manipulation.
+- `src/games/BraveTrail.tsx`: detailed original vector map (painted mountains, mists, castle, river, pines, stone circle, Witch’s timber cottage, moonlit ruins, wisp loom); six clickable illustrated chapter markers and chapter/story parchment; Molly's first interactive prologue (listen or follow), short original character interaction. Original AudioContext slow triangular plucks and airy undertone, off until user clicks ♪; cleanup on mute/unmount. Full reduced-motion CSS and accessible map navigation. Tiny screen map scrolls sideways at fixed coordinate aspect ratio with a six-button chapter strip to avoid losing pins.
+- `src/styles.css`: dedicated parchment/pine/teal/gold storybook styling with large banner, illustrated map, animated wisp lights, readable parchment chapter scroll, responsive design.
+- `src/App.tsx`: Game 07 shelf now **WORLD PREVIEW** and directly opens the new Brave route. Six existing playable titles and their stats remain untouched. No new fake completion awards.
+- `tests/braveWorld.test.ts`: verifies six settings, exactly eighteen uniquely named **future** levels, map bounds, authored scenes and isolated save/import fallback.
+
+**Research grounding:** Official Pixar Brave story/world page https://www.pixar.com/brave (Merida, Angus, Witch, Elinor, Mor’du, old DunBroch castle, variable Highland weather, Callanish-inspired standing stones). This is an original storybook reinterpretation, not a reproduction of Pixar assets or film audio.
+
+**Critical continuation rule:** **STOP after Module 01** and obtain owner's feedback on map art, phone legibility, music and pacing BEFORE beginning Module 02. Module 02 is a distinct deterministic grid-state engine with BFS/solver, undo/reset and no-softlock tests; only one small prototype test room, not an entire chapter. Modules 03–08 will implement one chapter at a time after explicit staged review. Module 09 integrates saves/Passport/end-to-end QA.
+
+Existing Pink Rush remains fully intact with v4 Passport and the redeemed coupon's browser-local terminal marker. Birthday Quest and secure rewards are separate later work.
+
 ## Latest checkpoint — Phase 2L: 87-question BLINK content audit, rotation and real crowd sound (22 October 2026)
 
 **User feedback from full Pink Rush 2.0 play-through:** screenshot showed a 2020 Selena Gomez clue saying "sweet treat" while the other three answers were Pink Venom/STAY/GO; trivial elimination made the game dull. Another 2025 Coachella clue named ROSÉ and LISA in the crowd while offering them as answer options. Three practice shows repeated too many questions. The existing synth "crowd cheering" was mostly beeps. A wide "sound on/off" bar dominated the stage; in-game disclaimer contained redundant claims. User liked the **existing full-screen winner** and wants it retained.
