@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState,type CSSProperties} from 'react';
-import {braveChapters,readBraveSave,writeBraveSave,type BraveChapter,type BraveIntroChoice,type BravePreviewSave} from '../data/braveWorld';
+import {braveChapters,readBraveSave,writeBraveSave,type BraveIntroChoice,type BravePreviewSave} from '../data/braveWorld';
 
 /** Original illustrated Highland panorama. All paths are handmade vector art. */
 function HighlandMap({active,onSelect}:{active:string;onSelect:(id:string)=>void}){
