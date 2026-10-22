@@ -871,3 +871,202 @@
  .site-header nav{display:none}
  .header-inner{justify-content:space-between}
 }
+
+/* Phase 2K: Pink Rush — black / pink concert overhaul and BLINK gift wallet.
+   All selectors are scoped to this game or its wallet, never to other games. */
+.pink-rush-game{max-width:1500px;background:linear-gradient(155deg,#120e18,#21101d 42%,#100d13);border:1px solid #733052;border-radius:26px;padding:19px 23px 34px;color:#fff0fa;box-shadow:0 15px 50px #17061935}
+.pink-rush-game .back-link{color:#ffb5de!important}
+.pink-rush-hero{background:linear-gradient(115deg,#100c12,#251222 68%,#451a34);border:1px solid #ec5aa2;box-shadow:inset 0 0 35px #da30802b;color:#ffeaf4}
+.pink-rush-hero h1{color:#fff4fb;text-shadow:0 0 15px #dd538d4d}
+.pink-rush-hero h1 em{color:#ff4da1}
+.pink-rush-hero p{color:#f5c8de}
+.pink-rush-game .overline{color:#ff87c0!important}
+.pink-hero-tags span{background:#42162f;border-color:#ab3c76;color:#ffcae5}
+.pink-vip-ticket{background:#070609;border:2px dashed #fa73b5;box-shadow:0 8px 26px #fd56a036;color:#ffe1f1}
+.pink-vip-ticket strong{color:#ff4da1;text-shadow:0 0 16px #e93c868c}
+.pink-vip-ticket small{color:#ffd8eb}
+.pink-mode-tabs{background:#160e19;border:1px solid #87335b}
+.pink-mode-tabs button{color:#ffcce5;border:1px solid #462039;background:#211523}
+.pink-mode-tabs button.is-active{background:#ff4fa1;color:#170612;box-shadow:0 0 13px #f34c9961;border-color:#ff9bc9}
+.pink-mode-tabs .pink-new-show{background:#ff4fa1;color:#170612;border-color:#ff91c5}
+.pink-mode-tabs .pink-wallet-shortcut{background:#08070b;color:#ffb7de;border:1px solid #f65b9c}
+.pink-performance-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);align-items:start;gap:16px}
+.pink-stage-area{position:sticky;top:76px;align-self:start;min-width:0;z-index:8}
+.pink-stage{min-height:340px;border:3px solid #e34b90;background:radial-gradient(ellipse at 52% 30%,#692046 0,#210e23 57%,#070509 100%);box-shadow:inset 0 0 36px #fd52a82f,0 10px 30px #0008}
+.pink-stage-grid{opacity:.30}
+.pink-stage-name{color:#fff7fc}
+.pink-stage-name span{color:#ff4da1}
+.pink-stage-beam.is-lit{opacity:.8}
+.pink-stage-beam.is-beat-lit{opacity:1;filter:drop-shadow(0 0 24px var(--beam))}
+.pink-stage-beam:not(.is-lit){opacity:.075}
+.pink-stage-riser{background:linear-gradient(160deg,#891d54,#0c0712);border-top:4px solid #ff4fa1}
+.pink-stage-lights i{background:#42162c}
+.pink-stage-lights i.is-on{background:#ff5db1;box-shadow:0 0 13px #ff66af,0 0 26px #e72c82}
+.pink-stage-audience{background:linear-gradient(#100912bb,#020103)}
+.pink-stage-caption{background:#100711bd;letter-spacing:.07em;color:#ffd9ed}
+.pink-stage.pink-pulse-up{animation:pink-stage-win .75s ease}
+.pink-stage.pink-pulse-down{animation:pink-stage-loss .65s ease}
+.pink-stage.is-finale{border-color:#ff90c9;box-shadow:0 0 25px #fb438f92,0 0 75px #ff3f944d,inset 0 0 70px #d82e7799}
+.pink-stage.is-finale .pink-performer{opacity:1;filter:saturate(1.15) drop-shadow(0 0 10px #ff4ba6);animation:pink-performer-dance .75s alternate infinite}
+.pink-stage.is-finale .pink-stage-name{animation:pink-logo-beat .7s alternate infinite}
+.pink-stage.is-finale .pink-stage-audience span{animation-duration:.5s}
+@keyframes pink-stage-win{0%{filter:brightness(1)}30%{filter:brightness(1.65)}100%{filter:brightness(1)}}
+@keyframes pink-stage-loss{20%,65%{filter:grayscale(.9) brightness(.55)}100%{filter:none}}
+@keyframes pink-performer-dance{to{transform:translateY(-12px) rotate(3deg)}}
+@keyframes pink-logo-beat{to{transform:scale(1.025);text-shadow:0 0 28px #ff4ba6}}
+.pink-show-meter{margin:9px 0 5px;background:#160c16;border:1px solid #8c2c5a;color:#ffb5d9;padding:11px 12px;gap:7px}
+.pink-show-meter span:first-child{color:#ff75b4}
+.pink-setlist-track{background:#401b36}
+.pink-setlist-track div{background:linear-gradient(90deg,#a90055,#ff4ca2,#ffb8dd)}
+.pink-sound-toggle{width:100%;background:#110a12;border:1px solid #933b69;border-radius:12px;color:#ffb5df;font-size:11px;padding:12px;margin:0 0 6px;font-weight:800}
+.pink-sound-toggle:hover{background:#34152b}
+.pink-setback-notice{background:#491228;color:#ffb8cf;padding:10px 12px;border-radius:9px;font-size:11px;line-height:1.5;margin:6px 0}
+.pink-performance-pane{min-width:0}
+.pink-challenge,.pink-empty-concert,.pink-encore-result{background:#180f1d;border:1px solid #85305c;box-shadow:0 7px 25px #08030b55;margin:0;color:#ffe4f0}
+.pink-challenge-heading h2,.pink-empty-concert h2,.pink-encore-result h2,.pink-setlist-board h2{color:#ff9bcc}
+.pink-challenge-heading p,.pink-empty-concert p,.pink-encore-result>p{color:#f1c5db}
+.pink-challenge-record{background:#310e28;border-color:#bd3d7d}
+.pink-challenge-record span{color:#ff6bad}
+.pink-challenge-record small{color:#fac0dd}
+.pink-answer-option{background:linear-gradient(125deg,#2b172b,#17101d);border:2px solid #803459;color:#ffe3f2}
+.pink-answer-option:hover:not(:disabled){border-color:#ff76b7;background:#531c3e;box-shadow:0 0 13px #f64a964b}
+.pink-answer-option.is-picked{background:#713056;border-color:#f6a0ca}
+.pink-answer-option.is-picked small{color:#ffc5e1}
+.pink-answer-shine{background:#491b35;color:#ff73b7}
+.pink-member-monogram{background:#6a2756;color:#fff1fa;border-color:#f08cbb}
+.pink-member-choice .pink-answer-option:nth-child(n) .pink-member-monogram{background:#8b265e;color:#fff}
+.pink-timeline-picked>div{background:#311a2f;border-color:#a63d78}
+.pink-timeline-picked small{color:#ff86bd}
+.pink-timeline-picked strong{color:#fbe0ee}
+.pink-feedback{background:#29182d;border:1px solid #7a3461;color:#f5cae4}
+.pink-feedback.is-win{background:#512041;border-color:#f369aa;color:#ffd7e9}
+.pink-round-victory>span{color:#ff8cc3}
+.pink-round-victory p{color:#e9bad3}
+.pink-rush-game .btn-primary{background:#ff4ca0;border-color:#ff4ca0;color:#210b18}
+.pink-rush-game .btn-outline{background:#120c15;border-color:#bd568b;color:#ffd0e6}
+.pink-rush-game .btn-soft{background:#482139;color:#ffd0e6}
+.pink-no-pressure{color:#d997b9}
+.pink-encore-instructions{background:#32182d;border-color:#8c3b69;color:#ffcadf}
+.pink-encore-instructions p{color:#f4c5df}
+.pink-encore-pad{border-color:var(--pad);background:linear-gradient(140deg,#270f25,#431836);color:#ffe9f6;box-shadow:0 5px 0 #08040a}
+.pink-encore-pad:not(:disabled):active,.pink-encore-pad.is-shining{background:var(--pad);box-shadow:0 0 28px var(--pad);color:#100814}
+.pink-beat-count,.pink-live-beat{color:#ffbada;font-size:11px}
+.pink-encore-result{background:radial-gradient(circle at 40% 15%,#773056,#190a20 70%);border-color:#fe73b4}
+.pink-encore-result h2{font-size:clamp(26px,3vw,40px);color:#ffd8eb;text-shadow:0 0 22px #f6388e}
+.pink-encore-result .pink-score-row strong{color:#ff7ab9}
+.pink-encore-result .pink-score-row,.pink-encore-result>.pink-finale-note{color:#f5c6da}
+.pink-setlist-board{margin:18px 0;background:linear-gradient(145deg,#241322,#110a15);padding:22px;border-radius:20px;border:1px solid #a44073}
+.pink-setlist-board-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.pink-setlist-board-header h2{margin:7px 0}
+.pink-setlist-board-header p{font-size:11px;color:#e9b0d0;margin:0;line-height:1.7}
+.pink-setlist-mini{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:5px;margin-top:19px}
+.pink-setlist-mini-card{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;border-radius:8px;padding:12px 3px;background:#150c18;color:#91587a;border:1px solid #633051;min-width:0}
+.pink-setlist-mini-card>span{font-size:16px}
+.pink-setlist-mini-card strong{font-size:8px;line-height:1.3}
+.pink-setlist-mini-card small{font-size:8px}
+.pink-setlist-mini-card.is-current{background:#752750;color:#fff1fa;border-color:#ff6db1;box-shadow:0 0 12px #eb47856b}
+.pink-setlist-mini-card.is-unlocked{background:#3e1a34;color:#ffbadc;border-color:#ce4d91}
+.pink-setlist-mini-card:disabled{cursor:default;opacity:.66}
+.pink-setlist-mini-card.is-unlocked:hover{background:#662344}
+.pink-memory-open{background:#35172e;border-left:3px solid #ff75b9;color:#ffbada;border-radius:9px;margin-top:14px;padding:13px 15px}
+.pink-memory-open strong{font-size:13px}
+.pink-memory-open p{font-size:11px;line-height:1.7;margin:6px 0 0;color:#f1c7de}
+.pink-rush-game .privacy-note{color:#bb86a9!important}
+.pink-rush-game .privacy-note a{color:#ffa9d5}
+.pink-wallet-page{max-width:1040px;margin:24px auto 76px}
+.pink-wallet-heading{background:linear-gradient(120deg,#140c16,#431833);border:1px solid #f369b3;border-radius:23px;padding:30px;color:#ffe8f5}
+.pink-wallet-heading h1{font-family:Georgia,serif;font-size:clamp(28px,4vw,49px);color:#ff9bca;margin:9px 0 15px}
+.pink-wallet-heading p{color:#f9cadd;font-size:14px;line-height:1.65}
+.pink-wallet-heading .overline{color:#f787be}
+.pink-wallet-draw,.pink-wallet-owned,.pink-wallet-empty{margin:18px 0;background:#1b1020;border:1px solid #a43b78;border-radius:22px;padding:23px;color:#ffe0f1}
+.pink-wallet-draw h2,.pink-wallet-empty h2{color:#ffadcf;font-family:Georgia,serif;font-size:28px}
+.pink-wallet-draw p,.pink-wallet-empty p{color:#d7a8c8;font-size:13px;line-height:1.7}
+.pink-blind-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:25px 0}
+.pink-blind-card{min-height:245px;display:flex;align-items:center;justify-content:center;gap:12px;flex-direction:column;background:repeating-linear-gradient(45deg,#1a101d,#1a101d 12px,#3d1530 12px,#3d1530 24px);color:#ffb6dc;border:3px double #ff71b1;border-radius:19px;box-shadow:0 8px 20px #0005;transition:transform .2s,box-shadow .2s}
+.pink-blind-card:hover{transform:translateY(-8px) rotate(-1deg);box-shadow:0 12px 23px #ee438384;background:#4e183c}
+.pink-blind-card strong{font-size:75px;color:#fff5fc;text-shadow:0 0 22px #ff63b0}
+.pink-blind-star{font-size:25px}
+.pink-blind-card small{font-weight:900;letter-spacing:.14em;font-size:10px}
+.pink-blind-card>span:last-child{font-size:10px;font-weight:900;letter-spacing:.15em}
+.pink-wallet-owned{text-align:center;background:#130d19;border:2px solid #e75299}
+.pink-wallet-ribbon{color:#ffd0e6;font-weight:900;letter-spacing:.11em;font-size:11px;margin-bottom:18px}
+.pink-wallet-ticket{max-width:690px;margin:0 auto;padding:30px 25px;border:3px dashed #ff80ba;background:linear-gradient(120deg,#2a1429,#501836);border-radius:18px;color:#fff0fa}
+.pink-ticket-icon{display:block;font-size:49px;margin-bottom:13px}
+.pink-wallet-ticket>span:nth-child(2){display:block;color:#ffa7d3;font-size:10px;letter-spacing:.14em;font-weight:950}
+.pink-wallet-ticket h2{font-family:Georgia,serif;color:#ffb4d5;font-size:clamp(26px,4vw,37px);margin:14px 0}
+.pink-wallet-ticket p{color:#f5d0e2;line-height:1.7;font-size:14px}
+.pink-wallet-ticket small{color:#f29fc9}
+.pink-wallet-owned.is-redeemed .pink-wallet-ticket{border-style:solid;border-color:#ffa7d5;background:linear-gradient(130deg,#4f1c38,#301321)}
+.pink-wallet-actions{margin:18px 0;display:flex;justify-content:center;flex-wrap:wrap;gap:13px}
+.pink-wallet-actions .btn-primary,.pink-wallet-empty .btn-primary{background:#f951a0;color:#18070f;border-color:#f951a0}
+.pink-wallet-actions .btn-outline{color:#fdb7d9;border-color:#c54e8d;background:#231226}
+.pink-reveal-other{border-top:1px solid #733657;margin-top:27px;padding-top:16px}
+.pink-reveal-other h3{font-size:13px;color:#fdafd5}
+.pink-reveal-other>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.pink-reveal-other>div>div{display:flex;flex-direction:column;align-items:center;gap:7px;border:1px solid #71304f;background:#211224;padding:13px;border-radius:11px;opacity:.6}
+.pink-reveal-other>div>div.is-chosen{opacity:1;border-color:#ff94c6;background:#5c1e3f}
+.pink-reveal-other span{font-size:25px}
+.pink-reveal-other strong{font-size:11px;color:#ffe4f1}
+.pink-reveal-other small{font-size:9px;color:#ff9ccb}
+.pink-wallet-empty{text-align:center;padding:42px 22px}
+.pink-wallet-empty>span{font-size:47px}
+.pink-wallet-status{color:#a64077;font-weight:800;font-size:13px;margin:10px 0}
+.pink-wallet-fine{font-size:11px;color:#82687a;line-height:1.7;margin:18px 2px}
+.passport-coupon-keepsake{margin:24px 0;padding:25px;border-radius:21px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;background:linear-gradient(125deg,#f5dfef,#eadbed);border:2px dashed #d795bb;color:#6e4d69}
+.passport-coupon-keepsake.is-forever{border:3px double #d57aa8;background:linear-gradient(130deg,#ffe4f2,#efd0e7)}
+.passport-coupon-keepsake h2{font-family:Georgia,serif;margin:7px 0;color:#864674;font-size:25px}
+.passport-coupon-keepsake h3{font-size:17px;color:#a3487e}
+.passport-coupon-keepsake p{font-size:12px;line-height:1.6;max-width:660px}
+.passport-coupon-keepsake small{font-size:10px;color:#936384}
+.passport-forever-badge{display:inline-block;margin:5px 0 9px;padding:7px 12px;background:#9f3f75;color:#fff2fb;border-radius:14px;font-size:10px;font-weight:900}
+@media(max-width:1050px){.pink-performance-grid{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr)}.pink-stage{min-height:305px}.pink-stage-member-row{gap:10px}.pink-setlist-mini{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:740px){
+ .pink-rush-game{margin:12px 0 45px;padding:9px;border-radius:15px}
+ .pink-rush-hero{padding:14px}
+ .pink-rush-hero h1{font-size:35px}
+ .pink-mode-tabs{gap:5px}
+ .pink-mode-tabs button{min-width:0;flex:1 1 40%;font-size:10px;padding:11px 4px}
+ .pink-performance-grid{display:flex;flex-direction:column;gap:9px}
+ .pink-stage-area{position:sticky;top:0px;z-index:30;width:100%;background:#10090f;border-radius:12px;padding-bottom:3px;box-shadow:0 8px 17px #000b}
+ .pink-stage{height:165px;min-height:165px;border-width:2px;border-radius:13px}
+ .pink-stage-name{font-size:26px;padding-top:7px}
+ .pink-stage-name b{font-size:11px}
+ .pink-stage-member-row{margin:7px 4px 0;min-height:76px;gap:5px}
+ .pink-performer{width:58px;height:83px;transform:scale(.73);transform-origin:bottom}
+ .pink-performer.is-ready{transform:scale(.73) translateY(-5px)}
+ .pink-stage-riser{height:21px;bottom:18px}
+ .pink-stage-lights{bottom:24px}
+ .pink-stage-lights i{width:5px;height:5px}
+ .pink-stage-audience{height:22px}
+ .pink-stage-audience span{font-size:10px}
+ .pink-stage-caption{font-size:7px;bottom:2px}
+ .pink-show-meter{margin:4px 0 2px;padding:5px 7px;gap:3px;font-size:9px;line-height:1.2}
+ .pink-setlist-track{height:5px}
+ .pink-sound-toggle{font-size:10px;padding:5px;margin:1px 0}
+ .pink-setback-notice{font-size:9px;padding:5px}
+ .pink-performance-pane{width:100%}
+ .pink-challenge,.pink-encore-result,.pink-empty-concert{padding:16px 12px}
+ .pink-challenge-heading h2{font-size:23px}
+ .pink-challenge-heading p{font-size:12px}
+ .pink-challenge-record{padding:8px 4px}
+ .pink-encore-buttons{gap:5px;margin:10px 0}
+ .pink-encore-pad{min-height:64px;padding:4px}
+ .pink-encore-pad span{font-size:21px}
+ .pink-encore-pad small{font-size:8px}
+ .pink-encore-instructions{margin:9px 0;padding:8px}
+ .pink-beat-controls{gap:4px}
+ .pink-beat-controls .btn{padding:8px;font-size:9px}
+ .pink-setlist-board{padding:14px}
+ .pink-setlist-mini{grid-template-columns:repeat(6,minmax(0,1fr))}
+ .pink-setlist-mini-card{padding:9px 2px}
+ .pink-setlist-mini-card strong{font-size:7px}
+ .pink-blind-cards{gap:6px}
+ .pink-blind-card{min-height:155px;gap:6px}
+ .pink-blind-card strong{font-size:47px}
+ .pink-blind-card small{font-size:8px;letter-spacing:0}
+ .pink-reveal-other>div{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+ .pink-stage.is-finale .pink-performer,.pink-stage.is-finale .pink-stage-name,
+ .pink-stage.pink-pulse-up,.pink-stage.pink-pulse-down,.pink-blind-card{animation:none;transition:none}
+}
