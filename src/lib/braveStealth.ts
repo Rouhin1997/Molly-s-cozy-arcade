@@ -48,7 +48,11 @@ export function braveStealthMove(s:BraveStealthState,action:BraveStealthAction):
  const guard=braveGuardColumn(tick);
  const distracted=distraction>0;
  if(distraction>0)distraction--;
- if(!distracted&&Math.floor(position/W)===1&&position%W===guard){
+ const oldGuard=braveGuardColumn(s.tick);
+ const visible=!distracted&&Math.floor(position/W)===1&&Math.abs(position%W-guard)<=1;
+ const crossed=!distracted&&Math.floor(position/W)===1&&Math.floor(s.position/W)===1
+   &&position%W===oldGuard&&s.position%W===guard;
+ if(visible||crossed){
   position=start;event='caught';
  }
  const state={position,tick,distraction,usedDistraction:used,caught:s.caught+(event==='caught'?1:0)};
