@@ -1887,3 +1887,11 @@
 @media(prefers-reduced-motion:reduce){
  .chronicle-dialog,.chronicle-book,.chronicle-illustration{animation:none}
 }
+
+
+/* Finale: a tangible reward reveal without interrupting the story. */
+.brave-chronicle-earned{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;margin:19px auto 12px;padding:20px 21px;max-width:580px;border-radius:15px;background:radial-gradient(circle at 55% 10%,#fff8d2,#dcecd6);border:3px double #c6b987;box-shadow:0 9px 27px #46694327}
+.brave-chronicle-earned>span{font-size:32px;color:#4e9177}
+.brave-chronicle-earned strong{font:700 19px 'Fraunces',Georgia,serif;color:#3c7165}
+.brave-chronicle-earned p{margin:0;font:italic 13px/1.7 Georgia,serif;color:#5b7566}
+.brave-chronicle-earned .brave-journey-main-action{margin:5px 0 0}
