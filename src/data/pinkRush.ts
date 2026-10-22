@@ -7,7 +7,6 @@ export type PinkChallenge={
  prompt:string;emoji:string;answer:string;options:string[];
  explanation:string;year:string;source:string;
 };
-type QuestionSeed=[string,string,string,string,string,string,string,string[]];
 const official='https://ygfamily.com/en/artists/blackpink/discography';
 const solo='https://www.grammy.com/news/blackpink-solo-acts-jennie-jisoo-rose-lisa-single-album-born-pink-world-tour/';
 const track=(id:string,year:string,title:string,emoji:string,prompt:string,answer:string,options:string[],explanation:string):PinkChallenge=>
