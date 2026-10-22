@@ -34,6 +34,14 @@ describe('Evidence-first casebook: exhaustive counterfactual audit',()=>{
    }
   }
  });
+ it('separates difficulty by real uncertainty throughout the evidence chain',()=>{
+  const expected={easy:[12,4,2,1],medium:[12,6,4,1],hard:[12,9,6,4,1]};
+  for(const c of nineCases){
+    const ids=c.deductions.map(d=>d.id);
+    const counts=Array.from({length:ids.length+1},(_,k)=>caseCandidates(c,ids.slice(0,k)).length);
+    expect(counts,`${c.id} does not match its ${c.difficulty} tier`).toEqual(expected[c.difficulty]);
+  }
+ });
  it('gives every mystery an authored narrative that agrees with the verified deduction trail',()=>{
   for(const c of nineCases){
     const p=nineCasePresentation(c);
