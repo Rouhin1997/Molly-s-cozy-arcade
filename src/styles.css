@@ -858,3 +858,16 @@
  .pink-stage-audience span,.pink-stage-confetti i{animation:none}
  .pink-performer,.pink-answer-option,.pink-stage-beam{transition:none}
 }
+
+/* Keep the expanded six-game navigation legible on laptop widths. */
+@media(min-width:1021px) and (max-width:1210px){
+ .site-header nav{gap:12px}
+ .site-header nav button{font-size:10px;white-space:nowrap}
+ .header-inner{gap:13px;padding-left:17px;padding-right:17px}
+ .brand strong{font-size:20px}
+ .header-cta{font-size:11px;padding:11px 13px}
+}
+@media(min-width:681px) and (max-width:1020px){
+ .site-header nav{display:none}
+ .header-inner{justify-content:space-between}
+}
