@@ -2,6 +2,8 @@
  * checked against official BLACKPINK discography, no reproduced lyrics/audio.
  * Difficulty is purposefully one welcoming-to-BLINK setting. */
 import { pinkFanQuestions } from './pinkRushFan';
+import { extraPinkFanQuestions } from './pinkRushFanExtra';
+import { editPinkQuestion } from './pinkRushEditorial';
 export type PinkMember='JISOO'|'JENNIE'|'ROSÉ'|'LISA';
 export type PinkChallenge={
  id:string;kind:'track'|'era'|'spotlight'|'fan'|'encore'; category?:string; title:string;
@@ -80,8 +82,12 @@ export const pinkEncoreVariants=[
  [0,2,1,3],[1,0,3,2,1],[2,2,0,1,3],[3,1,0,2,0,3],
  [0,3,2,1,2],[1,2,3,0,1],[3,0,1,3,2],[2,1,0,3,0],
 ] as const;
-export const pinkQuestionPool=[...pinkTrackQuestions,...pinkEraQuestions,...pinkSpotQuestions,...pinkFanQuestions];
-export {pinkFanQuestions};
+export const pinkQuestionPool=[...pinkTrackQuestions,...pinkEraQuestions,...pinkSpotQuestions,...pinkFanQuestions,...extraPinkFanQuestions].map(q=>{
+ const edited=editPinkQuestion(q);
+ // Never display an answer year in the prominent year badge.
+ return edited.options.includes(edited.year)?{...edited,year:'BLINK FILES'}:edited;
+});
+export {pinkFanQuestions,extraPinkFanQuestions};
 export function pinkQuestionById(id:string):PinkChallenge|undefined{
  return pinkQuestionPool.find(q=>q.id===id);
 }
@@ -90,17 +96,21 @@ function hashSeed(text:string){
  for(let i=0;i<text.length;i++)hash=Math.imul(hash^text.charCodeAt(i),16777619);
  return hash>>>0;
 }
-function pickFromPool(pool:PinkChallenge[],count:number,seed:string):string[]{
- const offset=hashSeed(seed)%pool.length;
- // Prime stride; ensures there is no repetition within each show.
- const stride=pool.length===20?7:pool.length===12?5:pool.length===30?7:3;
- return Array.from({length:count},(_,i)=>pool[(offset+stride*i)%pool.length].id);
+/** Stable order per seed, but favor unused questions across prior shows.
+ * When a topic's pool is exhausted, reuse the least-recently played entry. */
+function pickFromPool(pool:PinkChallenge[],count:number,seed:string,recent:string[]):string[]{
+ const indexed=pool.map(q=>{
+  const last=recent.lastIndexOf(q.id);
+  return {id:q.id,last,tie:hashSeed(seed+':'+q.id)};
+ });
+ indexed.sort((a,b)=>a.last-b.last||a.tie-b.tie);
+ return indexed.slice(0,count).map(x=>x.id);
 }
-export function pinkSetlist(seed:string):string[]{
- const tracks=pickFromPool(pinkTrackQuestions,2,'tracks:'+seed);
- const eras=pickFromPool(pinkEraQuestions,1,'eras:'+seed);
- const members=pickFromPool(pinkSpotQuestions,3,'spot:'+seed);
- const culture=pickFromPool(pinkFanQuestions,5,'culture:'+seed);
+export function pinkSetlist(seed:string,recent:string[]=[]):string[]{
+ const tracks=pickFromPool(pinkTrackQuestions,2,'tracks:'+seed,recent);
+ const eras=pickFromPool(pinkEraQuestions,1,'eras:'+seed,recent);
+ const members=pickFromPool(pinkSpotQuestions,3,'spot:'+seed,recent);
+ const culture=pickFromPool([...pinkFanQuestions,...extraPinkFanQuestions],5,'culture:'+seed,recent);
  const encore=hashSeed('encore:'+seed)%pinkEncoreVariants.length;
  // Twelve acts, not an ordinary album quiz: the fan-life rounds are dominant.
  return [culture[0],tracks[0],members[0],culture[1],eras[0],culture[2],
@@ -122,12 +132,17 @@ export function pinkQuestionIssues():string[]{
  const issues:string[]=[];
  const ids=pinkQuestionPool.map(q=>q.id);
  if(new Set(ids).size!==ids.length)issues.push('duplicate question ids');
- if(pinkTrackQuestions.length<18||pinkEraQuestions.length<7||pinkSpotQuestions.length<12||pinkFanQuestions.length<25)issues.push('insufficient BLINK variety');
+ if(pinkTrackQuestions.length<18||pinkEraQuestions.length<7||pinkSpotQuestions.length<12||pinkFanQuestions.length+extraPinkFanQuestions.length<45)issues.push('insufficient BLINK variety');
  for(const c of pinkQuestionPool){
   if(c.options.length<3||new Set(c.options).size!==c.options.length)issues.push(c.id+': invalid options');
   if(c.kind!=='era'&&!c.options.includes(c.answer))issues.push(c.id+': answer not in choices');
   if(c.kind==='era'&&c.answer.split('→').length!==3)issues.push(c.id+': bad ordering solution');
   if(c.explanation.length<30||!c.source.startsWith('https://'))issues.push(c.id+': insufficient context');
+  if(c.kind!=='era'&&c.kind!=='encore'){
+   const hint=(c.title+' '+c.prompt).toLowerCase();
+   // Exact answer leakage, including multi-word song titles, is never allowed.
+   if(c.answer.length>=5&&hint.includes(c.answer.toLowerCase()))issues.push(c.id+': answer leaked in clue');
+  }
  }
  for(const seed of ['2026-10-22','show-3','practice-100']){
   const plan=pinkSetlist(seed);

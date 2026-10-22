@@ -1,7 +1,7 @@
 import { useEffect,useRef,useState,type CSSProperties,type Dispatch,type SetStateAction } from 'react';
 import { pinkChallengeFor,pinkEncoreColors,pinkEncouragements } from '../data/pinkRush';
 import { choosePink } from '../lib/pinkRush';
-import { concertReaction,finaleFanfare } from '../lib/pinkConcertAudio';
+import { finaleFanfare } from '../lib/pinkConcertAudio';
 import { advancePink,applyPinkRound,getActivePinkRound,pinkDailySession,pinkEncorePattern,pinkNextPractice,pinkShowScore,type PinkProgress } from '../lib/pinkRush';
 
 type Props={today:string;progress:PinkProgress;setProgress:Dispatch<SetStateAction<PinkProgress>>;onHome:()=>void;onWallet:()=>void};
@@ -50,6 +50,8 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
  const [finaleOverlay,setFinaleOverlay]=useState(false);
  const pulseTimer=useRef<number|null>(null);
  const audio=useRef<AudioContext|null>(null);
+ const crowd=useRef<HTMLAudioElement|null>(null);
+ const crowdStop=useRef<number|null>(null);
  const session=mode==='daily'?(progress.daily[today]??pinkDailySession(today)):progress.practice;
  const round=session?getActivePinkRound(session):null;
  const question=round?pinkChallengeFor(round.id):null;
@@ -57,18 +59,23 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
  const done=session?.completed??false;
  const score=session?pinkShowScore(session):0;
  const encore=question?.kind==='encore'&&round?.status==='playing';
- function ping(n:number){
+ // A real public-domain applause-and-hurray recording, not pitched beeps.
+ const crowdUrl='https://upload.wikimedia.org/wikipedia/commons/a/a8/Clapping_hurray.ogg';
+ function playCrowd(finale=false){
   if(!sound)return;
   try{
-   const ctx=audio.current??new window.AudioContext();audio.current=ctx;
-   if(ctx.state==='suspended')void ctx.resume();
-   const osc=ctx.createOscillator(),gain=ctx.createGain();
-   osc.type='sine';osc.frequency.value=[330,440,523,659][n];
-   gain.gain.setValueAtTime(.001,ctx.currentTime);
-   gain.gain.exponentialRampToValueAtTime(.13,ctx.currentTime+.025);
-   gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.22);
-   osc.connect(gain);gain.connect(ctx.destination);osc.start(ctx.currentTime);osc.stop(ctx.currentTime+.24);
-  }catch{/* optional sound; visual pattern remains playable */}
+   const clip=crowd.current??new Audio(crowdUrl);
+   crowd.current=clip;
+   if(crowdStop.current!==null)window.clearTimeout(crowdStop.current);
+   clip.pause();clip.currentTime=finale?0:1.0;
+   clip.volume=finale?.77:Math.min(.62,.18+(session?.index??0)*.034);
+   void clip.play().catch(()=>{/* unsupported sound or remote loading: visual cue stays */});
+   crowdStop.current=window.setTimeout(()=>clip.pause(),finale?5500:1500);
+  }catch{/* optional sound */}
+ }
+ function quietCrowd(){
+  if(crowdStop.current!==null)window.clearTimeout(crowdStop.current);
+  if(crowd.current)crowd.current.pause();
  }
  useEffect(()=>{
   if(!encore||!question)return;
@@ -81,7 +88,7 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
   timers.push(window.setTimeout(()=>{setPreviewing(false);setLight(-1)},450+pattern.length*710));
   return ()=>timers.forEach(window.clearTimeout);
  },[encore,question?.id,replay]);
- useEffect(()=>()=>{if(pulseTimer.current!==null)window.clearTimeout(pulseTimer.current);if(audio.current)void audio.current.close()},[]);
+ useEffect(()=>()=>{if(pulseTimer.current!==null)window.clearTimeout(pulseTimer.current);if(crowdStop.current!==null)window.clearTimeout(crowdStop.current);if(crowd.current)crowd.current.pause();if(audio.current)void audio.current.close()},[]);
  function flash(direction:'up'|'down'){
   setPulse(direction);
   if(pulseTimer.current!==null)window.clearTimeout(pulseTimer.current);
@@ -89,19 +96,15 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
  }
  function react(isWin:boolean){
   flash(isWin?'up':'down');
-  if(!sound)return;
-  try{
-   const ctx=audio.current??new window.AudioContext();
-   audio.current=ctx;
-   concertReaction(ctx,isWin,session?.index??0);
-  }catch{/* muted browser, still animated */}
+  if(isWin)playCrowd();
+  else quietCrowd();
  }
 
  function pick(choice:string){
   if(!question||!round||previewing||round.status!=='playing')return;
   const preview=choosePink(round,question,choice);
   if(preview===round)return;
-  if(question.kind==='encore')ping(Number(choice));
+  // Encore pads are visual; no misleading synthetic 'crowd' tones.
   const mistake=preview.mistakes>round.mistakes;
   if(preview.status==='won')react(true);
   else if(mistake){react(false);setWasSetback(true)}
@@ -112,6 +115,7 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
   if(last&&round?.status==='won'){
    setFinaleOverlay(true);
    flash('up');
+   playCrowd(true);
    if(sound)try{const ctx=audio.current??new window.AudioContext();audio.current=ctx;finaleFanfare(ctx)}catch{/* visual finale remains */}
   }
   setProgress(p=>advancePink(p,mode,today));setReplay(0);setLight(-1);setWasSetback(false);
@@ -145,13 +149,16 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
    <span>✨ {score} show points</span><span>🩷 {progress.stats.stars} Passport stars</span>
    <div className="pink-setlist-track"><div style={{width:(done?100:lit/(session?.plan.length??12)*100)+'%'}}/></div>
   </div>
-  <button className="pink-sound-toggle" onClick={()=>setSound(v=>!v)} aria-pressed={sound}>{sound?'🔊 Original concert crowd on':'🔇 Turn concert reactions on'}</button>
+  <button className="pink-sound-toggle" aria-label={sound?'Mute concert sounds':'Enable concert sounds'}
+    title={sound?'Mute applause':'Enable applause'} onClick={()=>{if(sound)quietCrowd();setSound(v=>!v)}} aria-pressed={sound}>
+    {sound?'🔊':'🔇'}
+  </button>
   {wasSetback&&!done&&<p className="pink-setback-notice">💔 A light went out. Win back the previous round to return to your setlist!</p>}
   </div>
   <div className="pink-performance-pane">
   {mode==='practice'&&!session&&<section className="pink-empty-concert">
    <span>🎵</span><h2>Ready for a private comeback show?</h2>
-   <p>Eight BLINK memories and one big finale. No timers, no difficulty tiers and no impossible trivia.</p>
+   <p>New BLINK memories, new backstage surprises and a full concert finale.</p>
    <button className="btn btn-primary" onClick={startPractice}>Start a practice show ↗</button>
   </section>}
   {done&&session&&<section className="pink-encore-result" role="status">
@@ -217,7 +224,7 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
       <p>{pinkChallengeFor(session.plan[selectedMemory]).explanation}</p>
     </div>}
   </section>}
-  <p className="privacy-note">♡ Unofficial BLACKPINK fan tribute. Original stage art and optional synthesized concert sounds only; no commercial recordings, videos or promotional photos. Facts checked against <a href="https://ygfamily.com/en/artists/blackpink/discography" target="_blank" rel="noreferrer">YG's official discography</a> and independent reporting. Rewards and scores stay in this browser.</p>
+  <p className="privacy-note">Unofficial fan-made BLACKPINK tribute, researched using <a href="https://ygfamily.com/en/artists/blackpink/discography" target="_blank" rel="noreferrer">YG’s official discography</a> and independent sources.</p>
   {finaleOverlay&&<div className="pink-finale-overlay" role="dialog" aria-modal="true" aria-labelledby="pink-finale-title">
     <div className="pink-finale-overlay-inner">
       <div className="pink-finale-sparks" aria-hidden="true">{Array.from({length:35},(_,i)=><span key={i}

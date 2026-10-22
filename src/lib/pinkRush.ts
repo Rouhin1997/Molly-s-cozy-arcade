@@ -28,10 +28,12 @@ export type PinkStats={
 export type PinkProgress={
  version:1;daily:Record<string,PinkSession>;practice:PinkSession|null;
  sessionNumber:number;bestAwards:Record<string,number>;stats:PinkStats;
+ /** Rotating practice history, separate from best-score awards. */
+ recentPractice?:string[];
  coupon?:PinkCoupon;
 };
 export function freshPinkProgress():PinkProgress{
- return {version:1,daily:{},practice:null,sessionNumber:0,bestAwards:{},
+ return {version:1,daily:{},practice:null,sessionNumber:0,bestAwards:{},recentPractice:[],
   stats:{showsFinished:0,roundsSolved:0,stars:0,bestShow:0,perfectShows:0},
   coupon:{status:'locked'}};
 }
@@ -44,7 +46,12 @@ export function newPinkSession(seed:string,id:string):PinkSession{
 export function pinkDailySession(date:string):PinkSession{return newPinkSession(date,'daily-'+date);}
 export function pinkNextPractice(p:PinkProgress):PinkProgress{
  const number=p.sessionNumber+1;
- return {...p,sessionNumber:number,practice:newPinkSession('practice-'+number,'practice-'+number)};
+ const recent=p.recentPractice??[];
+ const old=p.practice?.plan??[];
+ const updated=[...recent,...old].slice(-120);
+ const seed='practice-'+number,plan=pinkSetlist(seed,updated);
+ return {...p,sessionNumber:number,recentPractice:updated,
+   practice:{id:seed,seed,plan,index:0,rounds:{},completed:false}};
 }
 export function getActivePinkRound(s:PinkSession):PinkRound|null{
  if(s.index>=s.plan.length)return null;
@@ -160,7 +167,7 @@ export function redeemPinkCoupon(p:PinkProgress,now:string=new Date().toISOStrin
 }
 export function normalizePinkProgress(p:PinkProgress,localLock?:PinkCoupon|null):PinkProgress{
  const clean={...p,sessionNumber:p.sessionNumber??0,practice:p.practice??null,
-  bestAwards:p.bestAwards??{},coupon:p.coupon??{status:'locked' as const}};
+  bestAwards:p.bestAwards??{},recentPractice:p.recentPractice??[],coupon:p.coupon??{status:'locked' as const}};
  // A browser-local redemption marker wins over imported/older backups.
  return localLock?.status==='redeemed'?{...clean,coupon:localLock}:clean;
 }
