@@ -50,6 +50,53 @@ describe('Pink Rush 2.0: BLINK fan festival content',()=>{
   expect(pinkQuestionPool.some(q=>q.id==='fan-dalgom')).toBe(true);
   expect(pinkQuestionPool.every(q=>q.source.startsWith('https://'))).toBe(true);
  });
+ it('does not reveal song or member answers in the clue, visible title or year badge',()=>{
+  const allMembers=['JISOO','JENNIE','ROSÉ','LISA'];
+  expect(pinkQuestionIssues()).toEqual([]);
+  for(const q of pinkQuestionPool){
+    expect(new Set(q.options).size,q.id).toBe(q.options.length);
+    if(q.kind==='era')continue;
+    const heading=(q.title+' '+q.prompt+' '+q.year).toLowerCase();
+    if(q.answer.length>=5)expect(heading,q.id).not.toContain(q.answer.toLowerCase());
+    if(q.options.length===4&&q.options.every(x=>allMembers.includes(x))){
+      const words=q.prompt.toUpperCase();
+      // If the correct answer is a member, the clue must not accidentally
+      // name that member or eliminate others by naming 2–3 of the options.
+      const named=allMembers.filter(member=>new RegExp('(^|[^A-Z])'+member+'([^A-Z]|$)').test(words));
+      expect(named,q.id+' member names in prompt').toHaveLength(0);
+    }
+  }
+  const ice=pinkQuestionPool.find(q=>q.id==='track-ice')!;
+  expect(ice.prompt).not.toMatch(/sweet treat|dessert|ice cream/i);
+  expect(ice.options).toEqual(['Ice Cream','Sour Candy','Kiss and Make Up','Bet You Wanna']);
+  const desert=pinkQuestionPool.find(q=>q.id==='fan-jenniesolo')!;
+  expect(desert.prompt).not.toContain('ROSÉ');
+  expect(desert.prompt).not.toContain('LISA');
+ });
+ it('rotates consecutive practice shows without repeating any regular question until categories are used',()=>{
+  let p=freshPinkProgress();
+  const previous=new Set<string>();
+  for(let concert=0;concert<4;concert++){
+    p=pinkNextPractice(p);
+    const plan=p.practice!.plan.filter(id=>!id.startsWith('encore-'));
+    for(const id of plan){
+      expect(previous.has(id),id+' repeated before its pool was exhausted').toBe(false);
+      previous.add(id);
+    }
+  }
+  expect(previous.size).toBe(44);
+  expect((p.recentPractice??[]).length).toBeGreaterThanOrEqual(30);
+ });
+ it('includes updated solo and fan-culture reporting without making an answer obvious',()=>{
+   expect(pinkQuestionPool.length).toBeGreaterThanOrEqual(85);
+   expect(pinkQuestionPool.some(q=>q.id==='fan-newtopia-show')).toBe(true);
+   expect(pinkQuestionPool.some(q=>q.id==='fan-grammy-three')).toBe(true);
+   expect(pinkQuestionPool.some(q=>q.id==='fan-eyesclosed-collab')).toBe(true);
+   const q=pinkQuestionPool.find(q=>q.id==='fan-worldcup-year')!;
+   expect(q.year).not.toEqual(q.answer);
+   const grammy=pinkQuestionPool.find(q=>q.id==='fan-grammy-three')!;
+   expect(grammy.title.toLowerCase()).not.toContain('three');
+ });
  it('creates unique twelve-act shows with the fan-life questions now dominant',()=>{
   for(const seed of [date,'practice-1','practice-2','practice-45','2026-11-13']){
    const plan=pinkSetlist(seed);
