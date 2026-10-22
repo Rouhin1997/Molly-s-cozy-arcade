@@ -1,6 +1,6 @@
 import {useRef,useState,type KeyboardEvent} from 'react';
 import {braveCampaignStages,braveChapterBridges,braveArcheryTargets,braveRuneOptions,braveRuneOrder,type BraveStage} from '../data/braveCampaign';
-import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,braveTile,type BravePuzzleState,type BraveDirection} from '../lib/bravePuzzle';
+import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,braveTile,nextBraveHint,type BravePuzzleState,type BraveDirection} from '../lib/bravePuzzle';
 import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,type BraveJourneySave} from '../lib/braveProgress';
 import {braveRuneStep} from '../lib/braveChallenges';
 import BraveArcheryRange from './BraveArcheryRange';
@@ -79,6 +79,7 @@ export default function BraveJourney({onChapterChange}:{
  const [finished,setFinished]=useState(()=>progress.completed.includes(progress.current));
  const [shots,setShots]=useState(0);
  const [runeSteps,setRuneSteps]=useState(0);
+ const [hintLevel,setHintLevel]=useState(0);
  const sectionRef=useRef<HTMLElement|null>(null);
  const stage=braveCampaignStages[currentIndex],chapter=braveChapterBridges[stage.chapterId];
  const isLast=currentIndex===braveCampaignStages.length-1;
@@ -95,7 +96,7 @@ export default function BraveJourney({onChapterChange}:{
   setCurrentIndex(index);
   setHistory(openingHistory(next));
   setNotice('Take the path at your own pace. The wisps will wait.');
-  setShots(0);setRuneSteps(0);setFinished(false);
+  setShots(0);setRuneSteps(0);setHintLevel(0);setFinished(false);
   onChapterChange(next.chapterId);
   sectionRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
  }
@@ -193,7 +194,25 @@ export default function BraveJourney({onChapterChange}:{
      <p role="status" aria-live="polite">{notice}</p>
     </div>
    </div>}
-   <p className="brave-journey-hint"><span>✧ The wisp suggests:</span> {stage.hint}</p>
+   {stage.kind==='route'&&<div className="brave-journey-hint-panel">
+    <button className="brave-journey-hint-toggle" onClick={()=>setHintLevel(v=>Math.min(v+1,3))}>
+     {hintLevel===0?'✧ Ask the wisp for a hint':hintLevel===3?'✧ The wisp knows the way':'✧ Ask for a clearer clue'}
+    </button>
+    {hintLevel>0&&<p className="brave-journey-hint" role="status"><span>✧ The wisp suggests:</span> {
+     hintLevel===1?stage.hint:hintLevel===2?(
+      history[history.length-1].wisps.length<(stage.route?.rows.join('').split('W').length??1)-1
+       ?'The missing wisp can still be found among the branching paths. Search routes you have not explored.'
+       :history[history.length-1].stones.length<(stage.route?.rows.join('').split('A').length??1)-1
+       ?'A rune stone is still sleeping. Some turns are worth revisiting.'
+       :history[history.length-1].keys.length<(stage.route?.rows.join('').split('K').length??1)-1
+       ?'The golden key lies somewhere along the side paths.'
+       :'The way ahead is open now. Think about which path leads towards the exit.'
+     ):(
+      'From where you stand, the next useful step is '+
+      ({up:'north ↑',right:'east →',down:'south ↓',left:'west ←'}[nextBraveHint(stage.route!,history[history.length-1])??'up'])+'.'
+     )
+    }</p>}
+   </div>}
   </div>}
   {finished&&<div className="brave-journey-end" role="status">
    <div className="brave-journey-end-sigil">✦</div>
