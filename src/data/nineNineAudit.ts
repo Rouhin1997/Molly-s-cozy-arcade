@@ -48,7 +48,7 @@ export const auditedExhibitNotes:Record<string,string[]>={
 'heist-one':[
  'Rosa was on corridor duty and Charles was in a meeting. Neither checked out the key or entered the office during the actual exchange.',
  'Jake stood at the security desk during the brief opening and Charles was still in a meeting. The service vent remained sealed.',
- 'Holt’s office-key register does not explain the fabricated medal: Amy had approved access for a rehearsal replacement, not a forced lock opening.',
+ 'The Office key register does not explain the fabricated medal: Amy had approved access for a rehearsal replacement, not a forced lock opening.',
 ],
 'heist-two':[
  'Gina was hosting the first heist briefing and Terry was with the K9 handler. Neither took the moving cart to the corridor.',
@@ -57,7 +57,7 @@ export const auditedExhibitNotes:Record<string,string[]>={
 ],
 'heist-three':[
  'Rosa was logged on a different floor during the envelope exchange. Gina remained a possible paperwork handler until the seal check.',
- 'Jake was still at the briefing and Rosa was away. Badge audits find no clone, so the second swipe cannot identify a second thief.',
+ 'Jake was still at the briefing and Rosa was away. The Badge clone theory is ruled out by the badge audit, so the second swipe cannot identify a second thief.',
  'Jake and Amy remained in the briefing room while Gina processed paperwork. The sealed envelopes are consistent with Gina’s account.',
  'The fake evidence bag remained intact throughout; the transfer adhesive shows Gina used a double-envelope exchange instead.',
 ],
