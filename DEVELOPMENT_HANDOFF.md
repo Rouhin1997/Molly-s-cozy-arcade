@@ -14,6 +14,7 @@
 
 - Removed the duplicate schematic/blueprint disclaimer above the room map; retained the fan-made copyright notice at the page bottom.
 - `src/games/BazingaRoomGame.tsx`: `casePanelTitles` now provides 18 bespoke clue-card headings and taglines. The Roommate Agreement is reserved for Apartment 4A scenes. Examples: The Lunch Protocol, Bernadette's Dinner Plan, the Mystery Dossier, the Viewing Protocol, the Caltech Lab Safety Protocol.
+- `src/data/bazingaWorld.ts`: supplementary spatial clue sentences have been rewritten for clearer grammar, context-specific examples (lunch notes, mystery whispering, lab collaboration, cinema neighbour geometry) and explicit geometric meaning. The exhaustive solver still determines which clauses are true.
 - `src/data/bazingaPolish.ts`: `seatLabelForCase()` provides story-specific descriptive labels (cinema row A/C, cafeteria table sides, sofa/window ends, lab workstations, Howard/Bernadette table sides). Labels describe physical positions, not occupants; no explicit “Sheldon's spot” in map text.
 - `tests/bazingaWorld.test.ts` now checks all 18 headings exist and all case-specific seat labels are unique, meaningful and do not name a character.
 - Existing 18 Room Adventures cases, spatial validity tests, exact original character artwork, 18 Classic Lab cases and all saved stars/puzzles remain unchanged. Further human clue-writing feedback is expected from actual play-testing.
