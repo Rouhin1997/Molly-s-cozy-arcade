@@ -1895,3 +1895,41 @@
 .brave-chronicle-earned strong{font:700 19px 'Fraunces',Georgia,serif;color:#3c7165}
 .brave-chronicle-earned p{margin:0;font:italic 13px/1.7 Georgia,serif;color:#5b7566}
 .brave-chronicle-earned .brave-journey-main-action{margin:5px 0 0}
+
+
+/* Input assistant: optional full-catalogue autocomplete for free-text games.
+   This is not a clue and never confirms correctness on selection. */
+.answer-assist{position:relative;flex:1 1 220px;min-width:0;isolation:isolate}
+.guess-input-row .answer-assist{flex:1 1 220px}
+.toon-expert-form .answer-assist{flex:1 1 220px}
+.guess-input-row .answer-assist>input,
+.toon-expert-form .answer-assist>input{
+ width:100%;box-sizing:border-box;display:block;min-width:0
+}
+.answer-assist-help{display:block;font-size:10px;line-height:1.5;color:#95859b;margin:6px 9px 0}
+.answer-assist-popover{
+ position:absolute;top:calc(100% - 2px);left:0;right:0;z-index:80;
+ background:#fffdfb;border:1px solid #d9c6df;border-radius:17px;
+ box-shadow:0 14px 32px #30253c33;
+ padding:6px;max-height:295px;overflow-y:auto;overscroll-behavior:contain
+}
+.answer-assist-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;
+ padding:9px 12px;border-bottom:1px solid #eee3ef;color:#7a5a92;
+ font:800 11px 'DM Sans',sans-serif}
+.answer-assist-heading small{font-size:10px;font-weight:500;color:#97869d}
+.answer-assist-option{display:flex;align-items:baseline;justify-content:space-between;
+ gap:12px;width:100%;text-align:left;border:0!important;box-shadow:none!important;
+ background:transparent!important;color:#53425f!important;border-radius:9px!important;
+ padding:11px 12px!important;font-size:13px!important;cursor:pointer;min-height:42px}
+.answer-assist-option:hover,.answer-assist-option.is-active{background:#f1e8f6!important}
+.answer-assist-option strong{font-weight:800;min-width:0}
+.answer-assist-option small{font-size:10px;font-weight:500;color:#957c9b;text-align:right}
+.answer-assist-popover>p{font:italic 10px/1.5 Georgia,serif;color:#998a9f;margin:5px 12px 10px}
+.answer-assist input:focus-visible{outline:2px solid #a27cba;outline-offset:1px}
+@media(max-width:580px){
+ .guess-input-row{flex-wrap:wrap}
+ .guess-input-row .answer-assist{flex:1 1 100%}
+ .guess-input-row .btn{width:100%}
+ .toon-expert-form .answer-assist{flex:1 1 100%}
+ .answer-assist-popover{max-height:245px}
+}
