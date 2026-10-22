@@ -14,7 +14,7 @@ export default function BraveArcheryRange({target,onHit}:{
   if(complete)return;
   const impact=braveShot(target,shot),serial=attempts+1;
   setAttempts(serial);setLast({impact,settings:{...shot},serial});
-  if(impact.hit){setComplete(true);onHit()}
+  if(impact.hit)setComplete(true);
  }
  const feedback=last?.impact;
  const hint=feedback?.hit?'The arrow lands true! The ribbon falls and the trail opens.':
@@ -91,7 +91,7 @@ export default function BraveArcheryRange({target,onHit}:{
     <div className="brave-archery-result">
      <div className="brave-archery-scoreline"><span>✧ SHOT {attempts+1}</span><span>{feedback?'Flight '+feedback.flightTime.toFixed(2)+' s':'Watch the wind'}</span></div>
      <p role="status" aria-live="polite">{hint}</p>
-     <button className="brave-journey-main-action" onClick={fire} disabled={complete}>{complete?'✦ Target struck':'Loose the arrow ↗'}</button>
+     <button className="brave-journey-main-action" onClick={complete?onHit:fire}>{complete?'✦ Continue to the next target →':'Loose the arrow ↗'}</button>
      <span className="brave-archery-fair">No timer. Every arrow obeys the same wind and gravity.</span>
     </div>
    </div>
