@@ -1,0 +1,71 @@
+import type {PinkChallenge} from './pinkRush';
+
+/** Editor-checked questions. Clues must require fan knowledge, never simply
+ * translate the answer's name, announce the answer in the title or rule out
+ * three of four members through the question wording. Distractors are drawn
+ * from comparable songs, same-era releases or believable alternative facts. */
+type Edit=Partial<Pick<PinkChallenge,'title'|'prompt'|'options'|'answer'|'emoji'|'year'>>;
+export const pinkEditorial:Record<string,Edit>={
+ 'track-whistle':{title:'The debut double',emoji:'🎧',prompt:'Which SQUARE ONE debut track used comparatively sparse, finger-snap production rather than the festival-sized EDM sound?',options:['WHISTLE','BOOMBAYAH','PLAYING WITH FIRE',"AS IF IT'S YOUR LAST"]},
+ 'track-boombayah':{title:'Two songs, one debut',emoji:'🎤',prompt:'BLACKPINK debuted with two SQUARE ONE singles. Which one leans into a high-energy EDM party sound?',options:['BOOMBAYAH','WHISTLE','PLAYING WITH FIRE','DDU-DU DDU-DU']},
+ 'track-fire':{title:'The other 2016 chapter',emoji:'💿',prompt:'Which SQUARE TWO single paired a tropical-house-influenced production with a November 2016 release?',options:['PLAYING WITH FIRE','WHISTLE','BOOMBAYAH','STAY']},
+ 'track-stay':{title:'SQUARE TWO memories',emoji:'🎙️',prompt:'Which SQUARE TWO track features a much more acoustic, stripped-back mood than its companion single?',options:['STAY','WHISTLE','PLAYING WITH FIRE','Forever Young']},
+ 'track-last':{title:'A comeback between eras',emoji:'📼',prompt:'Which standalone 2017 group comeback sits chronologically between SQUARE TWO and SQUARE UP?',options:["AS IF IT'S YOUR LAST",'DDU-DU DDU-DU','PLAYING WITH FIRE','How You Like That']},
+ 'track-ddu':{title:'The 2018 title stage',emoji:'🎤',prompt:'Which SQUARE UP single became especially famous for its finger-gun choreography?',options:['DDU-DU DDU-DU','Forever Young','Kill This Love','BOOMBAYAH']},
+ 'track-forever':{title:'A 2018 B-side',emoji:'📀',prompt:'Which of these songs belongs to SQUARE UP rather than THE ALBUM or KILL THIS LOVE?',options:['Forever Young','You Never Know','Hope Not','Pretty Savage']},
+ 'track-kill':{title:'The 2019 comeback',emoji:'🥁',prompt:'A brass-and-drum, almost marching-band-style opening announces which 2019 lead single?',options:['Kill This Love','DDU-DU DDU-DU','How You Like That','Shut Down']},
+ 'track-hylt':{title:'Before THE ALBUM',emoji:'🎧',prompt:'Which single opened the 2020 comeback rollout in June, several weeks before the Selena Gomez collaboration?',options:['How You Like That','Ice Cream','Lovesick Girls','Pretty Savage']},
+ 'track-ice':{title:'The 2020 guest feature',emoji:'🎤',prompt:'Which BLACKPINK collaboration features a guest vocalist known for starring as Alex Russo on Disney Channel?',options:['Ice Cream','Sour Candy','Kiss and Make Up','Bet You Wanna']},
+ 'track-lovesick':{title:'THE ALBUM lead single',emoji:'📻',prompt:'After two pre-release singles, which track became the October 2020 title single of BLACKPINK’s first full album?',options:['Lovesick Girls','How You Like That','Ice Cream','Pretty Savage']},
+ 'track-pretty':{title:'THE ALBUM deep cut',emoji:'🎶',prompt:'Which THE ALBUM B-side is known for an especially swaggering rap-and-trap arrangement?',options:['Pretty Savage','You Never Know','Love To Hate Me','Bet You Wanna']},
+ 'track-venom':{title:'Before BORN PINK',emoji:'📼',prompt:'Which BORN PINK song arrived as an August 2022 pre-release, before the September album and title single?',options:['Pink Venom','Shut Down','Typa Girl','The Happiest Girl']},
+ 'track-shutdown':{title:'A violin and old memories',emoji:'🎻',prompt:'Which 2022 BLACKPINK video referenced earlier group eras and used a sample of Paganini’s La Campanella?',options:['Shut Down','Pink Venom','Ready For Love','Typa Girl']},
+ 'track-typa':{title:'Which album was it?',emoji:'💿',prompt:'Which of these songs is a BORN PINK B-side rather than a track from 2020’s THE ALBUM?',options:['Typa Girl','Pretty Savage','You Never Know','Love To Hate Me']},
+ 'track-ready':{title:'A virtual first look',emoji:'🎮',prompt:'Which BORN PINK track was first revealed through a PUBG Mobile virtual concert before its album release?',options:['Ready For Love','Hard to Love','The Happiest Girl','Typa Girl']},
+ 'track-jump':{title:'After the solo chapters',emoji:'⚡',prompt:'Which July 2025 single reunited BLACKPINK for a group comeback before the DEADLINE mini album?',options:['JUMP','GO','Pink Venom','Shut Down']},
+ 'track-go':{title:'DEADLINE: title stage',emoji:'📺',prompt:'Which track became the lead promotional single from the February 2026 DEADLINE mini album?',options:['GO','JUMP','Champion','Me and my']},
+ 'track-champion':{title:'Beyond the lead single',emoji:'🏟️',prompt:'Which of these is a DEADLINE album track rather than a BORN PINK or THE ALBUM song?',options:['Champion','Typa Girl','You Never Know','Ready For Love']},
+ 'track-me':{title:'The newest tracklist',emoji:'🎧',prompt:'Which of these songs appears on DEADLINE rather than on THE ALBUM or BORN PINK?',options:['Me and my','You Never Know','The Happiest Girl','Love To Hate Me']},
+ 'spot-flower':{title:'The hand-gesture trend',emoji:'📸',prompt:'A 2023 solo debut sparked a recognizable hand-gesture dance and featured an elegantly stylized music video. Whose was it?'},
+ 'spot-solo':{title:'The first member debut',emoji:'🎤',prompt:'Which member was the first to make a solo single debut, back in 2018?'},
+ 'spot-ground':{title:'R: the beginning',emoji:'💿',prompt:'Whose 2021 solo debut paired On The Ground with Gone?'},
+ 'spot-lalisa':{title:'The MONEY era',emoji:'🕺',prompt:'Whose 2021 debut solo release included the B-side MONEY?'},
+ 'spot-apt':{title:'A night at the Grammys',emoji:'🏆',prompt:'Which BLACKPINK member opened the 2026 Grammy Awards alongside Bruno Mars?'},
+ 'spot-rockstar':{title:'The Bangkok music video',emoji:'🎬',prompt:'A 2024 solo music video brought cameras to Bangkok’s Yaowarat Road. Whose comeback was it?'},
+ 'spot-mantra':{title:'The ODD ATELIER chapter',emoji:'🖤',prompt:'Which member’s independent label ODD ATELIER was behind a 2024 solo single?'},
+ 'spot-amortage':{title:'Four chapters of love',emoji:'💗',prompt:'Whose 2025 solo project included earthquake and was named AMORTAGE?'},
+ 'spot-ruby':{title:'A feature-packed solo album',emoji:'💿',prompt:'Whose 2025 album included guest appearances by Dua Lipa and Childish Gambino?'},
+ 'spot-alterego':{title:'Five alter egos',emoji:'🪞',prompt:'Which member introduced the fictional album personas Vixi, Roxi and others in 2025?'},
+ 'spot-rosie':{title:'A nickname on the cover',emoji:'🎙️',prompt:'Who named her 2024 full solo album after her own nickname and included the song toxic till the end?'},
+ 'spot-earthquake':{title:'A 2025 music-video memory',emoji:'🎬',prompt:'Whose 2025 solo project AMORTAGE featured earthquake as a lead single?'},
+ 'fan-leo':{title:'A familiar furry family',emoji:'🐈',prompt:'Which member’s pets include the cats Leo and Louis?',options:['LISA','ROSÉ','JISOO','JENNIE']},
+ 'fan-fivecats':{title:'Count the companions',emoji:'🐱',prompt:'Before her dog joined the household, how many cats were in LISA’s well-known original feline family?'},
+ 'fan-petmatch':{title:'Match the pet passport',emoji:'🦴',prompt:'Only one of these pairings matches a BLACKPINK member with the right pet. Which?',options:['ROSÉ — Hank','JISOO — Kuma','JENNIE — Dalgom','LISA — Hank']},
+ 'fan-dior':{title:'The fashion file',emoji:'👜',prompt:'A Dior global ambassador became especially recognizable at its Paris fashion-week shows. Which member?',options:['JISOO','JENNIE','ROSÉ','LISA']},
+ 'fan-chanel':{title:'Fashion-week flashback',emoji:'👜',prompt:'Who earned the long-running BLINK nickname “Human Chanel” through her fashion-house partnership?'},
+ 'fan-saintlaurent':{title:'Paris runway chapter',emoji:'🕶️',prompt:'Which member became a Saint Laurent global ambassador, appearing in its fashion campaigns?'},
+ 'fan-lv':{title:'2024 luxury campaign',emoji:'💼',prompt:'After a long partnership with Celine, which member became a Louis Vuitton ambassador in 2024?'},
+ 'fan-bvlgari':{title:'A jewellery partnership',emoji:'💍',prompt:'Which BLACKPINK member is particularly associated with Bvlgari jewellery campaigns?'},
+ 'fan-celine':{title:'Before a new house',emoji:'👜',prompt:'Before becoming a Louis Vuitton ambassador in 2024, LISA represented which other French fashion house?',options:['Celine','Dior','Saint Laurent','Chanel']},
+ 'fan-brandswap':{title:'Which ambassador pair is correct?',emoji:'💎',prompt:'Only one member–fashion house pairing here reflects a real long-running ambassadorship. Which?',options:['JENNIE — Chanel','JISOO — Saint Laurent','ROSÉ — Dior','LISA — Chanel']},
+ 'fan-coachella19':{title:'The first desert stage',emoji:'🎡',prompt:'BLACKPINK headlined Coachella in 2023. In what year had they first performed at the festival?',answer:'2019',options:['2017','2018','2019','2020'],year:'FESTIVAL'},
+ 'fan-coachella23':{title:'The headliner milestone',emoji:'🏟️',prompt:'Which year saw BLACKPINK return to Coachella as a main-stage headliner instead of performing on a smaller stage?'},
+ 'fan-jenniesolo':{title:'Desert solo stage',emoji:'🎸',prompt:'During Coachella 2025, which BLACKPINK member performed a separate Sunday solo set?',options:['JENNIE','JISOO','ROSÉ','LISA']},
+ 'fan-lisasolo':{title:'Another desert solo',emoji:'🌟',prompt:'Which member brought her own solo show to Coachella’s Sahara stage in April 2025?'},
+ 'fan-coachellafact':{title:'Four years between stages',emoji:'🎡',prompt:'How many years passed between BLACKPINK’s first Coachella performance and their 2023 headlining set?',answer:'4',options:['2','3','4','5'],year:'FESTIVAL'},
+ 'fan-white-lotus':{title:'HBO resort mystery',emoji:'🎬',prompt:'Which member appeared in the third season of HBO’s resort-set mystery comedy-drama?'},
+ 'fan-theidol':{title:'An HBO cameo',emoji:'📺',prompt:'Which BLACKPINK member appeared on screen in the 2023 music-industry drama The Idol?'},
+ 'fan-acting-pair':{title:'Screen debut mix-up',emoji:'🎞️',prompt:'Who joined the cast of The White Lotus, rather than The Idol, for a television acting debut?'},
+ 'fan-goals-song':{title:'A global sports collaboration',emoji:'⚽',prompt:'Which BLACKPINK soloist teamed up with Anitta and Rema on a track for FIFA’s World Cup album?',year:'WORLD STAGE'},
+ 'fan-goals-trio':{title:'FIFA collaboration',emoji:'🌍',prompt:'Which artist duo joined LISA on the World Cup anthem Goals?',year:'FIFA'},
+ 'fan-fifatrack':{title:'The FIFA soundtrack',emoji:'🏟️',prompt:'Which LISA collaboration appeared on the official 2026 FIFA World Cup album?',options:['Goals','ROCKSTAR','New Woman','Moonlit Floor']},
+ 'fan-worldcup-year':{title:'Which tournament?',emoji:'🏆',prompt:'LISA teamed up with Anitta and Rema for an official World Cup soundtrack. Which tournament edition?',year:'FIFA'},
+ 'fan-labubu':{title:'The viral plush charm',emoji:'🧸',prompt:'Which character from POP MART’s THE MONSTERS universe helped kick off the toothy bag-charm craze linked to LISA?',options:['Labubu','Skullpanda','Crybaby','Dimoo']},
+ 'fan-labubu-lisa':{title:'A trending bag charm',emoji:'🎒',prompt:'Which member was widely associated with helping the collectible Labubu craze reach global audiences?'},
+ 'fan-labubu-brand':{title:'Where did the toy come from?',emoji:'🎁',prompt:'Which designer-toy retailer distributed the viral Labubu blind-box collections?',options:['POP MART','52TOYS','Mighty Jaxx','Kidrobot']},
+ 'fan-coachella-duo':{title:'Cheering from the wings',emoji:'💞',prompt:'Which two BLACKPINK members turned up to support JENNIE’s 2025 Coachella solo performance?'},
+ 'fan-coachella-stage':{title:'Two separate solo shows',emoji:'🎤',prompt:'Which pair of BLACKPINK members each performed their own solo Coachella set in April 2025?'}
+};
+export function editPinkQuestion(q:PinkChallenge):PinkChallenge{
+ const edit=pinkEditorial[q.id];return edit?{...q,...edit}:q;
+}
