@@ -109,7 +109,7 @@ export const verifiedCases:Record<string,VerifiedCase>={
  ],
  scene:'A prized Halloween medal is missing from its locked display despite no damage to the cabinet or the nearby vent.',
  motivation:'Amy prepared a meticulous opening trick for the annual competition, confident that her teammates would chase an imaginary break-in.',
- reconstruction:'Rosa and Charles were elsewhere and the vent was sealed. The Office key never moved, eliminating that route. Only the final resin fragment and commission reveal Amy’s Medal duplicate, with Jake visible elsewhere during the exchange.',
+ reconstruction:'The corridor video places Rosa at the checkpoint and Charles at his training meeting, while the freshly painted vent seal has never been disturbed. Holt's Office key remains on his signed key ring, disproving that route without yet identifying who used the authorized rehearsal access. Only the final gold-resin flake, the matching commission and the rehearsal photograph establish Amy's Medal duplicate; Jake was at the security desk when she switched it.',
  closing:'Holt records the first result. Jake announces that this was merely the warm-up. Amy has already filed a victory memo.'
 },
 'pontiac-switch':{
@@ -214,7 +214,7 @@ export const verifiedCases:Record<string,VerifiedCase>={
   L(e('🍔','record','Scully’s meal ticket','Scully ordered his own lunch at the station cafeteria at 12:05 and remained in the checkout line until 12:20.'),
     e('📹','record','Cafeteria register camera','The camera includes Scully holding his untouched receipt at 12:12 while the truck reported the missing premium meal.'),
     'Who was visible somewhere else while the tray disappeared?',
-    'The timestamped cafeteria evidence clears Scully of the truck exchange.',
+    'The 12:12 camera still shows Scully at the station cafeteria checkout, not at the food truck. The ticket and independent video exclude him from the tray exchange.',
     ['Scully'],[]),
   L(e('🚪','scene','Side-hatch tamper seal','The sealed side hatch has no broken tape, moved hinges or dust disturbance during the lunch service.'),
     e('📷','record','Rear service camera','The rear camera covers the side hatch throughout 12:05–12:20 and records no opening or Side-door handoff.'),
@@ -237,7 +237,7 @@ export const verifiedCases:Record<string,VerifiedCase>={
   L(e('🔐','record','Floor assignment roster','Rosa was supervising an adjacent floor from 14:00–14:30; she could not reach the main precinct mail desk.'),
     e('📸','record','Stairwell video clock','At the critical envelope handoff of 14:19, Rosa is still visible beside the same floor checkpoint.'),
     'Who lacked the opportunity to handle the final envelope?',
-    'Rosa’s roster and synchronized checkpoint footage exclude her from the handoff.',
+    'Rosa’s roster places her on another floor throughout the handoff, and the independent synchronized checkpoint footage confirms she never approached the mail desk.',
     ['Rosa'],[]),
   L(e('📋','record','Jake’s briefing log','Jake spoke continuously during a mandatory evidence briefing from 14:08 to 14:26. No breaks or phone calls were logged.'),
     e('🎥','record','Briefing-room recording','At 14:19 Jake is shown leading the demonstration, while the disputed envelope travels through the precinct mail desk.'),
