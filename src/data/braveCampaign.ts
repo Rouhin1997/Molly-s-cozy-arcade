@@ -177,9 +177,9 @@ export const braveCampaignStages:readonly BraveStage[]=[
  }
 ];
 export const braveArcheryTargets=[
- {name:'The Near Ribbon',wind:1,range:'near' as const,description:'The red ribbon pulls to the east.'},
- {name:'The Far Pennant',wind:-1,range:'far' as const,description:'The blue pennant streams west across the glen.'},
- {name:'The Last Feather',wind:0,range:'far' as const,description:'The heather grows still beneath the final target.'}
+ {name:'The Near Ribbon',wind:1,crosswind:4,distance:42,height:3.2,range:'near' as const,description:'The red ribbon snaps east above the near target.'},
+ {name:'The Far Pennant',wind:-1,crosswind:-6,distance:68,height:4.2,range:'far' as const,description:'The blue pennant streams west across the long clearing.'},
+ {name:'The Last Feather',wind:0,crosswind:4,distance:75,height:7.8,range:'far' as const,description:'High on the wooden frame, a feather twists in an easterly crosswind.'}
 ];
 export const braveRuneOrder=['oak','light','hearth'] as const;
 export const braveRuneOptions=[
