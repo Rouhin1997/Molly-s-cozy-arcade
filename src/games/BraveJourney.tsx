@@ -1,8 +1,8 @@
 import {useRef,useState,type KeyboardEvent} from 'react';
-import {braveCampaignStages,braveChapterBridges,braveArcheryTargets,braveRuneOptions,braveRuneOrder,type BraveStage} from '../data/braveCampaign';
+import {braveCampaignStages,braveChapterBridges,braveArcheryTargets,type BraveStage} from '../data/braveCampaign';
 import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,braveTile,nextBraveHint,type BravePuzzleState,type BraveDirection} from '../lib/bravePuzzle';
 import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,type BraveJourneySave} from '../lib/braveProgress';
-import {braveRuneStep} from '../lib/braveChallenges';
+import BraveRuneWorkshop from './BraveRuneWorkshop';
 import BraveArcheryRange from './BraveArcheryRange';
 import BraveSceneBackdrop from './BraveSceneBackdrop';
 
@@ -78,7 +78,6 @@ export default function BraveJourney({onChapterChange}:{
  const [notice,setNotice]=useState('A path opens in the heather. Listen for the little light.');
  const [finished,setFinished]=useState(()=>progress.completed.includes(progress.current));
  const [shots,setShots]=useState(0);
- const [runeSteps,setRuneSteps]=useState(0);
  const [hintLevel,setHintLevel]=useState(0);
  const sectionRef=useRef<HTMLElement|null>(null);
  const stage=braveCampaignStages[currentIndex],chapter=braveChapterBridges[stage.chapterId];
@@ -96,7 +95,7 @@ export default function BraveJourney({onChapterChange}:{
   setCurrentIndex(index);
   setHistory(openingHistory(next));
   setNotice('Take the path at your own pace. The wisps will wait.');
-  setShots(0);setRuneSteps(0);setHintLevel(0);setFinished(false);
+  setShots(0);setHintLevel(0);setFinished(false);
   onChapterChange(next.chapterId);
   sectionRef.current?.scrollIntoView({behavior:'smooth',block:'start'});
  }
@@ -120,14 +119,6 @@ export default function BraveJourney({onChapterChange}:{
    const dir=directions[event.key]??directions[event.key.toLowerCase()];
    if(dir){event.preventDefault();move(dir)}
   }
- }
- function rune(id:string){
-  if(finished)return;
-  const next=braveRuneStep(runeSteps,id,braveRuneOrder);
-  if(next===runeSteps){setNotice('The little bear shakes its head. Remember the order of your journey.');return}
-  setRuneSteps(next);
-  if(runeSteps+1===braveRuneOrder.length){setNotice('The three carvings nod. The spindle begins to glow.');markFinished()}
-  else setNotice('A rune glimmers. The next carving waits.');
  }
  return <section id="brave-journey" className={'brave-crossing brave-journey brave-journey-'+stage.chapterId}
   ref={sectionRef} aria-label="The Wisps’ Trail playable story" onKeyDown={keyDown} tabIndex={0}
@@ -181,19 +172,7 @@ export default function BraveJourney({onChapterChange}:{
       else setNotice('The next pennant rises in the changing wind.');
     }}/>
    </div>}
-   {stage.kind==='runes'&&<div className="brave-journey-special brave-journey-runes">
-    <div className="brave-journey-target-art" aria-hidden="true"><span>❧</span><span>✧</span><span>♨</span></div>
-    <div className="brave-journey-special-controls">
-     <span className="brave-kicker">THE THREE MEMORY MARKS</span>
-     <h4>Follow the story back to its heart</h4>
-     <p>Choose the signs in the order Molly encountered them: beneath the castle oak, by the guiding light, and at the hearth she hopes to protect.</p>
-     <div className="brave-journey-rune-dots">{braveRuneOrder.map((r,i)=><span key={r} className={i<runeSteps?'is-complete':''}>{i<runeSteps?'✦':'◇'}</span>)}</div>
-     <div className="brave-journey-choice-row">
-      {braveRuneOptions.map(r=><button key={r.id} onClick={()=>rune(r.id)}><span aria-hidden="true">{r.symbol}</span>{r.label}</button>)}
-     </div>
-     <p role="status" aria-live="polite">{notice}</p>
-    </div>
-   </div>}
+   {stage.kind==='runes'&&<BraveRuneWorkshop onSolve={()=>{setNotice('The spindle begins to spin a golden thread.');markFinished()}}/>}
    {stage.kind==='route'&&<div className="brave-journey-hint-panel">
     <button className="brave-journey-hint-toggle" onClick={()=>setHintLevel(v=>Math.min(v+1,3))}>
      {hintLevel===0?'✧ Ask the wisp for a hint':hintLevel===3?'✧ The wisp knows the way':'✧ Ask for a clearer clue'}
