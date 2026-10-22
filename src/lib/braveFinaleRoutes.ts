@@ -60,7 +60,9 @@ export function makeBraveFinaleRoute(o:Options):BraveLevel{
  const gate=last;
  if(o.gate)cells[gate.r][gate.c]=o.gate;
  cells[end.r][end.c]='E';cells[start.r][start.c]='S';
- const blocked=new Set(o.gate?[key(gate)]:[]);
+ const doorCell=o.key&&o.gate?all.parent.get(key(gate)):undefined;
+ const useDoor=Boolean(doorCell&&!same(doorCell,start));
+ const blocked=new Set([...(o.gate?[key(gate)]:[]),...(useDoor&&doorCell?[key(doorCell)]:[])]);
  const accessible=bfs(start,blocked);
  if(!accessible.queue.length)throw Error('No upstream cells');
  const candidates=accessible.queue.filter(p=>!same(p,start)&&!same(p,end)&&!same(p,gate)&&around(p).length>=1);
@@ -79,13 +81,8 @@ export function makeBraveFinaleRoute(o:Options):BraveLevel{
  if(o.key)place('K');
  // A locked door is adjacent to the exit if requested and not a gate.
  if(o.key){
-  const nearer=all.parent.get(key(gate));
-  if(nearer&&!same(nearer,start)&&!chosen.some(x=>same(x,nearer))&&o.gate){
-   // Do not replace a required rune/item or the only access route.
-   cells[nearer.r][nearer.c]='D';
-  }else if(!o.gate){
-   cells[gate.r][gate.c]='D';
-  }
+  if(useDoor&&doorCell)cells[doorCell.r][doorCell.c]='D';
+  else if(!o.gate)cells[gate.r][gate.c]='D';
  }
  return {id:o.id,title:o.title,rows:cells.map(row=>row.join(''))};
 }
