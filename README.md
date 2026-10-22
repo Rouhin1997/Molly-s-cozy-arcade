@@ -1,5 +1,13 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 3A · Brave: The Wisps’ Trail — STORYBOOK WORLD PREVIEW
+
+**Module 01 of the approved, carefully staged Brave adventure** is available on the game shelf as **WORLD PREVIEW**. It is an original illustrated Scottish Highlands chapter map with castle, standing stones, Witch’s cottage, moonlit ruins and magical clearing. Click or tap any of six locations to read its original scene, Merida dialogue, wisp message and three proposed future levels. Molly becomes the Keeper of the Wisps in a short interactive prologue, choosing to **listen** or **follow**. The choice and visited locations persist in a dedicated local save; none of the existing six games, coupon rewards or Passport stars are affected.
+
+The storybook's new original Celtic-inspired ambience uses gentle synthesized harp-like notes with a quiet wind undertone, **muted until enabled via a small ♪ button**. On phones the illustrated map scrolls horizontally, with an accessible six-chapter shortcut strip. This is intentionally an art/world review checkpoint, **not a claim that the eighteen levels or archery engine are playable**.
+
+Our new production contract is [BRAVE_MODULAR_PRODUCTION.md](BRAVE_MODULAR_PRODUCTION.md): nine reviewable modules, starting with world and atmosphere, followed by a rigorously verified map/interaction engine, then individual three-level chapters, and final integration. Owner approval is required before moving to Module 02. The original [Brave plan](BRAVE_THE_WISPS_TRAIL_PLAN.md) remains the creative reference. Module 01 sources: `src/data/braveWorld.ts`, `src/games/BraveTrail.tsx`, `tests/braveWorld.test.ts`.
+
 ## Phase 2L — Pink Rush final trivia and concert-sound polish (22 October 2026)
 
 Player testing caught overly obvious song clues and implausible alternatives (especially the Selena Gomez/Ice Cream question), performer clues which named potential answers in the question, and frequent repeats over three concerts. The full question bank has now received an **editorial clue-and-distractor audit** and grown from about **70 to 87** verified public-fact entries. The reviewed prompts are in `src/data/pinkRushEditorial.ts` and 17 additional sourced fan-life questions in `src/data/pinkRushFanExtra.ts`. New practice shows **prioritize unused songs, solo and fan-culture questions**, deliberately rotating away from recent concerts until each category is exhausted. Daily selections remain fixed for a date; existing completed and in-progress saves remain intact.

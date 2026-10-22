@@ -1,5 +1,17 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 3A — Brave storybook world preview and modular craft standards
+
+*The user specifically prioritized patience and atmosphere over shipping all levels quickly.* We adopted a nine-module release workflow detailed in [BRAVE_MODULAR_PRODUCTION.md](BRAVE_MODULAR_PRODUCTION.md).
+
+**Module 01 available for review:** Original illustrated SVG Highlands with six story-rich chapter destinations. On opening, the player may read the atmospheric prologue and choose how Molly responds to the little wisp; the choice is stored independently. Clicking the map reveals artwork, story, Merida dialogue, wisp remarks and the names of the three planned levels per place. A small toggle enables original quiet harp/wind Web Audio ambience (default muted), while reduced-motion CSS and an accessible horizontally explorable mobile map support phone play.
+
+**Important game-design boundary:** A clickable illustration does not count as a solved puzzle or unlocked chapter. The world is explicitly tagged WORLD PREVIEW. Eighteen future levels, environmental archery, item logic, collectible wisps, the tapestry finale, Passport integration and the actual puzzle engine belong to later, individually reviewed modules. The preview makes no claim of completion.
+
+**Art principles:** Old layered DunBroch stonework, warm castle light, dark blue-green pine woods, turquoise floating lights, craggy misty hills, enchanted cottage wood, weathered standing stones and gold-green embroidered details. New character dialogue is gentle, brief and original. Each chapter has its own colour, architecture, weather and emotional mood. Canonical grounding: [Pixar's official Brave page](https://www.pixar.com/brave). The visual medium is original hand-authored SVG/CSS rather than copied promotional photographs or licensed score.
+
+**Next module:** Build pure map-state mechanics with move legality, environmental interactions, pathfinding and undo/reset, and prove each future puzzle is solvable before adding visual chapter levels. No rushing or hidden solution assumptions.
+
 ## Phase 2L — Fair BLINK trivia and real applause design standard
 
 - **Questions:** A real challenge for a knowledgeable BLINK should depend on a member-specific fact, recognizable performance or release detail, rather than a title paraphrase. In particular, *never write a “sweet treat” clue with Ice Cream against unrelated tracks*, or identify 2–3 members in a clue and offer those same members among the four choices.
