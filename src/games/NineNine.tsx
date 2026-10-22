@@ -7,7 +7,7 @@ import {
  allNineLinksSolved,clearNineSelection,connectNineEvidence,creditNineResult,
  getNineDaily,hintNine,inspectNineEvidence,newNinePractice,newNineRound,
  nineGuessLimit,nineHintLimit,nineWrongPairLimit,pristineNineRound,
- setNineAccusation,submitNineAccusation,unlockedHeistCount,
+ setNineAccusation,submitNineAccusation,unlockedHeistCount,retryNineHeist,
  type NineProgress,type NineRound,
 } from '../lib/nineNine';
 
@@ -68,18 +68,11 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
   const index=heistCaseIds.indexOf(id as typeof heistCaseIds[number]);
   if(index<0||index>heistUnlocked)return;
   // The stage card also reopens a failed investigation without losing awards.
-  if(progress.heist[id]?.status==='lost'){
-   const story=nineCases.find(c=>c.id===id);
-   if(story)setProgress(prev=>({...prev,heist:{...prev.heist,[id]:newNineRound(story)}}));
-  }
+  if(progress.heist[id]?.status==='lost')setProgress(prev=>retryNineHeist(prev,id));
   setSelectedHeist(id);setActiveExhibit(null);setMode('heist');
  }
  function retryHeist(){
-  setProgress(prev=>{
-   const caseFile=nineCases.find(x=>x.id===selectedHeist);
-   if(!caseFile)return prev;
-   return {...prev,heist:{...prev.heist,[selectedHeist]:newNineRound(caseFile)}};
-  });
+  setProgress(prev=>retryNineHeist(prev,selectedHeist));
   setActiveExhibit(null);
  }
  function changeRound(transform:(r:NineRound,c:NineCase)=>NineRound){
