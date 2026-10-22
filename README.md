@@ -1,5 +1,19 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 2K — Pink Rush 2.0 · Fan Festival + One-Time Reward Wallet
+
+**Latest update (22 October 2026):** Pink Rush has been redesigned as a **12-act BLINK fan festival** with a black/hot-pink concert identity, stage and question controls visible together on desktop and phone (compact sticky stage on phones), original synthesized crowd/cheer pulses and a much stronger fullscreen encore finale. **It still has no difficulty picker.**
+
+Each fresh show features **2 song rounds, 1 era-ordering round, 3 solo-artist spotlights, 5 fan-culture challenges and 1 repeatable encore pattern**. The fan-life pool adds 30 source-checked public facts about pets, fashion ambassadors, HBO acting appearances, 2019/2023/2025 Coachella moments, LISA's official FIFA World Cup 2026 collaboration with Anitta and Rema, and the Labubu craze. About **70 independently authored challenges** now rotate in daily and practice shows. The old decorative scrapbook is replaced with a clickable live tour-log of unlocked memories.
+
+Correct answers pulse the stage and generate an original electronic cheer; a wrong answer **switches off a previously lit stage segment and moves Molly back one round**, which she must clear again to resume. Completed personal-best scores are never re-awarded on replay. Mobile players can see both the encore colour pads and active stage in a compact layout. Real recordings are **not** embedded or streamed.
+
+**Molly's BLINK Wallet:** The first completed new concert unlocks three hidden gift cards; she selects **one** and the remaining prizes are revealed afterward. Options: teach Rouhin a BLACKPINK/solo choreo, have him sing one song, or demand a **one-minute speech praising Lisa**. Before redemption, she can surrender the coupon to play a new full show for a new blind draw. After clicking **Redeem** it becomes a permanent **redeemed** Passport keepsake and the game will not issue another coupon. A separate local redemption marker and Passport import reconciler prevent accidental reissuance from older backups in the same browser. This is browser-local, **not tamper-proof/cross-device entitlement security**; implementing that will require a server-backed user identity and protected reward records.
+
+Current save key remains `mollys-pink-rush-v1`; Passport remains **v4** and accepts v1–v3 backups. Legacy in-progress eight-round concerts remain playable. [Full architecture, test coverage, source references and redemption rules](PINK_RUSH_GAME_AND_SOURCES.md).
+
+**Brave: The Wisps' Trail** stays **Coming Soon** only; see [the approved six-chapter design](BRAVE_THE_WISPS_TRAIL_PLAN.md). Work on the Brave code requires a separate green light.
+
 ## Phase 2J — Pink Rush! is playable; Brave is Coming Soon
 
 **Pink Rush!** joins the arcade as Game 06: a fully playable, **no-difficulty-selector** BLACKPINK memory-lane concert. Molly answers three track memories, arranges two discography timelines, identifies two solo member spotlights and completes an original visual lightstick encore. Eight rounds illuminate an original four-member stage before a personalized grand finale. Each show is untimed and impossible to lose; wrong answers simply reduce that round's star score. The show spans SQUARE ONE (2016) through DEADLINE (2026), with verified official release facts rather than copyrighted lyric/audio clips.
