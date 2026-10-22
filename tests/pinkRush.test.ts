@@ -11,7 +11,7 @@ function answerRound(id:string,seedMistakes=0){
  const q=pinkChallengeFor(id);
  let round=newPinkRound(id);
  if(seedMistakes){
-  if(q.kind==='era')round=choosePink(round,q,q.options[0]);
+  if(q.kind==='era')for(const choice of q.options)round=choosePink(round,q,choice);
   else if(q.kind==='encore')round=choosePink(round,q,String((pinkEncorePattern(id)[0]+1)%4));
   else round=choosePink(round,q,q.options.find(option=>option!==q.answer)!);
  }
