@@ -7,6 +7,7 @@ import PinkRush from './games/PinkRush';
 import PinkWallet from './games/PinkWallet';
 import BraveTrail from './games/BraveTrail';
 import ArcadeNavigation from './components/ArcadeNavigation';
+import AnswerAssistInput from './components/AnswerAssistInput';
 import {comingSoonGames,upcomingArcadeEvents} from './data/arcadeHub';
 import { readPinkProgress,writePinkProgress,type PinkProgress,type PinkStats } from './lib/pinkRush';
 import { readNineProgress, writeNineProgress, type NineProgress, type NineStats } from './lib/nineNine';
@@ -23,6 +24,11 @@ import {
   readProgress, registerResult, skipRound, submitGuess, writeProgress,
   type Progress, type Round,
 } from './lib/game';
+
+/** A full, stable catalogue: never generated from the hidden riddle's answer. */
+const guessAnswerCatalogue=riddles.map(riddle=>({
+ value:riddle.answer,label:riddle.answer,aliases:riddle.accepted
+}));
 
 type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'pink' | 'wallet' | 'brave' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
@@ -240,7 +246,9 @@ function Puzzle({ riddle, round, onGuess, onHint, onSkip, onNext, nextText, mode
       <div className="puzzle-support"><span>{allowedGuesses - round.guesses.length} guesses left</span><span>{scoreRound(round.cluesShown, round.guesses.length, round.difficulty)} stars up for grabs</span></div>
       <form className="guess-form" onSubmit={handleSubmit}>
         <label htmlFor="guess-answer">Your best guess</label>
-        <div className="guess-input-row"><input id="guess-answer" autoComplete="off" spellCheck="false" value={value} maxLength={60} onChange={e => setValue(e.target.value)} placeholder="Type a fruit, vegetable or dish…"/><button className="btn btn-primary" disabled={!value.trim()} type="submit">Guess ↗</button></div>
+        <div className="guess-input-row"><AnswerAssistInput id="guess-answer" value={value} onChange={setValue}
+          options={guessAnswerCatalogue} minChars={3} maxLength={60}
+          placeholder="Type a fruit, vegetable or dish…"/><button className="btn btn-primary" disabled={!value.trim()} type="submit">Guess ↗</button></div>
       </form>
       {round.guesses.length > 0 && <div className="guess-history"><span>Not quite yet:</span> {wrong.map((guess, i) => <span className="wrong-guess" key={`${guess}-${i}`}>{guess} <span aria-hidden="true">×</span></span>)}</div>}
       {notice && <p role="status">{notice}</p>}

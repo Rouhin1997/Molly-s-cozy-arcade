@@ -1,5 +1,16 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 4B — Name suggestions for free-text game answers (22 October 2026)
+
+**Owner requested:** When typing in expert-level games (especially Toon Rewind and Guess Who?), help recall a forgotten show or ingredient name using a matching catalogue/autocomplete rather than requiring perfect spelling. Make this a lightweight usability aid rather than reducing the mystery to an automatically revealed solution.
+
+**Implemented:** `src/lib/answerAssist.ts` provides pure full-catalogue searches with Unicode/accent folding, punctuation normalization, prefix/word/substring ranking, known aliases and narrowly bounded single-typo matching. Nothing is suggested before **three meaningful characters** are entered. Suggestions come from the games' **entire answer catalogues**, not from the hidden current answer, with a limit of seven and deduplication by canonical answer. `src/components/AnswerAssistInput.tsx` is a reusable accessible textbox/listbox: arrow keys to explore, Escape to dismiss, Enter to fill a highlighted choice, mouse/touch to select; **choosing never automatically submits or awards a correct guess**. Existing game validation, guess limits, clues and star scoring are untouched.
+
+**Integrated:** Toon Rewind **Expert** typing searches all catalogue show titles, helpful aliases and abbreviations. Guess Who? typing in **daily and practice modes**, including Expert, searches all ingredients/dishes and alternate Indian/English names. The responsive dropdown does not require an internet API or store any typed guesses beyond the game's existing submission logic. This change does not extend to games without free-text guesses. `tests/answerAssist.test.ts` covers the three-character guard, regional aliases, accents, typo tolerance, ranking and result caps, in addition to the existing full regression suite.
+
+**Up next (discussion only):** Owner wants to discuss unique gameplay concepts for *Kung Fu Panda*, *Courage the Cowardly Dog*, *Toy Story* and *The Addams Family*. These remain roadmap ideas, not playable games; no release dates are promised. Brave's original recorded-quality Celtic quest-music pass remains an open creative task.
+
+
 ## Phase 3A — Brave storybook world preview and modular craft standards
 
 *The user specifically prioritized patience and atmosphere over shipping all levels quickly.* We adopted a nine-module release workflow detailed in [BRAVE_MODULAR_PRODUCTION.md](BRAVE_MODULAR_PRODUCTION.md).
