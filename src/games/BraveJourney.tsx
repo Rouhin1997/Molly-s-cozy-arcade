@@ -4,6 +4,7 @@ import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,brav
 import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,type BraveJourneySave} from '../lib/braveProgress';
 import {braveRuneStep} from '../lib/braveChallenges';
 import BraveArcheryRange from './BraveArcheryRange';
+import BraveSceneBackdrop from './BraveSceneBackdrop';
 
 const roman:Record<string,string>={highland:'I',forest:'II',witch:'III'};
 const directions:Record<string,BraveDirection>={
@@ -13,51 +14,6 @@ const directions:Record<string,BraveDirection>={
 const chapterName:Record<string,string>={highland:'The Highland Games',forest:'Follow the Wisps',witch:"The Witch’s Workshop"};
 function openingHistory(stage:BraveStage):BravePuzzleState[]{
  return stage.route?[braveInitialState(stage.route)]:[];
-}
-function JourneyLandscape({chapter}:{chapter:string}){
- return <svg className="brave-journey-landscape" viewBox="0 0 980 280" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
-  <defs>
-   <linearGradient id="journeySky" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stopColor={chapter==='highland'?'#b8bc94':chapter==='forest'?'#315961':'#6f6766'}/>
-    <stop offset="1" stopColor={chapter==='highland'?'#dfc99b':chapter==='forest'?'#7fa69a':'#d1a98b'}/>
-   </linearGradient>
-   <radialGradient id="journeyWisp"><stop stopColor="#ecffff"/><stop offset=".24" stopColor="#b0fff6"/><stop offset="1" stopColor="#6adbd0" stopOpacity="0"/></radialGradient>
-  </defs>
-  <rect width="980" height="280" fill="url(#journeySky)"/>
-  <circle cx={chapter==='forest'?695:790} cy="69" r="43" fill="#f5e6ba" opacity=".75"/>
-  <path d="M0 170L92 72L169 154L278 67L377 163L484 75L584 160L674 89L760 153L850 66L980 170V280H0Z" fill="#506c68" opacity=".67"/>
-  <path d="M0 207Q156 122 309 185T643 179T980 179V280H0Z" fill="#3a685b"/>
-  <path d="M0 238Q170 174 330 222T650 207T980 219V280H0Z" fill="#244f4b"/>
-  {Array.from({length:23},(_,i)=>{const x=(i*89+27)%980,y=178+(i*17)%73,h=19+(i*11)%48;
-   return <g key={i} transform={'translate('+x+' '+y+')'} opacity={chapter==='highland'?.55:.92}>
-    <path d={'M0 0L-'+h*.4+' '+h+'H'+h*.4+'Z'} fill={i%2?'#1d4b44':'#326957'}/>
-    <path d={'M0 '+h*.25+'L-'+h*.32+' '+h*.77+'H'+h*.32+'Z'} fill="#356e5a"/>
-   </g>})}
-  {chapter==='highland'&&<g transform="translate(145 92)">
-    <path d="M-52 118V47H-23V25H-5V47H32V13H53V48H83V118Z" fill="#747d72" stroke="#364d49" strokeWidth="5"/>
-    <path d="M-59 118H88" stroke="#3a4a48" strokeWidth="10"/>
-    <path d="M3 118V85Q16 72 32 85V118" fill="#374e47"/>
-    <path d="M-23 24l9 -15 9 15 M31 12l11 -18 11 18" fill="#8d8a79"/>
-    <path d="M-49 47V-3" stroke="#d3bf9a" strokeWidth="3"/><path d="M-49 -4l34 11 -34 10" fill="#ad7560"/>
-   </g>}
-  {chapter==='forest'&&<g transform="translate(340 155)" fill="#859d8f" stroke="#4b6862" strokeWidth="4">
-   <path d="M-48 64l4 -63 26 -19 7 82Z"/><path d="M-4 63l-8 -92 24 -12 16 104Z"/><path d="M35 64l5 -70 24 -13 8 83Z"/>
-   <path d="M-44 64q54 18 120 -3" stroke="#c8deba" strokeDasharray="3 9" fill="none"/>
-  </g>}
-  {chapter==='witch'&&<g transform="translate(705 96)">
-   <path d="M-62 126V50L30 42L76 126Z" fill="#675747" stroke="#393e38" strokeWidth="5"/>
-   <path d="M-79 56L8 -18 94 46 79 60 8 7 -65 70Z" fill="#453d38" stroke="#293f38" strokeWidth="5"/>
-   <rect x="-39" y="69" width="27" height="28" fill="#f5c17c" stroke="#3e4036" strokeWidth="4"/>
-   <path d="M31 125V80Q50 66 65 80V125" fill="#293f39"/>
-   <path d="M51 0v-55h20v38" fill="#5e625b"/>
-   <path d="M61 -58q-30 -28 1 -47" fill="none" stroke="#d4d9c7" strokeWidth="8" opacity=".45"/>
-  </g>}
-  {[0,1,2,3].map((i)=><g key={i}>
-   <circle cx={240+i*148} cy={124+((i*31)%62)} r="29" fill="url(#journeyWisp)"/>
-   <circle cx={240+i*148} cy={124+((i*31)%62)} r="3" fill="#f1ffff"/>
-  </g>)}
-  <path d="M0 278Q205 250 400 271T800 267T980 272" stroke="#d7cba4" strokeWidth="10" fill="none" opacity=".6"/>
- </svg>;
 }
 function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
  stage:BraveStage;history:BravePuzzleState[];onMove:(dir:BraveDirection)=>void;
@@ -191,7 +147,7 @@ export default function BraveJourney({onChapterChange}:{
      </button>;
    })}
   </div>
-  <JourneyLandscape chapter={stage.chapterId}/>
+  <BraveSceneBackdrop key={stage.id} chapter={stage.chapterId} scene={currentIndex%3}/>
   <div className="brave-journey-story">
    <span className="brave-kicker">PAGE {String(currentIndex+1).padStart(2,'0')} · {stage.kind==='route'?'THE WINDING PATH':stage.kind==='archery'?'THE ARCHER’S TEST':'THE CARVED RUNES'}</span>
    <h3>{stage.title}</h3>
