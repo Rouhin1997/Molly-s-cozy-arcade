@@ -35,7 +35,7 @@ const roomTraits:Record<string,string>={
   aisle:'aisle access',screen:'best straight-on screen angle',desk:'workstation',
   experiment:'near equipment','lab-safe':'safety-protected workstation',
 };
-const casePanelTitles:Record<string,{title:string;note:string}>={
+export const casePanelTitles:Record<string,{title:string;note:string}>={
   'star-wars-4a':{title:'The Roommate Agreement',note:'A new clause for the viewing-party emergency'},
   'penny-pizza':{title:'Pizza Night Protocol',note:'Penny’s rules; Sheldon’s unsolicited amendments'},
   'dinner-wolowitz':{title:'Bernadette’s House Rules',note:'Dinner service begins when the arguing stops'},
