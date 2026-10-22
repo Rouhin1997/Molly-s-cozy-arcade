@@ -68,7 +68,7 @@ function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
  return <div className="brave-crossing-content brave-journey-playfield">
   <div className="brave-crossing-grid-frame">
    <div className="brave-crossing-grid" style={{gridTemplateColumns:'repeat('+braveWidth(level)+',minmax(0,1fr))'}} aria-hidden="true">
-    {level.rows.join('').split('').map((glyph,i)=>{
+    {level.rows.join('').split('').map((_,i)=>{
      const tile=braveTile(level,i),at=i===state.position;
      const found=tile==='W'&&state.wisps.includes(i);
      const awake=tile==='A'&&state.stones.includes(i);
