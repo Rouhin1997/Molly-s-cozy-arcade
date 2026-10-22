@@ -1,4 +1,4 @@
-import {useRef,useState,type KeyboardEvent} from 'react';
+import {useEffect,useRef,useState,type KeyboardEvent} from 'react';
 import {braveCampaignStages,braveChapterBridges,braveArcheryTargets,type BraveStage} from '../data/braveCampaign';
 import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,braveTile,nextBraveHint,type BravePuzzleState,type BraveDirection} from '../lib/bravePuzzle';
 import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,type BraveJourneySave} from '../lib/braveProgress';
@@ -22,8 +22,17 @@ function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
  const level=stage.route!;
  const state=history[history.length-1],done=braveCompleted(level,state);
  const position=bravePosition(level,state.position);
+ const mazeRef=useRef<HTMLDivElement|null>(null);
+ useEffect(()=>{
+  const frame=mazeRef.current,token=frame?.querySelector('.has-traveller');
+  if(!frame||!token)return;
+  const area=frame.getBoundingClientRect(),current=token.getBoundingClientRect();
+  if(current.left<area.left+26||current.right>area.right-26){
+   frame.scrollTo({left:frame.scrollLeft+current.left-area.left-area.width/2+current.width/2,behavior:'smooth'});
+  }
+ },[state.position]);
  return <div className="brave-crossing-content brave-journey-playfield">
-  <div className="brave-crossing-grid-frame brave-journey-maze-scroll" role="region" aria-label="Scrollable illustrated puzzle labyrinth" tabIndex={0}>
+  <div ref={mazeRef} className="brave-crossing-grid-frame brave-journey-maze-scroll" role="region" aria-label="Scrollable illustrated puzzle labyrinth" tabIndex={0}>
    <div className="brave-crossing-grid" style={{gridTemplateColumns:'repeat('+braveWidth(level)+',minmax(0,1fr))',minWidth:braveWidth(level)*30+'px'}} aria-hidden="true">
     {level.rows.join('').split('').map((_,i)=>{
      const tile=braveTile(level,i),at=i===state.position;
