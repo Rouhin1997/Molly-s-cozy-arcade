@@ -47,6 +47,7 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
  const [pulse,setPulse]=useState<'up'|'down'|null>(null);
  const [selectedMemory,setSelectedMemory]=useState<number|null>(null);
  const [wasSetback,setWasSetback]=useState(false);
+ const [finaleOverlay,setFinaleOverlay]=useState(false);
  const pulseTimer=useRef<number|null>(null);
  const audio=useRef<AudioContext|null>(null);
  const session=mode==='daily'?(progress.daily[today]??pinkDailySession(today)):progress.practice;
@@ -109,6 +110,7 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
  function advance(){
   const last=session?.index===session!.plan.length-1;
   if(last&&round?.status==='won'){
+   setFinaleOverlay(true);
    flash('up');
    if(sound)try{const ctx=audio.current??new window.AudioContext();audio.current=ctx;finaleFanfare(ctx)}catch{/* visual finale remains */}
   }
@@ -215,6 +217,20 @@ export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Pr
       <p>{pinkChallengeFor(session.plan[selectedMemory]).explanation}</p>
     </div>}
   </section>}
-  <p className="privacy-note">♡ Unofficial BLACKPINK fan tribute. Original stage art and optional synthesized tones only; no copyrighted recordings, videos or promotional photos. Release references checked against <a href="https://ygfamily.com/en/artists/blackpink/discography" target="_blank" rel="noreferrer">YG's official discography</a>. Scores stay in this browser.</p>
+  <p className="privacy-note">♡ Unofficial BLACKPINK fan tribute. Original stage art and optional synthesized concert sounds only; no commercial recordings, videos or promotional photos. Facts checked against <a href="https://ygfamily.com/en/artists/blackpink/discography" target="_blank" rel="noreferrer">YG's official discography</a> and independent reporting. Rewards and scores stay in this browser.</p>
+  {finaleOverlay&&<div className="pink-finale-overlay" role="dialog" aria-modal="true" aria-labelledby="pink-finale-title">
+    <div className="pink-finale-overlay-inner">
+      <div className="pink-finale-sparks" aria-hidden="true">{Array.from({length:35},(_,i)=><span key={i}
+       style={{'--spark-x':(i*71)%100+'%','--spark-y':(i*39)%80+'%','--spark-delay':(i%9)*.13+'s'} as CSSProperties}>✦</span>)}</div>
+      <div className="pink-finale-disco" aria-hidden="true">🖤 💗 🖤</div>
+      <span className="overline">THE GRAND ENCORE HAS ARRIVED</span>
+      <h2 id="pink-finale-title">MOLLY<br/><em>OWNED THE STAGE!</em></h2>
+      <p>Twelve memories. Twelve acts. A roaring crowd. One extraordinary BLINK.</p>
+      <div className="pink-finale-overlay-actions">
+        <button className="btn btn-primary" onClick={()=>{setFinaleOverlay(false);onWallet()}}>🎁 Open the mystery backstage gifts ↗</button>
+        <button className="btn btn-outline" onClick={()=>setFinaleOverlay(false)}>Stay and admire my concert</button>
+      </div>
+    </div>
+  </div>}
  </main>;
 }
