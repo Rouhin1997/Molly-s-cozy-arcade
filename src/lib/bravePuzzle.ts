@@ -176,3 +176,25 @@ export function analyzeBravePuzzle(level:BraveLevel):BraveAnalysis{
  if(reachable.size!==seen.size)issues.push('A reachable position has no route back to a winning state');
  return {issues,reachableStates:seen.size,statesWithRouteToExit:reachable.size,shortestSolution:solution};
 }
+
+
+/** One optional directional hint from the CURRENT position, never a stale
+ * solution calculated for the level's start. Only shown after a player asks. */
+export function nextBraveHint(level:BraveLevel,state:BravePuzzleState):BraveDirection|null{
+ if(braveCompleted(level,state))return null;
+ const queue:{state:BravePuzzleState;first:BraveDirection|null}[]=[{state,first:null}];
+ const seen=new Set([braveStateKey(state)]);
+ for(let index=0;index<queue.length;index++){
+  const item=queue[index];
+  for(const direction of braveDirections){
+   const moved=braveMove(level,item.state,direction);
+   if(!moved.moved)continue;
+   const first=item.first??direction;
+   if(braveCompleted(level,moved.state))return first;
+   const key=braveStateKey(moved.state);
+   if(!seen.has(key)){seen.add(key);queue.push({state:moved.state,first})}
+   if(queue.length>120000)return null;
+  }
+ }
+ return null;
+}
