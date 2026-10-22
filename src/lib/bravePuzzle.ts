@@ -26,7 +26,7 @@ export const bravePrototypeLevel:BraveLevel = {
  rows:[
   '###########',
   '#S..#....E#',
-  '#.#.#.###G#',
+  '#.#.#####G#',
   '#.#...#...#',
   '#.#####.#.#',
   '#..W...A..#',
