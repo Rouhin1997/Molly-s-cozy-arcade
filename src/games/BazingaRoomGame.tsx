@@ -34,6 +34,26 @@ const roomTraits:Record<string,string>={
   aisle:'aisle access',screen:'best straight-on screen angle',desk:'workstation',
   experiment:'near equipment','lab-safe':'safety-protected workstation',
 };
+const casePanelTitles:Record<string,{title:string;note:string}>={
+  'star-wars-4a':{title:'The Roommate Agreement',note:'A new clause for the viewing-party emergency'},
+  'penny-pizza':{title:'Pizza Night Protocol',note:'Penny’s rules; Sheldon’s unsolicited amendments'},
+  'dinner-wolowitz':{title:'Bernadette’s House Rules',note:'Dinner service begins when the arguing stops'},
+  'comics-release':{title:'New Comic Day Checklist',note:'A first edition deserves careful handling'},
+  'cafeteria-lunch':{title:'The Lunch Protocol',note:'Caltech’s most unnecessary seating experiment'},
+  'movie-night':{title:'The Viewing Protocol',note:'No arguments after the opening crawl'},
+  'raj-mystery':{title:'The Mystery Dossier',note:'Suspects, seats and suspicious alibis'},
+  'sick-day':{title:'The Contagion Protocol',note:'An entirely excessive quarantine strategy'},
+  'halo-marathon':{title:'Halo Night House Rules',note:'The controller allocation has been contested'},
+  'wolowitz-thanksgiving':{title:'Bernadette’s Dinner Plan',note:'Final authority rests with the host'},
+  'lab-flag-show':{title:'Fun with Flags — Call Sheet',note:'A highly specialized filming schedule'},
+  'comic-tournament':{title:'Stuart’s Tournament Rules',note:'The tournament director objects to cheating'},
+  'sheldon-spot-war':{title:'Roommate Agreement Addendum',note:'The couch clause is under formal review'},
+  'cinema-empire':{title:'The Galactic Seating Directive',note:'The Empire demands an unobstructed screen'},
+  'raj-midnight':{title:'The Midnight Mystery Dossier',note:'Witness testimony must be reconciled'},
+  'nobel-banquet':{title:'The Dinner Seating Charter',note:'Peer review before the appetizers'},
+  'caltech-quantum':{title:'The Lab Safety Protocol',note:'A scientifically defensible workstation plan'},
+  'cafeteria-summit':{title:'The Cafeteria Summit Agenda',note:'Apparently lunch requires a committee'},
+};
 const zoneNames:Record<string,string>={
   apartment:'Apartment living room',penny:'Penny’s living room',dinner:'Family dining room',
   raj:'Raj’s party apartment',caltech:'University cafeteria',
@@ -162,7 +182,7 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
       </div>
       <div className="bazinga-world-layout">
         <section className="bazinga-room-card" aria-label={`Interactive seating map: ${room.name}`}>
-          <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong><small>Original schematic · not a studio blueprint</small></div>
+          <div className="bazinga-room-top"><strong>🏠 {zoneNames[room.theme]}</strong></div>
           <div className="bazinga-map-scroll"><div className={`bazinga-room-map room-theme-${room.theme}`} role="group" aria-label="Room seats and furniture">
             <div className="room-floor-object" aria-hidden="true"/>
             {showNeighbours&&<svg className="bazinga-neighbour-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
@@ -221,9 +241,9 @@ export default function BazingaRoomGame({today,progress,setProgress,onHome,onCla
         </section>
         <section className="bazinga-world-rules" aria-label="Roommate agreement clues">
           <div className="bazinga-rule-paper-head">
-            <span>📜</span><div><h3>Roommate Agreement</h3><small>The episode-specific seating clauses</small></div>
+            <span>📜</span><div><h3>{casePanelTitles[caseData.id]?.title??'The Ground Rules'}</h3><small>{casePanelTitles[caseData.id]?.note??'Episode-specific clues'}</small></div>
           </div>
-          <div className="bazinga-rule-paper-intro">To preserve domestic peace, all {rules.length} clauses must hold at the same time.</div>
+          <div className="bazinga-rule-paper-intro">To solve this episode, all {rules.length} conditions must hold at the same time.</div>
           <ol className="bazinga-world-clues">
             {rules.map((rule,i)=>{
               const showFeedback=round.attempts>0&&round.status==='playing'&&allPlaced&&level==='easy';
