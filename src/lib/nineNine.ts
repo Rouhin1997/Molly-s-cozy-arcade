@@ -117,4 +117,13 @@ export function unlockedHeistCount(p:NineProgress):number{
   while(count<ids.length&&(p.heist[ids[count]]?.status==='won'||(p.bestAwards?.['99:'+ids[count]]??0)>0))count++;
   return count;
 }
+/** Restart an unlocked heist without touching already-awarded stars or stamps. */
+export function retryNineHeist(p:NineProgress,id:string):NineProgress {
+ const stages=['heist-one','heist-two','heist-three'];
+ const index=stages.indexOf(id);
+ if(index<0||index>unlockedHeistCount(p))return p;
+ const c=nineCases.find(c=>c.id===id);
+ if(!c)return p;
+ return {...p,heist:{...p.heist,[id]:newNineRound(c)}};
+}
 export function nineCaseById(id:string){return nineCases.find(c=>c.id===id)}
