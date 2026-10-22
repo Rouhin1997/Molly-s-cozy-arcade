@@ -1,5 +1,28 @@
 # Molly's Cozy Arcade — Development Handoff
 
+## Latest development — Phase 2J: BLACKPINK Pink Rush + Brave approved docket (22 October 2026)
+
+**Direct user approval:** Plan BOTH games as dedicated worlds. Implement **Pink Rush** immediately and place the *Brave*-inspired adventure on the **Coming Soon** shelf. The user explicitly requested **NO difficulty levels** for Pink Rush: a relaxed, joyful BLINK memory-lane challenge appealing to a knowledgeable fan but not crushingly hard. Harder detective puzzles remain appropriate to The 99 Files, not this music game.
+
+### Implemented in this release
+- **Game 06 Pink Rush!** All-original, BLACKPINK-inspired concert stage with four member-coded stylized silhouettes, four pink/purple/teal/gold beams, lightstick crowd, audience glints, riser lights, original optional synthesizer tones and personalized VIP Molly finale. **No commercial BLACKPINK recordings, music videos, actor/member photographs or copyrighted lyrics are used**.
+- A deterministic **eight-round show**: 3 track memories (20 original questions, from 2016 debut to 2026 DEADLINE), 2 three-era ordering puzzles (8 variants), 2 solo/member spotlights (12 variants for Jisoo, Jennie, Rosé and Lisa), and an encore lightstick memory sequence (8 variants). All references reviewed against official YG discography and Grammy/Yonhap solo sources; see `PINK_RUSH_GAME_AND_SOURCES.md`.
+- **No difficulty selector.** Entire game is untimed; incorrect answers gently reduce that round's score and display encouraging hints, but cannot lock the player out. Original rhythm pad is replayable as often as desired and playable muted. Round rewards max 60 (show max 480).
+- `src/data/pinkRush.ts` contains 40 fact-checked puzzles, release source links, deterministic daily/practice selection and 8 finale patterns. `src/lib/pinkRush.ts` contains save state, scoring, game-loop transitions and first-score/best-award anti-farming. `src/games/PinkRush.tsx` renders the original stage world, interactive concert puzzles, memory pattern and reward/finale UI. `src/styles.css` adds responsive concert artwork.
+- `src/App.tsx`: adds Pink Rush as **live sixth game**, shows six-game totals and user navigation, and replaces its former Coming Soon slot with **Brave: The Wisps' Trail** (Game 07) plus an interactive sneak-peek dialog.
+- `src/lib/passport.ts`: Pink Rush stars, play metrics and three new achievement stamps (VIP BLINK, Encore Superstar, Perfect Comeback). `src/games/Passport.tsx`: **export version 4** includes all six games; still imports prior v1/v2/v3 backups, leaving absent newer-game progress intact.
+- `tests/pinkRush.test.ts`: 40-question/source invariants, stable eight-round daily/practice sets, wrong answer recovery, full concert simulations, maximum scoring, no practice farming, local save/load and repeatable visual encore tests.
+- Canonical references and beta checklist: `PINK_RUSH_GAME_AND_SOURCES.md`.
+
+### Brave: approved plan ONLY
+- **The Wisps' Trail** is **Coming Soon**, not implemented. User approved six-chapter Scottish Highlands magical adventure with pathfinding maps, archery challenges and tapestry finale. Plan specifies **18 handcrafted levels**, solver-tested routes, accessibility and original illustrated artwork. Docket: **`BRAVE_THE_WISPS_TRAIL_PLAN.md`**. Do not begin code before a later user green light.
+- The November 13 Birthday Quest and genuinely secure coupon wallet remain separate upcoming priorities; respect that timeline.
+
+### Next session
+1. Invite Molly/owner and other BLINK beta testers to play Pink Rush from the live arcade. Test song clue fun, chronological release ambiguity, accessibility of the lightstick replay and whether the finale is worth the buildup. Adjust for fan satisfaction while preserving no-timer/single-setting design.
+2. Verify Brave preview works from the shelf but hasn't been accidentally published as a playable game. Discuss Brave implementation scope only when user wishes.
+3. Keep previous saved scores, all five existing game rules and Passport v1-v4 imports intact. Continue birthday planning.
+
 ## Latest development — Phase 2I: evidence-first Nine-Nine casebook and Holt likeness
 
 **User's play-test finding:** A supposedly Clever case, *The Interrogation Clock*, exposed its culprit before the third evidence chain; other mysteries suffered from broad "three people have alibis" shortcuts. Player explicitly requested that all evidence links are essential for the complete **culprit + method** finding, genuine suspect ambiguity through Clever/Expert until the last clue, and show-accurate character portraits (starting with Holt). User specifically does **not** want artificial difficulty from hiding investigation question text.
