@@ -1139,7 +1139,6 @@
 .brave-world-heading .brave-kicker,.brave-keeper-panel .brave-kicker{color:#568078}
 .brave-world-heading h2{font-size:clamp(26px,3vw,36px);line-height:1.1;margin:9px 0;color:#345449}
 .brave-world-heading p{font-size:13px;line-height:1.65;margin:6px 0 0;color:#657c6d;max-width:680px}
-.brave-world-stamp{font:900 10px/1.7 'DM Sans',sans-serif;letter-spacing:.09em;color:#5d7970;border:2px double #a8b6a0;border-radius:10px;padding:12px 15px;white-space:nowrap;text-align:center;transform:rotate(3deg);background:#fbf2d9}
 .brave-world-layout{display:grid;grid-template-columns:minmax(0,1.23fr) minmax(320px,.77fr);align-items:start;gap:16px}
 .brave-map-view{position:relative;min-width:0;overflow:hidden;border-radius:16px;border:5px double #d4be92;aspect-ratio:1100/600;background:#2b5b56;box-shadow:0 10px 27px #20463839,inset 0 0 22px #072524;isolation:isolate}
 .brave-map-art{display:block;width:100%;height:100%;object-fit:cover}
@@ -1174,10 +1173,8 @@
 .brave-scroll-levels>div{display:flex;align-items:center;gap:11px;min-height:37px;border-top:1px dashed #d4c3a6;font-size:12px;color:#435d51}
 .brave-scroll-levels>div>span{font-family:Georgia,serif;font-size:16px;color:#a1896d;font-style:italic}
 .brave-scroll-levels strong{flex:1;font-weight:600}
-.brave-scroll-levels small{font:700 9px 'DM Sans',sans-serif;color:#9e8d77}
 .brave-snapshot-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
 .brave-snapshot-tags span{font:700 9px 'DM Sans',sans-serif;color:#55776b;border:1px solid #b1c1a9;padding:5px 8px;border-radius:25px;background:#e4e8cc}
-.brave-scroll-footer{font-size:10px;line-height:1.4;text-align:center;color:#97836a;margin:18px 0 0;font-style:italic}
 .brave-keeper-panel{display:flex;align-items:center;gap:20px;margin:20px 9px;padding:25px;border:2px solid #bbba9d;border-radius:17px;background:linear-gradient(105deg,#dbe9d5,#fbefd5);box-shadow:0 8px 19px #4e74451b}
 .brave-keeper-symbol{font-size:53px;flex:none;color:#72a8a1;text-shadow:0 0 12px #effffb}
 .brave-keeper-panel>div:nth-child(2){flex:1}
@@ -1269,3 +1266,89 @@
  .brave-chapter-shortcuts button{padding:8px 0;font-size:8px}
  .brave-chapter-shortcuts button>span{font-size:17px}
 }
+
+
+/* ─── BRAVE MODULE 02 · THE FIRST CROSSING ───
+   Gameplay sits inside the illustrated parchment, never over the map pins. */
+.brave-crossing{
+ margin:22px 9px 23px;padding:25px 26px 20px;border:5px double #b7aa87;border-radius:19px;
+ background:radial-gradient(circle at 5% 3%,#fff4d8,transparent 40%),
+  linear-gradient(135deg,#f3e6c5,#dce8d0 74%,#cee0ca);
+ box-shadow:0 12px 26px #294e3c2b;
+}
+.brave-crossing:focus-visible{outline:3px solid #419c9b;outline-offset:4px}
+.brave-crossing .brave-kicker{color:#5b837a}
+.brave-crossing-heading h2{font-size:clamp(27px,3vw,40px);margin:7px 0 11px;color:#34594d;line-height:1.13}
+.brave-crossing-heading p{font-size:14px;line-height:1.75;color:#526f60;max-width:800px;margin:0 0 22px}
+.brave-crossing-content{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(230px,.9fr);align-items:start;gap:23px}
+.brave-crossing-grid-frame{
+ min-width:0;padding:12px;border:4px double #b6c7af;border-radius:16px;
+ background:linear-gradient(145deg,#254d49,#376f5a);box-shadow:inset 0 0 32px #122f31a8,0 7px 20px #315b4a36;
+}
+.brave-crossing-grid{display:grid;gap:3px;max-width:660px;margin:0 auto}
+.brave-crossing-tile{
+ position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+ border-radius:5px;overflow:hidden;font-size:clamp(13px,2.2vw,26px);
+ background:radial-gradient(circle at 18% 30%,#658b71,#406c5e 80%);
+ border:1px solid #93ae8a55;
+}
+.brave-crossing-tile.is-wall{
+ background:linear-gradient(130deg,#677c72 0 29%,#415b57 30% 70%,#304e4b 70%);
+ border:1px solid #7e968b;box-shadow:inset 0 2px 0 #a3ada076,inset 3px 0 0 #263f3a6e;
+}
+.brave-crossing-tile.is-path:after{
+ content:'·';color:#d1e5b77d;font:22px Georgia,serif;position:absolute;bottom:0;right:17%;
+}
+.brave-crossing-tile.is-wisp{background:radial-gradient(circle,#437b76,#274f51)}
+.brave-crossing-tile.is-stone{background:radial-gradient(circle,#6b877b,#425d57);border:2px solid #b9bf9a}
+.brave-crossing-tile.is-gate-closed{background:linear-gradient(135deg,#8e7d67,#4b554f);border:2px solid #b0a087}
+.brave-crossing-tile.is-gate-open{background:radial-gradient(circle,#9dcfbc,#4c8b7c)}
+.brave-crossing-tile.is-exit{background:radial-gradient(circle,#c3d5ad,#658e78);border:2px solid #e6deb1}
+.brave-crossing-light{font-size:1.65em;color:#d0ffff;text-shadow:0 0 8px #c0faff,0 0 17px #6df8ff;animation:brave-flicker 3s ease-in-out infinite}
+.brave-crossing-rune{font-size:1.15em;color:#d5d3b0;text-shadow:0 1px 2px #1e3d32}
+.brave-crossing-rune.is-lit{color:#d5ffff;text-shadow:0 0 8px #b8ffff,0 0 16px #83e8f7}
+.brave-crossing-gate{font-size:1.35em;color:#f4dbc0}
+.brave-crossing-exit{color:#f9f6c8;text-shadow:0 0 12px #fffbca}
+.brave-crossing-traveller{
+ z-index:2;display:grid;place-items:center;border-radius:50%;width:83%;height:83%;
+ font-size:clamp(14px,2.3vw,25px);background:#ead9ad;border:2px solid #a76b47;box-shadow:0 2px 9px #19312b8b;
+}
+.brave-crossing-side{display:flex;flex-direction:column;gap:12px}
+.brave-crossing-status{border:1px solid #b6baa0;background:#fff8e1b8;border-radius:12px;padding:15px}
+.brave-crossing-status>span{font:900 10px 'DM Sans',sans-serif;letter-spacing:.13em;color:#648779}
+.brave-crossing-status>p{font:italic 15px/1.55 Georgia,serif;color:#456154;margin:9px 0 12px;min-height:68px}
+.brave-crossing-tally{display:flex;flex-wrap:wrap;gap:7px}
+.brave-crossing-tally>span{font:800 10px 'DM Sans',sans-serif;color:#436b5f;padding:7px 9px;border-radius:20px;background:#d8e7cd;border:1px solid #b3c7b2}
+.brave-crossing-tally .brave-crossing-coordinate{font-weight:500;background:#f1e8d1}
+.brave-crossing-dpad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,45px);gap:6px;width:177px;align-self:center}
+.brave-crossing-dpad button{
+ border-radius:10px;border:1px solid #7d9f8f;background:linear-gradient(#f9f4d8,#d1e4cd);
+ color:#3b675d;font-size:26px;box-shadow:0 3px 0 #90a88d;touch-action:manipulation;
+}
+.brave-crossing-dpad button:hover:enabled{background:#fcf8db}
+.brave-crossing-dpad button:active:enabled{transform:translateY(2px);box-shadow:none}
+.brave-crossing-dpad button:disabled,.brave-crossing-actions button:disabled{opacity:.5;cursor:default}
+.brave-crossing-up{grid-area:1/2}.brave-crossing-left{grid-area:2/1}
+.brave-crossing-down{grid-area:2/2}.brave-crossing-right{grid-area:2/3}
+.brave-crossing-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.brave-crossing-actions button{border:1px solid #a7bba8;color:#456b60;background:#f9f3da;border-radius:22px;padding:8px 12px;font:700 12px Georgia,serif}
+.brave-crossing-finale{text-align:center;font:italic 15px Georgia,serif;color:#2c7e71;margin:3px 0}
+.brave-crossing-key{font-size:11px;line-height:1.6;color:#638275;text-align:center;margin:20px 0 2px}
+@media(max-width:920px){
+ .brave-crossing-content{grid-template-columns:1fr}
+ .brave-crossing-side{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+ .brave-crossing-status{grid-row:span 3}
+}
+@media(max-width:670px){
+ .brave-crossing{padding:18px 12px;margin:15px 0}
+ .brave-crossing-heading p{font-size:12px;margin-bottom:15px}
+ .brave-crossing-grid-frame{padding:5px;border-width:3px}
+ .brave-crossing-grid{gap:2px}
+ .brave-crossing-tile{border-radius:3px}
+ .brave-crossing-traveller{font-size:14px}
+ .brave-crossing-side{display:flex}
+ .brave-crossing-status{width:100%}
+ .brave-crossing-status>p{min-height:0}
+ .brave-crossing-key{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){.brave-crossing-light{animation:none}}
