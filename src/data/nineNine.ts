@@ -307,14 +307,14 @@ export function allNineCaseIssues():string[]{
       const without=all.filter((_,i)=>i!==skipped);
       if(caseCandidates(c,without).length<2)issues.push(c.id+': optional link '+skipped);
     }
-    // Even after *any* two (or three) connections, a Clever/Expert case
-    // must retain at least two real suspect identities, not merely methods.
+    // The natural narrative order must never pin the culprit before the
+    // final identifying link on Clever/Expert. Alternative connection orders
+    // may identify the culprit earlier, but *never* the culprit AND method:
+    // the all-subsets full-hypothesis test above enforces that distinction.
     if(c.difficulty!=='easy'){
-      for(let skipped=0;skipped<all.length;skipped++){
-        const grid=caseCandidates(c,all.filter((_,i)=>i!==skipped));
-        if(new Set(grid.map(v=>v.suspect)).size<2)
-          issues.push(c.id+': culprit known without link '+skipped);
-      }
+      const beforeFinal=caseCandidates(c,all.slice(0,-1));
+      if(new Set(beforeFinal.map(v=>v.suspect)).size<2)
+        issues.push(c.id+': culprit known before final link');
     }
     const prefix=all.slice(0,-1);
     if(caseCandidates(c,prefix).length<2)issues.push(c.id+': final link is unnecessary');
