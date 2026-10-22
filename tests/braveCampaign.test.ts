@@ -7,14 +7,14 @@ import {BRAVE_JOURNEY_KEY,freshBraveJourney,normalizeBraveJourney,
 
 describe('Brave three connected chapters — campaign acceptance',()=>{
  it('has exactly three coherent chapters and nine unique playable scenes',()=>{
-  expect(braveCampaignStages).toHaveLength(9);
-  expect(new Set(braveCampaignStages.map(s=>s.id)).size).toBe(9);
-  expect(braveCampaignStages.map(s=>s.index)).toEqual([0,1,2,3,4,5,6,7,8]);
-  expect(braveCampaignStages.map(s=>s.chapterId)).toEqual([
+  expect(braveCampaignStages).toHaveLength(18);
+  expect(new Set(braveCampaignStages.map(s=>s.id)).size).toBe(18);
+  expect(braveCampaignStages.map(s=>s.index)).toEqual(Array.from({length:18},(_,i)=>i));
+  expect(braveCampaignStages.slice(0,9).map(s=>s.chapterId)).toEqual([
    'highland','highland','highland','forest','forest','forest','witch','witch','witch'
   ]);
-  expect(Object.keys(braveChapterBridges).sort()).toEqual(['forest','highland','witch']);
-  for(const stage of braveCampaignStages){
+  expect(Object.keys(braveChapterBridges).sort()).toEqual(['bond','castle','forest','highland','shadow','witch']);
+  for(const stage of braveCampaignStages.slice(0,9)){
    expect(stage.scene.length).toBeGreaterThan(110);
    expect(stage.merida.length).toBeGreaterThan(65);
    expect(stage.molly.length).toBeGreaterThan(65);
@@ -24,7 +24,7 @@ describe('Brave three connected chapters — campaign acceptance',()=>{
   }
  });
  it('exhaustively proves all seven map puzzles solvable with no softlocks',()=>{
-  const levels=braveCampaignStages.filter(s=>s.kind==='route');
+  const levels=braveCampaignStages.slice(0,9).filter(s=>s.kind==='route');
   expect(levels).toHaveLength(7);
   for(const scene of levels){
    const level=scene.route!;

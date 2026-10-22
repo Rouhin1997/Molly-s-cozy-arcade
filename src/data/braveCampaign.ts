@@ -2,9 +2,10 @@
  * Every scene is original writing. Later chapters remain a story atlas, not fake playable content.
  */
 import type {BraveLevel} from '../lib/bravePuzzle';
+import {braveFinaleStages} from '../lib/braveFinaleCampaign';
 
-export type BraveChapterId='highland'|'forest'|'witch';
-export type BraveStageKind='route'|'archery'|'runes';
+export type BraveChapterId='highland'|'forest'|'witch'|'castle'|'shadow'|'bond';
+export type BraveStageKind='route'|'archery'|'runes'|'stealth'|'circle'|'tapestry';
 export type BraveStage={
  id:string;chapterId:BraveChapterId;index:number;title:string;kind:BraveStageKind;
  scene:string;merida:string;molly:string;ending:string;hint:string;
@@ -25,10 +26,25 @@ export const braveChapterBridges:Record<BraveChapterId,{opening:string;closing:s
   opening:'The Carver’s Cottage smells of pine shavings, tea and trouble. Wooden bears watch from every shelf. A note waits beside an unfinished spool of golden thread.',
   closing:'The spindle turns once, all by itself. On the table a new stitch appears: the outline of DunBroch’s west tower. Merida looks back toward home. “The wisps were not leading us away,” she whispers. “They were trying to bring us back before something happened.”',
   next:'The next page waits in the moonlit halls of DunBroch.'
+ },
+ castle:{
+  opening:'DunBroch is quiet beneath the moon, but a golden thread glows on the old west stair. The triplets are awake. Naturally.',
+  closing:'Queen Elinor smooths the broken tapestry. “These threads were meant to keep our roads together,” she says. “Something has twisted them toward an old, terrible story.” She points across the moor.',
+  next:'Beyond the castle walls, thunder rolls over the Forgotten Stones.'
+ },
+ shadow:{
+  opening:'Clouds gather where the Highlands remember Mor’du. A shadow is not a resurrection, but the past can still teach a dangerous lesson.',
+  closing:'A small untouched fragment survives beneath the stones. Merida wraps it beside the golden spindle. The last wisp leads away from the storm, toward an oak at the heart of the Highlands.',
+  next:'The sky begins to brighten. The living loom waits beneath a tree of ancient roots.'
+ },
+ bond:{
+  opening:'Dawn reaches the Heart of the Highlands. Queen Elinor’s teaching and Merida’s courage finally belong to the same story.',
+  closing:'The old thread is mended, but not to constrain a single road. Paths now meet because people choose them. Molly has given the Highlands back their freedom.',
+  next:'The last wisp settles near Molly. The adventure is complete, but the storybook can always be opened again.'
  }
 };
 const route=(id:string,title:string,rows:string[]):BraveLevel=>({id,title,rows});
-export const braveCampaignStages:readonly BraveStage[]=[
+const braveOpeningStages:readonly BraveStage[]=[
  {
  id:'courtyard',chapterId:'highland',index:0,title:'The Courtyard Trial',kind:'route',
  scene:'A blue wisp slips between the archery banners as the clan cheers for the morning games. It is heading straight toward a little-used passage in the courtyard wall.',
@@ -176,6 +192,11 @@ export const braveCampaignStages:readonly BraveStage[]=[
  '###################'])
  }
 ];
+export const braveCampaignStages:readonly BraveStage[]=[
+ ...braveOpeningStages,
+ ...braveFinaleStages
+];
+
 export const braveArcheryTargets=[
  {name:'The Near Ribbon',wind:1,crosswind:4,distance:42,height:3.2,range:'near' as const,description:'The red ribbon snaps east above the near target.'},
  {name:'The Far Pennant',wind:-1,crosswind:-6,distance:68,height:4.2,range:'far' as const,description:'The blue pennant streams west across the long clearing.'},

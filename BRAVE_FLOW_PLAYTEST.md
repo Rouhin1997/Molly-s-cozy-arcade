@@ -1,5 +1,14 @@
 # Brave: The Wisps' Trail — Three-Chapter Story Flow Playtest
 
+## Phase 3E — Full Brave Six-Chapter Adventure (22 October 2026)
+
+**Owner greenlight:** Chapters IV–VI are approved for implementation following the Chapters I–III quality overhaul. The owner **still rejects the current synthesized music as final-quality**, so audio is explicitly unfinished even after the complete game is playable.
+
+**Implemented:** The second act adds *A Bear in the Castle* (Midnight Escape, Triple Trouble, Secret Passage), *Mor’du's Shadow* (Tracks in the Mist, Broken Circle, Shadow of the Bear) and *Mend the Bond* (Last Wisp, Threads of Fate, A Brave Heart). The campaign now contains **six connected chapters and 18 actual playable stages**. A predictable castle guard and triplet distraction, a five-stone compass puzzle and real 3×3/4×4 embroidered tile-rotation finale complement five new complex, exhaustively validated labyrinths. Distinct original chapter art now covers six settings, and the narrative concludes with Merida, Elinor, Molly and the wisps. Previously saved Chapter III progress remains compatible. No film soundtrack or recorded Pixar assets were used.
+
+**Important limitations:** The owner hasn't yet played Chapters IV–VI; current Celtic-inspired synthesized audio remains a known unsatisfied requirement. Brave Passport/star rewards, professionally produced original music, final mobile UX and editorial QA remain a separate polish gate. The existing arcade games and coupons are unchanged. See **BRAVE_FINALE_PLAYTEST.md** for exact testing and code notes.
+
+
 ## Phase 3D — Chapters I–III adventure-quality overhaul (22 October 2026)
 
 **Owner review and approval:** Three-chapter story flow is promising, but simple mazes, decorative archery targets, fatiguing "ting ting" music and visually similar environments must be overhauled *before Chapter IV*. This revision preserves the established story and focuses exclusively on the nine playable scenes of Chapters I–III. Chapter IV remains out of scope until the owner plays and approves this revision.

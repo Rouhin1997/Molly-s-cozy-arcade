@@ -5,13 +5,18 @@ import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,t
 import BraveRuneWorkshop from './BraveRuneWorkshop';
 import BraveArcheryRange from './BraveArcheryRange';
 import BraveSceneBackdrop from './BraveSceneBackdrop';
+import BraveFinaleBackdrop from './BraveFinaleBackdrop';
+import BraveCastleSneak from './BraveCastleSneak';
+import BraveStoneCircle from './BraveStoneCircle';
+import BraveTapestryWeave from './BraveTapestryWeave';
 
-const roman:Record<string,string>={highland:'I',forest:'II',witch:'III'};
+const roman:Record<string,string>={highland:'I',forest:'II',witch:'III',castle:'IV',shadow:'V',bond:'VI'};
 const directions:Record<string,BraveDirection>={
  ArrowUp:'up',ArrowRight:'right',ArrowDown:'down',ArrowLeft:'left',
  w:'up',a:'left',s:'down',d:'right'
 };
-const chapterName:Record<string,string>={highland:'The Highland Games',forest:'Follow the Wisps',witch:"The Witch’s Workshop"};
+const chapterName:Record<string,string>={highland:'The Highland Games',forest:'Follow the Wisps',witch:"The Witch’s Workshop",
+ castle:'A Bear in the Castle',shadow:"Mor’du’s Shadow",bond:'Mend the Bond'};
 function openingHistory(stage:BraveStage):BravePuzzleState[]{
  return stage.route?[braveInitialState(stage.route)]:[];
 }
@@ -137,21 +142,25 @@ export default function BraveJourney({onChapterChange}:{
     <h2>{chapterName[stage.chapterId]}</h2>
     <p>{currentIndex%3===0?chapter.opening:stage.scene}</p>
    </div>
-   <span className="brave-journey-counter">{currentIndex+1} <small>/ 09</small></span>
+   <span className="brave-journey-counter">{currentIndex+1} <small>/ 18</small></span>
   </div>
   {progress.completed.length>0&&<div className="brave-journey-review"><button className="brave-journey-replay-start" onClick={()=>go(0)}>↶ Begin again at Chapter I</button><span>The wisps remember every page you have unlocked.</span></div>}
   <div className="brave-journey-chapters" role="navigation" aria-label="Adventure chapters">
-   {(['highland','forest','witch'] as const).map((id,i)=>{
+   {(['highland','forest','witch','castle','shadow','bond'] as const).map((id,i)=>{
     const first=i*3,unlocked=first<=progress.completed.length;
     return <button key={id} onClick={()=>go(first)} disabled={!unlocked}
      className={stage.chapterId===id?'is-active':''} aria-current={stage.chapterId===id?'step':undefined}>
-      <span>{i===0?'🏹':i===1?'✧':'❦'}</span> Chapter {roman[id]} <small>{unlocked?(stage.chapterId===id?'Reading':'Open'):'✧'}</small>
+      <span>{['🏹','✧','❦','🐻','🌑','🧵'][i]}</span> Chapter {roman[id]} <small>{unlocked?(stage.chapterId===id?'Reading':'Open'):'✧'}</small>
      </button>;
    })}
   </div>
-  <BraveSceneBackdrop key={stage.id} chapter={stage.chapterId} scene={currentIndex%3}/>
+  {currentIndex<9
+    ?<BraveSceneBackdrop key={stage.id} chapter={stage.chapterId} scene={currentIndex%3}/>
+    :<BraveFinaleBackdrop key={stage.id} chapter={stage.chapterId as 'castle'|'shadow'|'bond'} scene={currentIndex%3}/>}
+
   <div className="brave-journey-story">
-   <span className="brave-kicker">PAGE {String(currentIndex+1).padStart(2,'0')} · {stage.kind==='route'?'THE WINDING PATH':stage.kind==='archery'?'THE ARCHER’S TEST':'THE CARVED RUNES'}</span>
+   <span className="brave-kicker">PAGE {String(currentIndex+1).padStart(2,'0')} · {{route:'THE WINDING PATH',archery:'THE ARCHER’S TEST',runes:'THE CARVED RUNES',
+    stealth:'THE MOONLIT GALLERY',circle:'THE STANDING STONES',tapestry:'THREADS OF FATE'}[stage.kind]}</span>
    <h3>{stage.title}</h3>
    <p>{stage.scene}</p>
    <div className="brave-journey-voices">
@@ -183,6 +192,10 @@ export default function BraveJourney({onChapterChange}:{
     }}/>
    </div>}
    {stage.kind==='runes'&&<BraveRuneWorkshop onSolve={()=>{setNotice('The spindle begins to spin a golden thread.');markFinished()}}/>}
+   {stage.kind==='stealth'&&<BraveCastleSneak onComplete={markFinished}/>}
+   {stage.kind==='circle'&&<BraveStoneCircle onComplete={markFinished}/>}
+   {stage.kind==='tapestry'&&<BraveTapestryWeave key={stage.id} size={currentIndex===16?3:4} onComplete={markFinished}/>}
+
    {stage.kind==='route'&&<div className="brave-journey-hint-panel">
     <button className="brave-journey-hint-toggle" onClick={()=>setHintLevel(v=>Math.min(v+1,3))}>
      {hintLevel===0?'✧ Ask the wisp for a hint':hintLevel===3?'✧ The wisp knows the way':'✧ Ask for a clearer clue'}
@@ -205,7 +218,7 @@ export default function BraveJourney({onChapterChange}:{
   </div>}
   {finished&&<div className="brave-journey-end" role="status">
    <div className="brave-journey-end-sigil">✦</div>
-   <span className="brave-kicker">ANOTHER PAGE TURNED</span>
+   <span className="brave-kicker">{isLast?'THE KEEPER’S PROMISE FULFILLED':'ANOTHER PAGE TURNED'}</span>
    <h3>{stage.title}</h3>
    <p>{stage.ending}</p>
    {currentIndex%3===2&&<div className="brave-journey-bridge">
@@ -214,7 +227,12 @@ export default function BraveJourney({onChapterChange}:{
     <p><em>{chapter.next}</em></p>
    </div>}
    {isLast
-    ? <p className="brave-journey-to-be-continued">The wisps have one more story to tell. Beyond this page, DunBroch waits under the moon.</p>
+    ? <div className="brave-final-victory">
+        <span>✧ ✦ ✧</span>
+        <h4>The Highlands remember Molly</h4>
+        <p>Six chapters. One promise. The wisps are free to find their own paths again, and a new golden thread now marks yours among them.</p>
+        <button className="brave-journey-main-action" onClick={()=>go(0)}>✧ Open the storybook again</button>
+      </div>
     : <button className="brave-journey-main-action" onClick={()=>go(currentIndex+1)}>
        {currentIndex%3===2?'Turn to the next chapter →':'Turn the page →'}
       </button>}
