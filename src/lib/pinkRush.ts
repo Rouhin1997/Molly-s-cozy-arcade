@@ -93,9 +93,13 @@ export function applyPinkRound(p:PinkProgress,mode:'daily'|'practice',date:strin
  const revised={...session,rounds};
  let stats=p.stats,bestAwards=p.bestAwards;
  if(before.status==='playing'&&after.status==='won'){
-   const award=bestAward(bestAwards,awardId(session,id),after.score);
+   const key=awardId(session,id);
+   const firstCompletion=(bestAwards[key]??0)===0;
+   const award=bestAward(bestAwards,key,after.score);
    bestAwards=award.awards;
-   stats={...stats,stars:stats.stars+award.delta,roundsSolved:stats.roundsSolved+(award.delta>0?1:0)};
+   // Improved personal bests grant extra stars but not a second solved stamp.
+   stats={...stats,stars:stats.stars+award.delta,
+    roundsSolved:stats.roundsSolved+(firstCompletion?1:0)};
  }
  return {...p,stats,bestAwards,...(mode==='daily'?{daily:{...p.daily,[date]:revised}}:{practice:revised})};
 }
