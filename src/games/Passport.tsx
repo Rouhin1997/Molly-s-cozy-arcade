@@ -5,7 +5,7 @@ import type { ConnectionProgress } from '../lib/connections';
 import type { ToonProgress } from '../lib/toon';
 import type { BazingaProgress } from '../lib/bazinga';
 import { normalizeNineProgress, type NineProgress } from '../lib/nineNine';
-import type { PinkProgress } from '../lib/pinkRush';
+import {couponGifts,reconcilePinkImport,type PinkProgress} from '../lib/pinkRush';
 
 type Props = {
   guess: Progress;
@@ -21,9 +21,10 @@ type Props = {
   setNine: Dispatch<SetStateAction<NineProgress>>;
   setPink: Dispatch<SetStateAction<PinkProgress>>;
   onHome: () => void;
+  onWallet: () => void;
 };
 
-export default function Passport({ guess, connections, toon, bazinga, nine, pink, setGuess, setConnections, setToon, setBazinga, setNine, setPink, onHome }: Props) {
+export default function Passport({ guess, connections, toon, bazinga, nine, pink, setGuess, setConnections, setToon, setBazinga, setNine, setPink, onHome, onWallet }: Props) {
   const passport = passportSummary({ guess, connections, toon, bazinga, nine, pink });
   const inputRef = useRef<HTMLInputElement>(null);
   const [feedback, setFeedback] = useState('');
@@ -76,7 +77,7 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       setToon(t);
       if (b) setBazinga(b);
       if (n) setNine(normalizeNineProgress(n));
-      if (pr) setPink(pr);
+      if (pr) setPink(previous=>reconcilePinkImport(pr,previous));
       setFeedback(pr ? 'All six arcade games restored! Stars and stamps are back.' : 'Older Passport restored! Games not included in that backup were left unchanged.');
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : 'Unable to read that backup file.');
@@ -94,6 +95,18 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
         <div><span>🎟️</span><strong>{passport.completion} / {passport.stamps.length}</strong><small>Stamps earned</small></div>
         <div><span>🔥</span><strong>{guess.stats.bestStreak}</strong><small>Best daily streak</small></div>
       </div>
+    </section>
+    <section className={'passport-coupon-keepsake '+(pink.coupon?.status==='redeemed'?'is-forever':'')}>
+      <div><span className="overline">MOLLY’S BACKSTAGE WALLET</span><h2>🎟️ A promise from Rouhin</h2>
+      {pink.coupon?.status==='redeemed'&&pink.coupon.chosen?<>
+        <div className="passport-forever-badge">💗 REDEEMED • FOREVER YOURS</div>
+        <h3>{couponGifts[pink.coupon.chosen].icon} {couponGifts[pink.coupon.chosen].title}</h3>
+        <p>{couponGifts[pink.coupon.chosen].description}</p>
+        <small>Redeemed {pink.coupon.redeemedAt?new Date(pink.coupon.redeemedAt).toLocaleDateString():''} • a permanent Pink Rush memory in this Passport.</small>
+      </>:<p>{pink.coupon?.status==='active'?'Your chosen backstage coupon is waiting in Molly’s wallet.':
+        pink.coupon?.status==='ready'?'You’ve earned a mystery prize! Three secret cards are waiting for your choice.':
+        'Clear a Pink Rush show to open three secret gift cards, chosen especially for Molly.'}</p>}</div>
+      <button className="btn btn-primary" onClick={onWallet}>{pink.coupon?.status==='redeemed'?'View your keepsake':'Open your coupon wallet'} ↗</button>
     </section>
     <section className="passport-section">
       <div className="passport-section-heading"><div><span className="overline">COLLECT THE MEMORIES</span><h2>Stamp collection</h2></div><span className="passport-count">{passport.completion} earned</span></div>
@@ -126,6 +139,6 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       </div>
       {feedback && <p role="status" className="passport-backup-feedback">{feedback}</p>}
     </section>
-    <p className="privacy-note">✧ Achievements reflect your real game scores. Birthday coupons will join the passport in a future update!</p>
+    <p className="privacy-note">✧ Stars and coupons are stored locally in this browser. A backup protects keepsakes; cloud-enforced redemption will need a future private account.</p>
   </main>;
 }

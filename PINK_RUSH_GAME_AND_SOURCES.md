@@ -1,6 +1,28 @@
 # Pink Rush! — BLACKPINK Memory-Lane Concert
 **Game 06 · Phase 2J · Implemented, awaiting browser play-test**
 
+## Phase 2K — Black-and-pink BLINK fan festival, original concert audio and reward wallet
+
+The user play-tested Phase 2J and authorized a substantially expanded, more BLACKPINK-specific game. **New concerts are 12 acts**, not eight. The old no-stakes disco quiz has become a rewarding concert journey: two group tracks, one release-order puzzle, three solo/members, **five fan-life questions**, and a rhythm encore. Earlier eight-act saves still work. There is still **one welcoming difficulty setting**, and guessing wrong switches off a light and takes the player one act back (with the previously cleared round replayed before resuming). No timers.
+
+**Verified public-fact categories (30 new cards, ~70 total):**
+- Pets: Jisoo’s Dalgom; Jennie’s Kuma; Rosé’s adopted Hank; Lisa’s all-L-named cats and Love.
+- Fashion ambassadors: Jisoo/Dior, Jennie/Chanel, Rosé/Saint Laurent, Lisa/Louis Vuitton, Bvlgari and former Celine work.
+- Live performances: BLACKPINK's 2019 Coachella stage and 2023 headliner milestone, JENNIE and LISA’s separate 2025 festival sets.
+- Public roles: JENNIE appeared in The Idol; LISA acted in season three of The White Lotus.
+- FIFA: LISA joined Anitta and Rema for the World Cup 2026 album track Goals.
+- Fan culture: LISA’s connection to the Labubu bag-charm trend and POP MART blind boxes.
+
+**Source URLs:** [FIFA Goals release](https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/lisa-anitta-rema-debut-new-single-for-world-cup-album); [Yonhap 2023 Coachella](https://en.yna.co.kr/view/AEN20230417002100315); [CNA 2025 solo stages](https://cnalifestyle.channelnewsasia.com/entertainment/blackpink-jennie-lisa-rose-coachella-463271); [CNA luxury fashion](https://cnaluxury.channelnewsasia.com/obsessions/blackpink-lisa-louis-vuitton-ambassador-246046); [Tatler pets](https://www.tatlerasia.com/lifestyle/entertainment/pets-of-the-blackpink-girls); [Reuters acting](https://www.reuters.com/lifestyle/two-members-k-pop-group-blackpink-go-solo-coachella-festival-2025-04-14/); [License Global Labubu](https://www.licenseglobal.com/trends-insights/the-meteoric-rise-of-labubu). Trivia source IDs are recorded alongside every question in `src/data/pinkRushFan.ts`. Avoid unverified favourite foods/private habits.
+
+**Visual/audio:** Original black/hot-pink stage and fan audience, animated reactive spots; desktop side-by-side game and stage; phone sticky compact stage above choices, so pattern and buttons remain visible concurrently. `src/lib/pinkConcertAudio.ts` creates original crowd-like synth sounds and a crescendo without external samples or copyrighted music. Muting is supported, and the outcome stays clear visually.
+
+**Wallet state machine (local only):**
+`locked --full show--> ready --choose 1 of 3 hidden cards--> active --Redeem--> redeemed`.
+Before redemption, `active --surrender--> seeking --complete fresh full show--> ready`. Redeemed is a terminal state; replays do not award more vouchers. After choosing, all three card fronts become visible with the chosen one highlighted. Gift options: choreo lesson to Rouhin, song to be sung by Rouhin, or a sixty-second Lisa praise speech by Rouhin. The Wallet has a Redeem button and direct play-again path; redeemed gift becomes a permanent in-browser Passport record. Separate localStorage redemption marker protects against old import rollback **within the same browser**. This is **not server-enforced anti-tamper security**; clearing or changing browser storage can defeat it. Truly persistent cross-device gifts require authenticated server storage/RLS.
+
+**Tests:** `tests/pinkRush.test.ts` covers the full 12-act performance, 30 new fan facts, all question mechanics, light-off rollback/recovery, no duplicate practice stars, all blind-card/claim/surrender/redeem transitions, redeemed marker restoration, and backwards-compatible old saves. See DEVELOPMENT_HANDOFF.md.
+
 Pink Rush is a cozy, upbeat BLACKPINK fan homage made especially for Molly. **There are no difficulty levels.** A BLINK should be rewarded for remembering memorable songs and eras, without needing to memorize chart minutiae or face countdown timers.
 
 ## Eight-round concert loop
