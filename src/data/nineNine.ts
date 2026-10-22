@@ -1,4 +1,5 @@
 import type { Difficulty } from '../lib/passport';
+import { auditedExhibitNotes } from './nineNineAudit';
 
 /** Original, fictional case files inspired by the setting and running gags of
  * Brooklyn Nine-Nine. NOT reproductions of aired plots or official dialogue. */
@@ -50,8 +51,16 @@ function unpackLink(raw:string,i:number,s:Seed):Deduction {
   return {id:'link'+i,pair:['e'+a,'e'+b],prompt,conclusion,...filters[i]};
 }
 function makeCase(s:Seed):NineCase {
-  return {...s,track:s.track??'detective',evidence:s.evidence.map(unpackEvidence),
-    deductions:s.links.map((line,i)=>unpackLink(line,i,s)),
+  const deductions=s.links.map((line,i)=>unpackLink(line,i,s));
+  const notes=auditedExhibitNotes[s.id];
+  if(!notes||notes.length!==deductions.length)throw new Error('Missing forensic audit notes for '+s.id);
+  const evidence=s.evidence.map(unpackEvidence);
+  deductions.forEach((d,i)=>{
+    const record=evidence.find(e=>e.id===d.pair[1]);
+    if(!record)throw new Error('Missing referenced report in '+s.id);
+    record.text+=' PRECINCT CROSS-CHECK: '+notes[i];
+  });
+  return {...s,track:s.track??'detective',evidence,deductions,
     decisive:'link'+(s.links.length-1)};
 }
 
@@ -287,6 +296,15 @@ export function allNineCaseIssues():string[]{
     if(!c.suspects.includes(c.culprit)||!c.methods.includes(c.method))issues.push(c.id+': missing solution');
     const seen=new Set<string>();
     for(const d of c.deductions){
+      const evidenceText=d.pair.map(id=>c.evidence.find(e=>e.id===id)?.text??'').join(' ').toLowerCase();
+      for(const suspect of c.suspects.filter(name=>d.possibleSuspects&&!d.possibleSuspects.includes(name))) {
+        if(!evidenceText.includes(suspect.toLowerCase()))
+          issues.push(c.id+': missing source-based alibi for '+suspect+' in '+d.id);
+      }
+      for(const method of c.methods.filter(name=>d.possibleMethods&&!d.possibleMethods.includes(name))) {
+        if(!evidenceText.includes(method.toLowerCase()))
+          issues.push(c.id+': missing source-based elimination for '+method+' in '+d.id);
+      }
       if(d.pair[0]===d.pair[1]||d.pair.some(id=>!evIds.includes(id)))issues.push(c.id+': bad evidence pair');
       const key=[...d.pair].sort().join('|');
       if(seen.has(key))issues.push(c.id+': repeated link pair');
