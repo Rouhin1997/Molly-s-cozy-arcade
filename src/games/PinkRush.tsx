@@ -1,16 +1,18 @@
 import { useEffect,useRef,useState,type CSSProperties,type Dispatch,type SetStateAction } from 'react';
 import { pinkChallengeFor,pinkEncoreColors,pinkEncouragements } from '../data/pinkRush';
+import { choosePink } from '../lib/pinkRush';
+import { concertReaction,finaleFanfare } from '../lib/pinkConcertAudio';
 import { advancePink,applyPinkRound,choosePink,getActivePinkRound,pinkDailySession,pinkEncorePattern,pinkNextPractice,pinkShowScore,type PinkProgress } from '../lib/pinkRush';
 
-type Props={today:string;progress:PinkProgress;setProgress:Dispatch<SetStateAction<PinkProgress>>;onHome:()=>void};
+type Props={today:string;progress:PinkProgress;setProgress:Dispatch<SetStateAction<PinkProgress>>;onHome:()=>void;onWallet:()=>void};
 const stageMembers=[
  {name:'JISOO',tone:'#c2a5eb',hair:'wave'},
  {name:'JENNIE',tone:'#ee9cca',hair:'bob'},
  {name:'ROSÉ',tone:'#e9c286',hair:'long'},
  {name:'LISA',tone:'#8fcfd3',hair:'fringe'},
 ] as const;
-function PinkStage({lit,finale,active}:{lit:number;finale:boolean;active:number}){
- return <div className={'pink-stage '+(finale?'is-finale':'')} role="img" aria-label={'Original illuminated concert stage: '+lit+' of 8 special effects unlocked'}>
+function PinkStage({lit,finale,active,pulse}:{lit:number;finale:boolean;active:number;pulse:'up'|'down'|null}){
+ return <div className={'pink-stage '+(finale?'is-finale ':'')+(pulse?'pink-pulse-'+pulse:'')} role="img" aria-label={'Original illuminated concert stage: '+lit+' of 8 special effects unlocked'}>
   <div className="pink-stage-grid" aria-hidden="true"/>
   <div className="pink-spotlights" aria-hidden="true">
    {stageMembers.map((member,i)=><span key={member.name}
@@ -26,7 +28,7 @@ function PinkStage({lit,finale,active}:{lit:number;finale:boolean;active:number}
    </div>)}
   </div>
   <div className="pink-stage-riser"/>
-  <div className="pink-stage-lights" aria-hidden="true">{Array.from({length:16},(_,i)=><i key={i} className={lit>=4?'is-on':''}/>)}</div>
+  <div className="pink-stage-lights" aria-hidden="true">{Array.from({length:16},(_,i)=><i key={i} className={i<Math.round(lit*16/12)?'is-on':''}/>)}</div>
   <div className="pink-stage-audience" aria-hidden="true">
    {Array.from({length:23},(_,i)=><span key={i} style={{'--delay':(i%7)*.13+'s'} as CSSProperties}>{i%3===0?'🩷':'✦'}</span>)}
   </div>
@@ -36,12 +38,16 @@ function PinkStage({lit,finale,active}:{lit:number;finale:boolean;active:number}
   <div className="pink-stage-caption">{finale?'✨ MOLLY’S VERY OWN ENCORE ✨':lit>6?'ENCORE UNLOCKED':'A MEMORY-LANE CONCERT FOR ONE SPECIAL BLINK'}</div>
  </div>;
 }
-export default function PinkRush({today,progress,setProgress,onHome}:Props){
+export default function PinkRush({today,progress,setProgress,onHome,onWallet}:Props){
  const [mode,setMode]=useState<'daily'|'practice'>('daily');
  const [replay,setReplay]=useState(0);
  const [light,setLight]=useState(-1);
  const [previewing,setPreviewing]=useState(false);
- const [sound,setSound]=useState(false);
+ const [sound,setSound]=useState(true);
+ const [pulse,setPulse]=useState<'up'|'down'|null>(null);
+ const [selectedMemory,setSelectedMemory]=useState<number|null>(null);
+ const [wasSetback,setWasSetback]=useState(false);
+ const pulseTimer=useRef<number|null>(null);
  const audio=useRef<AudioContext|null>(null);
  const session=mode==='daily'?(progress.daily[today]??pinkDailySession(today)):progress.practice;
  const round=session?getActivePinkRound(session):null;
@@ -74,39 +80,73 @@ export default function PinkRush({today,progress,setProgress,onHome}:Props){
   timers.push(window.setTimeout(()=>{setPreviewing(false);setLight(-1)},450+pattern.length*710));
   return ()=>timers.forEach(window.clearTimeout);
  },[encore,question?.id,replay]);
- useEffect(()=>()=>{if(audio.current)void audio.current.close()},[]);
+ useEffect(()=>()=>{if(pulseTimer.current!==null)window.clearTimeout(pulseTimer.current);if(audio.current)void audio.current.close()},[]);
+ function flash(direction:'up'|'down'){
+  setPulse(direction);
+  if(pulseTimer.current!==null)window.clearTimeout(pulseTimer.current);
+  pulseTimer.current=window.setTimeout(()=>setPulse(null),850);
+ }
+ function react(isWin:boolean){
+  flash(isWin?'up':'down');
+  if(!sound)return;
+  try{
+   const ctx=audio.current??new window.AudioContext();
+   audio.current=ctx;
+   concertReaction(ctx,isWin,session?.index??0);
+  }catch{/* muted browser, still animated */}
+ }
+
  function pick(choice:string){
   if(!question||!round||previewing||round.status!=='playing')return;
+  const preview=choosePink(round,question,choice);
+  if(preview===round)return;
   if(question.kind==='encore')ping(Number(choice));
+  const mistake=preview.mistakes>round.mistakes;
+  if(preview.status==='won')react(true);
+  else if(mistake){react(false);setWasSetback(true)}
   setProgress(p=>applyPinkRound(p,mode,today,(r,c)=>choosePink(r,c,choice)));
  }
- function advance(){setProgress(p=>advancePink(p,mode,today));setReplay(0);setLight(-1)}
+ function advance(){
+  const last=session?.index===session!.plan.length-1;
+  if(last&&round?.status==='won'){
+   flash('up');
+   if(sound)try{const ctx=audio.current??new window.AudioContext();audio.current=ctx;finaleFanfare(ctx)}catch{/* visual finale remains */}
+  }
+  setProgress(p=>advancePink(p,mode,today));setReplay(0);setLight(-1);setWasSetback(false);
+ }
  function startPractice(){
   if(mode==='practice'&&round?.status==='playing'&&session&&session.index>0&&
    !window.confirm('Open a new show? Your finished performances and stars are safe.'))return;
   setProgress(p=>pinkNextPractice(p));setMode('practice');setReplay(0);setLight(-1);
  }
- function setShow(next:'daily'|'practice'){setMode(next);setReplay(0);setLight(-1)}
+ function setShow(next:'daily'|'practice'){setMode(next);setReplay(0);setLight(-1);setWasSetback(false);setSelectedMemory(null)}
  const kindLabel=question?.kind==='track'?'GUESS THE TRACK':question?.kind==='era'?'ERA RUSH':
-   question?.kind==='spotlight'?'SPOTLIGHT SHUFFLE':'LIGHTSTICK ENCORE';
+   question?.kind==='spotlight'?'SPOTLIGHT SHUFFLE':question?.kind==='fan'?(question.category??'BLINK CULTURE'):'LIGHTSTICK ENCORE';
  return <main className="game-page pink-rush-game">
   <button className="back-link" onClick={onHome}>← Back to Molly's arcade</button>
   <div className="pink-rush-hero"><div><span className="overline">GAME 06 / YOUR VIP BACKSTAGE PASS</span>
    <h1>PINK <em>RUSH!</em> <span>🖤🩷</span></h1>
-   <p>An eight-round memory-lane concert made for Molly. Recognize the songs, revisit the eras, celebrate all four members and light up your very own encore.</p>
-   <div className="pink-hero-tags"><span>✦ BLINK KNOWLEDGE</span><span>♡ NO TIMERS</span><span>♪ ONE HAPPY DIFFICULTY</span></div>
+   <p>Step into Molly’s BLACKPINK fan festival: pets, fashion, iconic stages, solo moments, songs, and a grand encore.</p>
+   <div className="pink-hero-tags"><span>🖤 VIP BLINK</span><span>🩷 BLACKPINK IN YOUR AREA</span><span>✦ BACKSTAGE MEMORIES</span></div>
   </div><div className="pink-vip-ticket"><span>VIP</span><strong>MOLLY</strong><small>ALL ACCESS • FOREVER BLINK</small>🎟️</div></div>
   <div className="pink-mode-tabs" role="group" aria-label="Choose concert">
    <button aria-pressed={mode==='daily'} className={mode==='daily'?'is-active':''} onClick={()=>setShow('daily')}>☀ Today's show</button>
    <button aria-pressed={mode==='practice'} className={mode==='practice'?'is-active':''} onClick={()=>setShow('practice')}>🎤 Backstage replay</button>
-   <button className="pink-new-show" onClick={startPractice}>✧ New practice concert</button>
+   <button className="pink-new-show" onClick={startPractice}>✧ New concert</button>
+   <button className="pink-wallet-shortcut" onClick={onWallet}>🎟️ Molly’s wallet</button>
   </div>
-  <PinkStage lit={done?8:lit} finale={done} active={light}/>
+  <div className="pink-performance-grid">
+   <div className="pink-stage-area">
+  <PinkStage lit={done?12:lit} finale={done} active={light} pulse={pulse}/>
   <div className="pink-show-meter">
-   <span>🎟️ {done?'SHOW COMPLETE':session?'SETLIST '+(Math.min(8,session.index+1))+' / 8':'READY TO REHEARSE'}</span>
+   <span>🎟️ {done?'SHOW COMPLETE':session?'SET '+(session.index+1)+' / '+session.plan.length:'READY FOR SOUND CHECK'}</span>
    <span>✨ {score} show points</span><span>🩷 {progress.stats.stars} Passport stars</span>
-   <div className="pink-setlist-track"><div style={{width:(done?100:lit/8*100)+'%'}}/></div>
+   <div className="pink-setlist-track"><div style={{width:(done?100:lit/(session?.plan.length??12)*100)+'%'}}/></div>
   </div>
+  <button className="pink-sound-toggle" onClick={()=>setSound(v=>!v)} aria-pressed={sound}>{sound?'🔊 Original concert crowd on':'🔇 Turn concert reactions on'}</button>
+  {wasSetback&&!done&&<p className="pink-setback-notice">💔 A light went out. Win back the previous round to return to your setlist!</p>}
+  </div>
+  <div className="pink-performance-pane">
   {mode==='practice'&&!session&&<section className="pink-empty-concert">
    <span>🎵</span><h2>Ready for a private comeback show?</h2>
    <p>Eight BLINK memories and one big finale. No timers, no difficulty tiers and no impossible trivia.</p>
@@ -114,15 +154,17 @@ export default function PinkRush({today,progress,setProgress,onHome}:Props){
   </section>}
   {done&&session&&<section className="pink-encore-result" role="status">
    <span className="pink-finale-crown">👑</span><span className="overline">THE LIGHTS ARE YOURS, MOLLY</span>
-   <h2>BLACKPINK in your area… and Molly in the spotlight!</h2>
-   <p>From SQUARE ONE to the latest era, you brought the memories back to life. The crowd goes wild. The night belongs to you. 🩷</p>
-   <div className="pink-score-row"><strong>{score} / 480</strong><span>concert score</span><strong>8 / 8</strong><span>memories relived</span></div>
-   <p className="pink-finale-note">All performances use original illustrations and light patterns, not licensed recordings.</p>
-   <div className="pink-final-actions"><button className="btn btn-primary" onClick={startPractice}>Another concert ↗</button>
+   <h2>BLACKPINK in your area… and Molly OWNS the stage!</h2>
+   <p>Every spotlight fires, the bass kicks in, the crowd erupts, and Molly’s ultimate BLINK encore takes over the whole stage. 🖤🩷</p>
+   <div className="pink-score-row"><strong>{score} / {60*session.plan.length}</strong><span>concert score</span><strong>{session.plan.length} / {session.plan.length}</strong><span>acts performed</span></div>
+   <p className="pink-finale-note">Original light patterns, synthesized stage tones and a cheering crowd—no licensed recordings.</p>
+   <div className="pink-final-actions">
+    <button className="btn btn-primary" onClick={onWallet}>{progress.coupon?.status==='ready'?'🎁 Reveal three mystery rewards':progress.coupon?.status==='redeemed'?'💝 View your forever reward':'🎟️ Visit Molly’s wallet'} ↗</button>
+    <button className="btn btn-soft" onClick={startPractice}>Another concert ↗</button>
     <button className="btn btn-outline" onClick={onHome}>Back to the game shelf</button></div>
   </section>}
   {question&&round&&!done&&<section className="pink-challenge" aria-labelledby="pink-current-title">
-   <div className="pink-challenge-heading"><div><span className="overline">ROUND {session!.index+1} • {kindLabel}</span>
+   <div className="pink-challenge-heading"><div><span className="overline">ACT {session!.index+1} / {session!.plan.length} • {kindLabel}</span>
     <h2 id="pink-current-title">{question.emoji} {question.title}</h2><p>{question.prompt}</p></div>
     <div className="pink-challenge-record"><span>{question.year}</span><small>{kindLabel}</small></div>
    </div>
@@ -130,7 +172,7 @@ export default function PinkRush({today,progress,setProgress,onHome}:Props){
     <small>0{i+1}</small><strong>{round.picks[i]??'Choose an era'}</strong></div>)}</div>}
    {question.kind==='encore'?<>
     <div className="pink-encore-instructions"><strong>Follow the lightstick pattern!</strong>
-     <p>Watch the coloured beams above, then tap the four pads in the same order. Replay whenever you like. No time limit.</p></div>
+     <p>Watch the beams on the stage right beside the pads. Repeat the colours in order and set off the finale. Replay the pattern whenever you need.</p></div>
     <div className="pink-encore-buttons">
      {pinkEncoreColors.map((c,i)=><button key={c.id} className={'pink-encore-pad '+(light===i?'is-shining':'')}
       style={{'--pad':c.color} as CSSProperties} disabled={previewing||round.status!=='playing'}
@@ -138,7 +180,7 @@ export default function PinkRush({today,progress,setProgress,onHome}:Props){
     </div>
     <div className="pink-beat-controls">
      <button className="btn btn-outline" disabled={previewing||round.status==='won'} onClick={()=>setReplay(n=>n+1)}>↻ {previewing?'Showing the sequence…':'Replay light sequence'}</button>
-     <button className="btn btn-soft" aria-pressed={sound} onClick={()=>setSound(n=>!n)}>{sound?'🔊 Original soft tones on':'🔇 Optional sound'}</button>
+     <span className="pink-live-beat">🖤 Watch the stage pulse with each beat</span>
      <span className="pink-beat-count">{round.picks.length}/{pinkEncorePattern(question.id).length} lights</span>
     </div>
    </>:<div className={'pink-answer-grid '+(question.kind==='spotlight'?'pink-member-choice':'')}>
@@ -154,13 +196,25 @@ export default function PinkRush({today,progress,setProgress,onHome}:Props){
    <div className={'pink-feedback '+(round.status==='won'?'is-win':'')} role="status"><span>{round.status==='won'?'💖':'✧'}</span><p>{round.note}</p></div>
    {round.status==='won'?<div className="pink-round-victory"><span>✨ +{round.score} concert points!</span>
      <p>{pinkEncouragements[session!.index%pinkEncouragements.length]}</p>
-     <button className="btn btn-primary" onClick={advance}>{session!.index===7?'Reveal the grand finale ↗':'Light up the next stage ↗'}</button>
-    </div>:<div className="pink-no-pressure"><span>{round.mistakes>0?'💌 '+round.mistakes+' little detour(s) • still plenty of stars':'♡ Every memory counts'}</span><span>No timers • no game overs</span></div>}
+     <button className="btn btn-primary" onClick={advance}>{session!.index===session!.plan.length-1?'Launch the GRAND FINALE! ↗':'Next act • relight the stage ↗'}</button>
+    </div>:<div className="pink-no-pressure"><span>{round.mistakes>0?'🖤 '+round.mistakes+' misses • fight for your encore':'🩷 The stage is yours'}</span><span>Miss = lights out + previous act</span></div>}
   </section>}
-  <section className="pink-memory-book"><div><span className="overline">THE BLINK SCRAPBOOK</span><h2>Every era, a little memory.</h2>
-   <p>Debut excitement, iconic comeback years, four different solo journeys and the newest chapter. This is for a BLINK who remembers how it all felt.</p></div>
-   <div className="pink-era-stickers">{['2016 • SQUARE ONE','2018 • SQUARE UP','2020 • THE ALBUM','2022 • BORN PINK','2025 • JUMP','2026 • DEADLINE'].map(x=><span key={x}>{x}</span>)}</div>
-  </section>
+  </div></div>
+  {session&&<section className="pink-setlist-board">
+    <div className="pink-setlist-board-header"><div><span className="overline">MOLLY’S LIVE TOUR LOG</span><h2>Tonight’s 12-act setlist</h2>
+      <p>Every unlocked memory is yours to revisit. Tap a completed act for its behind-the-scenes note.</p></div>
+      <button onClick={onWallet} className="btn btn-outline">🎟️ Reward wallet ↗</button></div>
+    <div className="pink-setlist-mini">{session.plan.map((id,i)=>{
+      const challenge=pinkChallengeFor(id),cleared=session.rounds[id]?.status==='won'&&i<session.index;
+      return <button key={i} className={'pink-setlist-mini-card '+(cleared?'is-unlocked ':i===session.index?'is-current':'')}
+       onClick={()=>setSelectedMemory(selectedMemory===i?null:i)} disabled={!cleared} aria-expanded={cleared&&selectedMemory===i}>
+       <span>{cleared?'✓':i===session.index?'♫':'🔒'}</span><strong>{challenge.kind==='fan'?'BLINK LIFE':challenge.kind==='track'?'TRACK':challenge.kind==='spotlight'?'SOLO':challenge.kind==='era'?'ERA':'ENCORE'}</strong><small>ACT {i+1}</small>
+      </button>})}</div>
+    {selectedMemory!==null&&selectedMemory<session.index&&<div className="pink-memory-open" role="status">
+      <strong>{pinkChallengeFor(session.plan[selectedMemory]).title}</strong>
+      <p>{pinkChallengeFor(session.plan[selectedMemory]).explanation}</p>
+    </div>}
+  </section>}
   <p className="privacy-note">♡ Unofficial BLACKPINK fan tribute. Original stage art and optional synthesized tones only; no copyrighted recordings, videos or promotional photos. Release references checked against <a href="https://ygfamily.com/en/artists/blackpink/discography" target="_blank" rel="noreferrer">YG's official discography</a>. Scores stay in this browser.</p>
  </main>;
 }
