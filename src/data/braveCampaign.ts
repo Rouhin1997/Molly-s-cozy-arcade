@@ -45,9 +45,17 @@ export const braveCampaignStages:readonly BraveStage[]=[
  merida:'“Angus knows these hills better than any royal map. That gate must have a story of its own.”',
  molly:'The wisp settles on the old marker stone. Under the moss, an inscription wakes.',
  ending:'The meadow gate swings aside with a sigh of old wood. Angus snorts triumphantly, as though he had opened it himself.',
- hint:'Take the wisp to the rune stone, then pass through the glowing gate.',
+ hint:'The ivy hides a longer trail than Angus expected. Trace the paths carefully; the rune answers the wisp.',
  route:route('angus','Angus’s Shortcut',[
- '###########','#S..#....E#','#.#.#####G#','#.#...#...#','#.#####.#.#','#..W...A..#','###########'])
+ '###########',
+ '#S#....W..#',
+ '#.#####.#.#',
+ '#.....#.#A#',
+ '#####.###.#',
+ '#...#.....#',
+ '#G#.#####.#',
+ '#E#.......#',
+ '###########'])
  },
  {
  id:'archer',chapterId:'highland',index:2,title:'The Archer’s Choice',kind:'archery',
@@ -63,9 +71,17 @@ export const braveCampaignStages:readonly BraveStage[]=[
  merida:'“There you are. I was beginning to think the forest had swallowed you whole.”',
  molly:'The lights gather around a standing stone. It must wake before the path ahead will open.',
  ending:'The first stone answers with a low, bell-like note. Farther in the trees, something answers back.',
- hint:'Follow the wisp before touching the stone. The old gateway cannot open while the stone sleeps.',
+ hint:'Some forest paths circle back on themselves. The sleeping gate will answer once the rune is awake.',
  route:route('first-light','The First Light',[
- '###########','#S.#.....E#','#..#.####G#','##...#....#','#..###.##.#','#..W....A.#','###########'])
+ '#############',
+ '#S..#.GE#...#',
+ '###.#.###.#.#',
+ '#.#.#..A..#.#',
+ '#.#.#######.#',
+ '#.#.#.....#.#',
+ '#.#.#.###.#.#',
+ '#.....#W....#',
+ '#############'])
  },
  {
  id:'stones',chapterId:'forest',index:4,title:'The Whispering Stones',kind:'route',
@@ -73,9 +89,19 @@ export const braveCampaignStages:readonly BraveStage[]=[
  merida:'“Careful. A wrong turn is not dangerous here—but it may lead us in a circle until supper.”',
  molly:'The standing stone at the far edge waits for a borrowed blue flame. The gate beside it is still asleep.',
  ending:'The broken circle shines briefly, and a little picture appears in the air: a carved bear, and a golden thread caught on its paw.',
- hint:'Take the blue light round the lower path. You can retrace your steps as often as you like.',
+ hint:'Two blue lights wander among these stones. Both must be gathered before the way feels complete.',
  route:route('stones','The Whispering Stones',[
- '#############','#S....#.....#','###.#.#.#####','#..W..#.#.#E#','#.#####.#.#G#','#.....A.....#','#############'])
+ '#############',
+ '#S#W....#...#',
+ '#.###.#.#G#.#',
+ '#...#.#.#E#.#',
+ '###.#.#.###W#',
+ '#.#.#.#A....#',
+ '#.#.#.#######',
+ '#.#.#.......#',
+ '#.#.#######.#',
+ '#...........#',
+ '#############'])
  },
  {
  id:'clearing',chapterId:'forest',index:5,title:'The Hidden Clearing',kind:'route',
@@ -83,9 +109,19 @@ export const braveCampaignStages:readonly BraveStage[]=[
  merida:'“I have followed an arrow into stranger places. But I have never followed a promise before.”',
  molly:'Someone has left a spindle carved from pale wood at the edge of the clearing. The last wisp circles it twice.',
  ending:'The spindle fits perfectly into an empty notch in a weathered tree. A track appears, leading toward a cottage with a crooked chimney.',
- hint:'The route winds around the clearing. Collect the wisp, wake the marker and return through the gate.',
+ hint:'The golden key unlocks the cottage trail. Listen for both wisps before searching for the stone.',
  route:route('clearing','The Hidden Clearing',[
- '#############','#S...#.....E#','#.##.#.####G#','#....#.#....#','####.#.#.##.#','#W.......A..#','#############'])
+ '###############',
+ '#S#D...W...A..#',
+ '#.#G#####.#.###',
+ '#.#E#...#W#...#',
+ '#.###.#.#####.#',
+ '#...#.#.....#K#',
+ '###.#.#####.#.#',
+ '#.#.#...#...#.#',
+ '#.#.###.#.###.#',
+ '#.......#.....#',
+ '###############'])
  },
  {
  id:'bargain',chapterId:'witch',index:6,title:'A Curious Bargain',kind:'route',
@@ -93,17 +129,29 @@ export const braveCampaignStages:readonly BraveStage[]=[
  merida:'“I know that handwriting. If we touch anything, it will probably turn into a bear.”',
  molly:'The note folds itself into a tiny paper bird and points toward the wisp beside the fire.',
  ending:'The cupboard opens—not with a crash, but with a polite little cough. Inside rests a spindle wound with gold.',
- hint:'Follow the light around the shelves; the cupboard unlocks only after the rune is awakened.',
+ hint:'Two stones guard the Witch’s enchanted cupboard. The key and the wisps are hidden among the winding shelves.',
  route:route('bargain','A Curious Bargain',[
- '###########','#S.#....#E#','#..#.#.##G#','##...#....#','#.####.##.#','#W....A...#','###########'])
+ '#################',
+ '#S..#.......DHGE#',
+ '###.#A#.###.#####',
+ '#...#.#...#W#...#',
+ '#.#####.#.###.#.#',
+ '#.....#A#.....#.#',
+ '#####.#######.#.#',
+ '#...#.#.....#W#.#',
+ '###.#.#.###.###.#',
+ '#...#.#.#.#.#...#',
+ '#.###.#.#.#.#.#.#',
+ '#.......#.....#K#',
+ '#################'])
  },
  {
  id:'runes',chapterId:'witch',index:7,title:'The Rune Sequence',kind:'runes',
- scene:'Three small bear carvings turn their wooden heads toward Molly. Above them, someone has written: REMEMBER THE ROAD, NOT THE DESTINATION.',
- merida:'“The first was where we began. The second showed us where to go. And the last… well. That is what we are trying to protect.”',
- molly:'You remember the oak by the castle wall, the star-like wisp in the wood, and the warm hearth you hope to return to.',
- ending:'Oak, light, hearth. The carvings nod, one after another. The little spindle begins to spin a thread that points toward the back room.',
- hint:'Remember the journey: first the oak, then the guiding light, then the warmth of home.'
+ scene:'Four enchanted wooden carvings turn toward Molly. A fifth bear carving smiles mischievously. The Witch has left a riddle: ROOT BEFORE CURRENT; LIGHT BEFORE WARMTH. THE STREAM COMES AFTER THE TREE, AND BEFORE THE GUIDING STAR.',
+ merida:'“She always hides the answer in the telling. Start where the old oak stood; the rest is a journey, not a guess.”',
+ molly:'A carved river curves beneath the other signs. Which four marks tell our journey—and in what order?',
+ ending:'The oak roots, the river flows, the wisp shines and the hearth glows. The four carvings bow. The spindle begins to spin a golden thread toward the back room.',
+ hint:'Read the inscription carefully: the stream must come after the tree, and the guiding light comes before home.'
  },
  {
  id:'secret',chapterId:'witch',index:8,title:'The Witch’s Secret',kind:'route',
@@ -111,20 +159,33 @@ export const braveCampaignStages:readonly BraveStage[]=[
  merida:'“The Witch does love a puzzle. Molly, whatever happens, do not make a bargain with a talking broom.”',
  molly:'The wisp carries the golden thread like a lantern. One last standing stone waits beneath the door.',
  ending:'The door swings open onto a moonlit painting of DunBroch. A thread in the painting glows at the west tower. Merida grows quiet. “We need to get home.”',
- hint:'The golden thread guides you to the wisp. Wake the last rune and find the hidden door.',
+ hint:'The final door has several locks. Gather both lights, wake both stones, and seek the golden key.',
  route:route('secret','The Witch’s Secret',[
- '#############','#S.....#..#E#','#.#.##.#.#.G#','#...#....#..#','###.#.##.#..#','#W....A.....#','#############'])
+ '###################',
+ '#S....#A...K#.....#',
+ '#####.#.###.#.###.#',
+ '#...#.#.#W#.#...#.#',
+ '###.#.#.#.#.###.#.#',
+ '#...#.#A#.#.....#.#',
+ '#.#.#.#.#.#####.#.#',
+ '#.#.#.#...#...#W#.#',
+ '#.###.###D#.#.#.#.#',
+ '#.#...#EGH#.#.#.#.#',
+ '#.#.#######.#.###.#',
+ '#...........#.....#',
+ '###################'])
  }
 ];
 export const braveArcheryTargets=[
- {name:'The Near Ribbon',wind:1,range:'near' as const,description:'The red ribbon pulls to the east.'},
- {name:'The Far Pennant',wind:-1,range:'far' as const,description:'The blue pennant streams west across the glen.'},
- {name:'The Last Feather',wind:0,range:'far' as const,description:'The heather grows still beneath the final target.'}
+ {name:'The Near Ribbon',wind:1,crosswind:4,distance:42,height:3.2,range:'near' as const,description:'The red ribbon snaps east above the near target.'},
+ {name:'The Far Pennant',wind:-1,crosswind:-6,distance:68,height:4.2,range:'far' as const,description:'The blue pennant streams west across the long clearing.'},
+ {name:'The Last Feather',wind:0,crosswind:4,distance:75,height:7.8,range:'far' as const,description:'High on the wooden frame, a feather twists in an easterly crosswind.'}
 ];
-export const braveRuneOrder=['oak','light','hearth'] as const;
+export const braveRuneOrder=['oak','river','light','hearth'] as const;
 export const braveRuneOptions=[
  {id:'hearth',symbol:'♨',label:'Hearth'},
  {id:'light',symbol:'✧',label:'Wisp-light'},
  {id:'oak',symbol:'❧',label:'Oak'},
- {id:'river',symbol:'≈',label:'River'}
+ {id:'river',symbol:'≈',label:'River'},
+ {id:'bear',symbol:'♧',label:'Carved Bear'}
 ] as const;

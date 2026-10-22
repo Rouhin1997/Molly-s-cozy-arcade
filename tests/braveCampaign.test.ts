@@ -42,8 +42,12 @@ describe('Brave three connected chapters — campaign acceptance',()=>{
     current=next.state;
    }
    expect(braveCompleted(level,current),scene.id).toBe(true);
-   if(level.rows.join('').includes('G'))expect(events,scene.id).toEqual(['wisp','stone','gate','finish']);
-   else expect(events,scene.id).toEqual(['wisp','finish']);
+   expect(events,scene.id).toContain('finish');
+   expect(events,scene.id).toContain('wisp');
+   if(level.rows.join('').includes('G')){expect(events,scene.id).toContain('stone');expect(events,scene.id).toContain('gate')}
+   if(level.rows.join('').includes('K'))expect(events,scene.id).toContain('key');
+   const minimums:Record<string,number>={courtyard:7,angus:30,'first-light':38,stones:50,clearing:60,bargain:75,secret:85};
+   expect(analysis.shortestSolution.length,scene.id).toBeGreaterThanOrEqual(minimums[scene.id]);
   }
  });
  it('requires proper crosswind compensation and draw strength at all three targets',()=>{
@@ -59,15 +63,15 @@ describe('Brave three connected chapters — campaign acceptance',()=>{
    }
   }
  });
- it('accepts the three rune marks in story order without punishing wrong taps',()=>{
-  expect(braveRuneOrder).toEqual(['oak','light','hearth']);
+ it('solves four-rune carving after exploring the Witch’s clues, with a decoy',()=>{
+  expect(braveRuneOrder).toEqual(['oak','river','light','hearth']);
   let at=0;
-  at=braveRuneStep(at,'river',braveRuneOrder);expect(at).toBe(0);
+  at=braveRuneStep(at,'bear',braveRuneOrder);expect(at).toBe(0);
   at=braveRuneStep(at,'oak',braveRuneOrder);expect(at).toBe(1);
-  at=braveRuneStep(at,'oak',braveRuneOrder);expect(at).toBe(1);
-  at=braveRuneStep(at,'light',braveRuneOrder);expect(at).toBe(2);
-  at=braveRuneStep(at,'hearth',braveRuneOrder);expect(at).toBe(3);
-  at=braveRuneStep(at,'river',braveRuneOrder);expect(at).toBe(3);
+  at=braveRuneStep(at,'light',braveRuneOrder);expect(at).toBe(1);
+  at=braveRuneStep(at,'river',braveRuneOrder);expect(at).toBe(2);
+  at=braveRuneStep(at,'light',braveRuneOrder);expect(at).toBe(3);
+  at=braveRuneStep(at,'hearth',braveRuneOrder);expect(at).toBe(4);
  });
  it('unlocks stages in linear story order and permits replay without skipped chapters',()=>{
   let save=freshBraveJourney();

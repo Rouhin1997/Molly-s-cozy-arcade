@@ -11,3 +11,11 @@ export function braveShotIsCorrect(target:BraveTarget,aim:BraveAim,draw:BraveDra
 export function braveRuneStep(current:number,pick:string,order:readonly string[]):number{
  return current>=order.length?current:pick===order[current]?current+1:current;
 }
+
+/** Four carved marks must form the full journey; duplicates cannot be placed. */
+export function braveRuneScore(sequence:readonly string[],answer:readonly string[]):number{
+ return answer.reduce((score,rune,index)=>score+(sequence[index]===rune?1:0),0);
+}
+export function braveRuneSolved(sequence:readonly string[],answer:readonly string[]):boolean{
+ return sequence.length===answer.length&&braveRuneScore(sequence,answer)===answer.length;
+}

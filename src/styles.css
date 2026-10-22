@@ -1459,3 +1459,120 @@
  .brave-journey-end{padding:20px 12px}
 }
 @media(prefers-reduced-motion:reduce){.brave-journey *{scroll-behavior:auto}}
+
+
+/* ── Brave's world/art/archery overhaul ── */
+.brave-scene-backdrop{
+ display:block;width:100%;height:auto;aspect-ratio:1100/358;object-fit:cover;
+ border:4px double #d6bc8e;border-radius:16px 16px 4px 4px;
+ box-shadow:inset 0 0 38px #152d2b55,0 8px 19px #1d3c3433;
+ animation:brave-scene-arrive .8s ease both;
+}
+.brave-scene-forest{border-color:#a6c8ac;box-shadow:0 8px 22px #173f404d}
+.brave-scene-witch{border-color:#c5a17a;box-shadow:0 8px 22px #60472c6b}
+.brave-backdrop-wisp{animation:brave-orb-hover 5.6s ease-in-out infinite}
+.brave-journey-forest .brave-journey-story{background:linear-gradient(130deg,#e8eddd,#d7e8df)}
+.brave-journey-witch .brave-journey-story{background:linear-gradient(145deg,#fff2d8,#e9d8b9)}
+.brave-journey-witch .brave-journey-story h3{color:#795b43}
+.brave-journey-witch .brave-journey-story blockquote{background:#eddfbe;border-color:#b48d60}
+.brave-journey-maze-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;touch-action:pan-x pan-y}
+.brave-journey-maze-scroll .brave-crossing-grid{max-width:none;gap:3px}
+.brave-journey-maze-scroll .brave-crossing-tile{min-width:24px}
+.brave-crossing-tile.is-key{background:radial-gradient(circle,#edcb86,#746b48);border:2px solid #d4ba70}
+.brave-crossing-key-icon{font-size:1.25em;color:#fff1ab;text-shadow:0 0 9px #ffeeb3}
+.brave-journey-forest .brave-crossing-tile.is-path{background:radial-gradient(circle at 65% 29%,#789a7f,#436b60)}
+.brave-journey-witch .brave-crossing-tile.is-path{background:repeating-linear-gradient(90deg,#94775d,#94775d 10px,#a98a68 10px,#a98a68 12px)}
+.brave-archery-series{margin-top:15px}
+.brave-archery-progress{display:flex;justify-content:center;gap:10px;margin-bottom:14px}
+.brave-archery-progress span{display:grid;place-items:center;width:33px;height:33px;border:1px solid #b3ba9f;border-radius:50%;color:#6a7b66;background:#f7ecd6;font:bold 14px Georgia,serif}
+.brave-archery-progress span.is-current{background:#385f55;color:#faf0d3;border-color:#385f55;box-shadow:0 0 0 3px #acdfd0}
+.brave-archery-progress span.is-complete{background:#d3e8ca;color:#3e816e}
+.brave-archery{border:4px double #b8ac8c;border-radius:15px;background:linear-gradient(135deg,#faf0d3,#e1e8ce);padding:13px}
+.brave-archery-stage{overflow:hidden;border-radius:11px;border:3px double #c9b893;background:#577b65}
+.brave-archery-stage svg{display:block;width:100%;height:auto}
+.brave-archery-scene-caption{margin:0;padding:8px 14px;background:#345f55;color:#f8e9c8;font:italic 12px Georgia,serif}
+.brave-archery-wind{animation:brave-windflow 3.8s ease-in-out infinite alternate}
+.brave-archery-flight{stroke-dasharray:1600;stroke-dashoffset:1600;animation:brave-arrow-flight 1.2s ease forwards}
+.brave-archery-dashboard{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(200px,.7fr);gap:18px;margin-top:16px}
+.brave-archery-controls{display:grid;gap:11px}
+.brave-archery-controls h4{font:800 12px Georgia,serif;color:#3e695d;margin:0 0 7px}
+.brave-archery-select{display:flex;flex-wrap:wrap;gap:6px}
+.brave-archery-select button{flex:1 1 auto;border:1px solid #acc0a7;background:#e6ebd7;border-radius:9px;padding:11px 7px;color:#416558;font:bold 12px Georgia,serif;min-height:40px}
+.brave-archery-select button[aria-pressed=true]{background:#326c60;color:#fbefd4;border-color:#326c60;box-shadow:inset 0 0 0 1px #b8d5bc}
+.brave-archery-select button:disabled{opacity:.56}
+.brave-archery-result{background:#fff9e8;border:1px solid #c3c4a4;border-radius:13px;padding:16px}
+.brave-archery-scoreline{display:flex;gap:7px;flex-wrap:wrap;justify-content:space-between;font:800 10px 'DM Sans',sans-serif;letter-spacing:.05em;color:#789485}
+.brave-archery-result>p{font:italic 14px/1.7 Georgia,serif;color:#496958;min-height:107px;margin:12px 0 5px}
+.brave-archery-result .brave-journey-main-action{width:100%;font-size:13px}
+.brave-archery-result .brave-journey-main-action:disabled{opacity:.7}
+.brave-archery-fair{display:block;color:#899484;font:11px/1.5 Georgia,serif;margin-top:10px}
+@keyframes brave-scene-arrive{from{opacity:.4;filter:blur(4px);transform:translateY(9px)}to{opacity:1;filter:none;transform:none}}
+@keyframes brave-arrow-flight{to{stroke-dashoffset:0}}
+@keyframes brave-windflow{to{transform:translateX(16px);opacity:.65}}
+@media(max-width:800px){.brave-archery-dashboard{grid-template-columns:1fr}}
+@media(max-width:600px){
+ .brave-scene-backdrop{aspect-ratio:1100/465;object-fit:cover}
+ .brave-archery{padding:7px}
+ .brave-archery-select button{font-size:11px;padding:9px 4px}
+ .brave-archery-result>p{min-height:0}
+ .brave-journey-maze-scroll .brave-crossing-tile{font-size:17px}
+}
+@media(prefers-reduced-motion:reduce){
+ .brave-scene-backdrop,.brave-backdrop-wisp,.brave-archery-wind,.brave-archery-flight{animation:none}
+}
+
+
+/* Witch's hand-carved logic table */
+.brave-rune-workshop{padding:15px;border:4px double #bea47e;border-radius:15px;background:linear-gradient(145deg,#e8dac0,#f7e6c8);box-shadow:inset 0 0 20px #9a764331}
+.brave-rune-book{border:1px solid #bd9a70;border-radius:11px;padding:18px 22px;background:radial-gradient(circle at 83% 19%,#fdf7dd,#ecddbb);text-align:center}
+.brave-rune-book .brave-kicker{color:#947151}
+.brave-rune-book p{max-width:620px;margin:12px auto;font:italic 20px/1.7 Georgia,serif;color:#775838}
+.brave-rune-book small{display:block;color:#89755e;font:12px/1.65 Georgia,serif}
+.brave-rune-slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.brave-rune-slot{border:3px double #b6a184;border-radius:12px;background:linear-gradient(160deg,#82684c,#4c574b);color:#f4dfb2;min-height:135px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;box-shadow:inset 0 0 19px #282b2d6b}
+.brave-rune-slot.is-placed{background:linear-gradient(160deg,#59766c,#4b564d);border-color:#acc5aa}
+.brave-rune-slot small{font:800 9px 'DM Sans',sans-serif;letter-spacing:.1em}
+.brave-rune-slot>span{font:40px Georgia,serif;text-shadow:0 0 12px #d4d7b690}
+.brave-rune-slot strong{font:700 12px Georgia,serif;text-align:center}
+.brave-rune-piece-tray{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.brave-rune-piece-tray button{flex:1 1 105px;border:2px solid #a98764;border-radius:12px;padding:15px 7px;background:linear-gradient(155deg,#eed3a4,#b99a6f);color:#664d39;display:flex;flex-direction:column;gap:5px;align-items:center}
+.brave-rune-piece-tray button>span{font:32px Georgia,serif}
+.brave-rune-piece-tray button strong{font:700 12px Georgia,serif}
+.brave-rune-piece-tray button:disabled{opacity:.35;cursor:default}
+.brave-rune-actions{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:15px 0}
+.brave-rune-actions>button:not(.brave-journey-main-action){padding:11px 15px;border:1px solid #b7ad91;border-radius:22px;background:#f6efd7;color:#70674b;font:700 12px Georgia,serif}
+.brave-rune-actions .brave-journey-main-action{margin:0}
+.brave-rune-actions button:disabled{opacity:.5;cursor:default}
+.brave-rune-feedback{text-align:center;font:italic 13px/1.7 Georgia,serif;color:#5d7760;margin:14px auto}
+.brave-journey-hint-panel{text-align:center;margin:16px auto}
+.brave-journey-hint-toggle{border:1px solid #99afa3;border-radius:22px;background:#eef5dd;color:#47766c;font:bold 12px Georgia,serif;padding:11px 18px}
+.brave-journey-hint-panel .brave-journey-hint{margin:10px auto;max-width:700px}
+.brave-journey-replay-start{border:1px solid #a7b8a7;border-radius:19px;background:#f9f1da;color:#5b7a6b;padding:9px 13px;font:bold 11px Georgia,serif}
+@media(max-width:650px){
+ .brave-rune-workshop{padding:9px}
+ .brave-rune-book{padding:12px}
+ .brave-rune-book p{font-size:16px}
+ .brave-rune-slots{gap:3px}
+ .brave-rune-slot{min-height:104px;gap:5px}
+ .brave-rune-slot small{font-size:7px}
+ .brave-rune-slot>span{font-size:27px}
+ .brave-rune-slot strong{font-size:9px}
+ .brave-rune-piece-tray{gap:5px}
+ .brave-rune-piece-tray button{flex-basis:76px;padding:10px 4px}
+}
+
+
+/* The adventure is primary; the atlas becomes an optional chapter explorer. */
+.brave-world-atlas{margin:22px 9px;border:2px solid #bac4a3;border-radius:15px;background:#eff0d9;overflow:hidden}
+.brave-world-atlas>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;padding:19px 23px;color:#3d6e61;font:bold 16px Georgia,serif;list-style:none}
+.brave-world-atlas>summary::-webkit-details-marker{display:none}
+.brave-world-atlas>summary span{font:800 10px 'DM Sans',sans-serif;letter-spacing:.07em;color:#728b7d}
+.brave-world-atlas[open]>summary{border-bottom:1px solid #c4c8ac;background:#e1ead8}
+.brave-world-atlas .brave-illustrated-world{padding:15px}
+.brave-journey-review{display:flex;align-items:center;flex-wrap:wrap;gap:13px;margin:0 0 15px;color:#729180;font:italic 11px Georgia,serif}
+@media(max-width:670px){
+ .brave-world-atlas{margin:15px 0}
+ .brave-world-atlas>summary{padding:15px;font-size:13px}
+ .brave-world-atlas>summary span{font-size:9px;text-align:right}
+ .brave-world-atlas .brave-illustrated-world{padding:8px}
+}
