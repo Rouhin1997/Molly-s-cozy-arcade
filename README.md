@@ -1,5 +1,11 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 2I — The 99 Files, redesigned for real deductions
+
+The Nine-Nine's 12 cases were audited for a more fundamental quality standard than mere unique solvability: **every connected pair of evidence must be necessary** for the complete culprit-and-method conclusion. Cozy cases remain approachable; Clever and Expert retain multiple suspects until their final decisive deduction. The evidence text and mini case stories have been comprehensively rewritten; no long alibi list may reveal one remaining culprit on its own. The player always sees the full question prompts (including Expert), and evidence-pairing links carry the detective reasoning.
+
+Unfinished cases from older saves are safely restarted when reopened, because their document connections have changed; **awarded stars, solved rounds, Heist progression and earlier Passport backups are preserved**. Holt's portrait has also been refined to the correct short-shaven/bald look, with Molly's illustration unchanged. The canonical source is `src/data/nineNineVerified.ts`; audit tests are in `tests/nineNineLogicAudit.test.ts`.
+
 ## Phase 2H — Detective Molly & Nine-Nine polish
 
 Detective Molly (an **original SVG portrait inspired by a private reference photo, not a publicly stored photo**) now leads each case-specific four-person squad, alongside redesigned and more recognizable Nine-Nine character stickers. Successful evidence links explain exactly which source reports were compared, which suspects and methods the logic excludes, and how many candidate hypotheses remain. Cozy highlights the starting evidence card; Clever does not; Expert hides unsolved investigation questions and requires four evidence connections.
