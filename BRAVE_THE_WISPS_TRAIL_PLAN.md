@@ -1,6 +1,14 @@
 # Game 07 — Brave: The Wisps' Trail
 ## Planned only · Coming Soon · design approved 22 October 2026
 
+## Implementation status update — Phase 3A, Module 01 (22 October 2026)
+
+**The user has now explicitly GREENLIT Brave development**, then requested a **careful, one-module-at-a-time process** with exceptional attention to illustrated atmosphere and world-building. The earlier instructions below saying “planned only / do not start until greenlit” are historical; they are superseded by this update.
+
+**Current playable status: WORLD PREVIEW ONLY.** An original illustrated six-destination Highlands map, personal Keeper prologue choice, chapter/character scene scrolls and gentle opt-in ambient music are implemented in Module 01. None of the eighteen future chapter puzzles is live yet. The game shelf says WORLD PREVIEW instead of Coming Soon. This is by design while awaiting owner visual/music review.
+
+See [BRAVE_MODULAR_PRODUCTION.md](BRAVE_MODULAR_PRODUCTION.md) for the authoritative nine-module roadmap, art direction, detailed scope and quality gates. Next is Module 02 (deterministic map puzzle solver), **only after owner approval of the first module**.
+
 **Approval:** User enthusiastically approved this direction as a *Brave*-inspired storybook puzzle adventure but requested **Pink Rush first**. Do not start Brave implementation until the user explicitly gives a later green light. The arcade shelf must show Brave as **COMING SOON** with an actual preview, not a dead link.
 
 ### The promise
