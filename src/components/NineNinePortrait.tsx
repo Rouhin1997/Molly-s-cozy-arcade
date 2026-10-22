@@ -10,7 +10,7 @@ type Persona={skin:string;hair:string;outfit:string;background:string;outline:st
 const profiles:Record<string,Persona>={
  Molly:{skin:'#bc7d5c',hair:'#29252e',outfit:'#846654',background:'#f2dacf',outline:'#6b4951',badge:'🔎',face:'soft',hairdo:'parted',smile:'warm'},
  Jake:{skin:'#e8b28e',hair:'#4c302e',outfit:'#576c8b',background:'#f5ddcb',outline:'#655260',badge:'✦',face:'angular',hairdo:'swept',smile:'big'},
- Holt:{skin:'#94664e',hair:'#33353e',outfit:'#293c57',background:'#d8e9ec',outline:'#485063',badge:'◆',face:'long',hairdo:'cropped',smile:'stoic'},
+ Holt:{skin:'#926448',hair:'#55535b',outfit:'#293c57',background:'#d8e9ec',outline:'#485063',badge:'◆',face:'angular',hairdo:'bald',smile:'stoic'},
  Amy:{skin:'#d6a17d',hair:'#352a2e',outfit:'#9f718c',background:'#e9e1f3',outline:'#655266',badge:'📋',face:'soft',hairdo:'bun',smile:'warm'},
  Rosa:{skin:'#b98169',hair:'#241d29',outfit:'#2c303a',background:'#e5d8e5',outline:'#51435c',badge:'⚡',face:'angular',hairdo:'waves',smile:'stoic'},
  Terry:{skin:'#935d48',hair:'#22212a',outfit:'#607f9d',background:'#dfedf0',outline:'#52556b',badge:'🥛',face:'angular',hairdo:'bald',smile:'big'},
@@ -22,7 +22,7 @@ const profiles:Record<string,Persona>={
 const witness:Persona={skin:'#d7ab8d',hair:'#59465b',outfit:'#93819b',background:'#e9deed',outline:'#715c70',badge:'?',face:'soft',hairdo:'short',smile:'warm'};
 
 function HairBack({name,p}: {name:string;p:Persona}):ReactNode{
- if(p.hairdo==='bald')return <path d="M34 43 Q39 17 55 18 Q73 18 79 43" fill={p.hair}/>;
+ if(p.hairdo==='bald')return null; // open scalp; avoid a dark cap painted behind the forehead
  if(p.hairdo==='waves')return <>
   <path d="M26 46 Q18 25 35 18 Q62 3 82 20 Q96 40 88 62 L94 93 Q75 91 77 66 L31 64 Q39 86 21 95 Q16 82 24 66Z" fill={p.hair} stroke={p.outline} strokeWidth="2"/>
   <path d="M21 59 Q16 71 24 87 M87 53 Q96 76 87 93" fill="none" stroke="#42303c" strokeWidth="5" strokeLinecap="round"/>
@@ -43,7 +43,11 @@ function HairFront({name,p}:{name:string;p:Persona}){
   <path d="M68 24 Q86 28 83 51 Q81 59 82 65" fill="none" stroke={p.hair} strokeWidth="9" strokeLinecap="round"/>
   <path d="M28 49 Q26 64 30 72" stroke={p.hair} strokeWidth="5" fill="none" strokeLinecap="round"/>
  </>;
- if(p.hairdo==='bald')return <path d="M39 28 Q54 23 72 30" fill="none" stroke="#302934" strokeWidth="2" opacity=".55"/>;
+ if(p.hairdo==='bald')return name==='Holt'?<>
+  {/* Very short grey stubble at the temples; no dark cap across the scalp. */}
+  <path d="M34 30 Q39 22 46 21 M71 22 Q77 25 80 31" fill="none" stroke="#595058" strokeWidth="1.4" strokeLinecap="round" opacity=".38"/>
+  <path d="M30 43 L31 51 M82 43 L82 51" stroke="#51474f" strokeWidth="2" strokeLinecap="round" opacity=".45"/>
+ </>:<path d="M33 31 Q55 26 76 31" fill="none" stroke={p.hair} strokeWidth="1.5" opacity=".35"/>;
  if(name==='Holt')return <path d="M32 37 Q36 22 55 23 Q75 21 79 36 Q69 29 56 30 Q42 29 32 37" fill={p.hair}/>;
  if(name==='Jake')return <path d="M29 42 L28 29 L39 21 L41 28 L53 17 L60 27 L75 20 Q86 28 82 43 Q69 38 63 31 Q52 43 45 34 Q37 43 29 42Z" fill={p.hair} stroke={p.outline} strokeWidth="1.6" strokeLinejoin="round"/>;
  if(name==='Amy')return <path d="M27 44 Q25 25 43 19 Q57 19 74 27 Q70 36 53 35 Q42 45 27 44Z" fill={p.hair}/>;
@@ -133,7 +137,7 @@ export function NineNinePortrait({name,size=70}:{name:string;size?:number}){
   <path d="M50 73 L50 83 Q58 91 67 82 L67 73Z" fill={p.skin} stroke="#ae8172" strokeWidth="1.2"/>
   <OutfitDetails name={name}/>
   <circle cx="34" cy="58" r="5.1" fill={p.skin}/><circle cx="82" cy="58" r="5.1" fill={p.skin}/>
-  <ellipse cx="58" cy={faceY} rx={p.face==='round'?29:p.face==='long'?23:26} ry={p.face==='long'?34:31} fill={p.skin} stroke="#a57866" strokeWidth="1.3"/>
+  <ellipse cx="58" cy={name==='Holt'?53:faceY} rx={p.face==='round'?29:p.face==='long'?23:name==='Holt'?28:26} ry={p.face==='long'?34:name==='Holt'?33:31} fill={p.skin} stroke="#a57866" strokeWidth="1.3"/>
   {name==='Rosa'&&<path d="M25 58 Q20 28 32 26 M84 31 Q94 56 86 78" fill="none" stroke={p.hair} strokeWidth="8" strokeLinecap="round"/>}
   <HairFront name={name} p={p}/>
   <path d={name==='Rosa'?'M36 47 L48 44 M67 44 L79 46':name==='Holt'?'M37 47 L48 47 M67 47 L79 47':'M38 47 Q43 44 48 46 M67 46 Q73 44 78 47'} fill="none" stroke={p.hair} strokeWidth={name==='Rosa'?2.8:2.1} strokeLinecap="round"/>
@@ -148,6 +152,10 @@ export function NineNinePortrait({name,size=70}:{name:string;size?:number}){
    <path d="M44 73 Q58 84 73 72" stroke="#94545d" strokeWidth="2.5" fill="none" strokeLinecap="round"/>}
   {name==='Molly'&&<><circle cx="78" cy="59" r="2" fill="#f9ddb0"/><circle cx="34" cy="59" r="2" fill="#f9ddb0"/><path d="M30 68 Q38 74 31 84" stroke={p.hair} strokeWidth="4" fill="none"/></>}
   {name==='Rosa'&&<><path d="M31 60 Q29 64 31 70 M84 60 Q86 66 84 72" stroke={p.hair} strokeWidth="5" fill="none"/></>}
+  {name==='Holt'&&<>
+   <path d="M35 63 Q33 68 37 71 M79 63 Q82 68 78 71" stroke="#855941" strokeWidth="1.2" fill="none" opacity=".55"/>
+   <path d="M37 46 Q43 44 48 46 M66 46 Q73 44 78 46" stroke="#44373c" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+  </>}
   <circle cx="96" cy="23" r="15" fill="#fff" stroke="#d8c4d8" strokeWidth="2.2"/>
   <text x="96" y="28.7" fontSize={p.badge.length>1?15:19} textAnchor="middle" fill="#856d91">{p.badge}</text>
  </svg>;
