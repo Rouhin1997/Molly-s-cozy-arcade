@@ -6,7 +6,7 @@ import type { ToonProgress } from '../lib/toon';
 import type { BazingaProgress } from '../lib/bazinga';
 import { normalizeNineProgress, type NineProgress } from '../lib/nineNine';
 import {couponGifts,reconcilePinkImport,type PinkProgress} from '../lib/pinkRush';
-import {readBraveJourney,writeBraveJourney,normalizeBraveJourney,type BraveJourneySave} from '../lib/braveProgress';
+import {readBraveJourney,writeBraveJourney,normalizeBraveJourney,braveChronicleUnlocked,type BraveJourneySave} from '../lib/braveProgress';
 import {braveCampaignStages} from '../data/braveCampaign';
 import BraveChronicle from './BraveChronicle';
 
@@ -34,8 +34,7 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
   const [braveSave,setBraveSave] = useState<BraveJourneySave>(readBraveJourney);
   const [chronicleOpen,setChronicleOpen] = useState(false);
   const braveCompletedCount=braveSave.completed.length;
-  const chronicleUnlocked=braveCompletedCount===braveCampaignStages.length &&
-    braveSave.completed[braveCompletedCount-1]===braveCampaignStages[braveCampaignStages.length-1].id;
+  const chronicleUnlocked=braveChronicleUnlocked(braveSave);
 
   function exportBackup() {
     const backup = {
