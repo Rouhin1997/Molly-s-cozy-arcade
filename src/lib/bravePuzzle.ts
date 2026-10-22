@@ -5,18 +5,19 @@
  */
 export type BraveDirection = 'up' | 'right' | 'down' | 'left';
 export const braveDirections: readonly BraveDirection[] = ['up','right','down','left'];
-export type BraveTile = '#' | '.' | 'S' | 'W' | 'A' | 'G' | 'E';
+export type BraveTile = '#' | '.' | 'S' | 'W' | 'A' | 'G' | 'H' | 'K' | 'D' | 'E';
 export type BraveLevel = {id:string; title:string; rows:readonly string[]};
 export type BravePuzzleState = {
   position:number;
   wisps:readonly number[];
   stones:readonly number[];
+  keys:readonly number[];
   moves:number;
 };
 export type BraveMove = {
   state:BravePuzzleState;
   moved:boolean;
-  event:'wisp'|'stone'|'gate'|'finish'|null;
+  event:'wisp'|'stone'|'gate'|'key'|'door'|'finish'|null;
   reason:string|null;
 };
 
@@ -50,27 +51,33 @@ export function bravePuzzleIssues(level:BraveLevel):string[]{
  if(width<4||width>30||height<4||height>30)errors.push('Puzzle must fit a 4–30 tile rectangular grid');
  if(level.rows.some(row=>row.length!==width))errors.push('Puzzle rows must have equal widths');
  const all=level.rows.join('');
- if(/[^#.SWAGE]/.test(all))errors.push('Unknown tile glyph');
+ if(/[^#.SWAGHKDE]/.test(all))errors.push('Unknown tile glyph');
  for(const glyph of ['S','E']){
   if([...all].filter(c=>c===glyph).length!==1)errors.push('Expected exactly one '+glyph+' tile');
  }
- for(const glyph of ['W','A','G']){
+ for(const glyph of ['W','A']){
+  if([...all].filter(c=>c===glyph).length>2)errors.push('Expected at most two '+glyph+' tiles');
+ }
+ for(const glyph of ['G','H','K','D']){
   if([...all].filter(c=>c===glyph).length>1)errors.push('Expected at most one '+glyph+' tile');
  }
  if(all.includes('G')&&!all.includes('A'))errors.push('Gates require a standing stone');
+ if(all.includes('H')&&all.split('A').length-1<2)errors.push('Moon gates require two rune stones');
+ if(all.includes('D')&&!all.includes('K'))errors.push('Locked doors require a key');
  return errors;
 }
 export function braveInitialState(level:BraveLevel):BravePuzzleState{
  const errors=bravePuzzleIssues(level);
  if(errors.length)throw new Error(errors.join('; '));
  const position=level.rows.join('').indexOf('S');
- return {position,wisps:[],stones:[],moves:0};
+ return {position,wisps:[],stones:[],keys:[],moves:0};
 }
 export function braveCompleted(level:BraveLevel,state:BravePuzzleState):boolean{
  const all=level.rows.join('');
  return braveTile(level,state.position)==='E'
   && state.wisps.length===all.split('W').length-1
-  && state.stones.length===all.split('A').length-1;
+  && state.stones.length===all.split('A').length-1
+  && state.keys.length===all.split('K').length-1;
 }
 export function braveMove(level:BraveLevel,state:BravePuzzleState,dir:BraveDirection):BraveMove{
  if(braveCompleted(level,state))return {state,moved:false,event:null,reason:'The crossing is complete.'};
@@ -84,22 +91,32 @@ export function braveMove(level:BraveLevel,state:BravePuzzleState,dir:BraveDirec
  }
  const next=nr*w+nc,tile=braveTile(level,next);
  if(tile==='#')return {state,moved:false,event:null,reason:'The old stones block the way.'};
- if(tile==='G'&&state.stones.length===0){
-  return {state,moved:false,event:null,reason:'The gate is sleeping. Awaken the standing stone first.'};
+ if(tile==='G'&&state.stones.length<1){
+  return {state,moved:false,event:null,reason:'The gate sleeps until a rune stone wakes.'};
+ }
+ if(tile==='H'&&state.stones.length<2){
+  return {state,moved:false,event:null,reason:'Both rune stones must sing to open the moon gate.'};
+ }
+ if(tile==='D'&&state.keys.length===0){
+  return {state,moved:false,event:null,reason:'The carved door needs its lost golden key.'};
  }
  const wisps=tile==='W'&&!state.wisps.includes(next)
   ?[...state.wisps,next].sort((a,b)=>a-b):state.wisps;
  const stones=tile==='A'&&(wisps.length>0||!level.rows.join('').includes('W'))&&!state.stones.includes(next)
   ?[...state.stones,next].sort((a,b)=>a-b):state.stones;
- const result:BravePuzzleState={position:next,wisps,stones,moves:state.moves+1};
+ const keys=tile==='K'&&!state.keys.includes(next)
+  ?[...state.keys,next].sort((a,b)=>a-b):state.keys;
+ const result:BravePuzzleState={position:next,wisps,stones,keys,moves:state.moves+1};
  const event=braveCompleted(level,result)?'finish'
   :stones.length>state.stones.length?'stone'
   :wisps.length>state.wisps.length?'wisp'
-  :tile==='G'?'gate':null;
+  :keys.length>state.keys.length?'key'
+  :tile==='G'||tile==='H'?'gate'
+  :tile==='D'?'door':null;
  return {state:result,moved:true,event,reason:null};
 }
 export function braveStateKey(state:BravePuzzleState):string{
- return state.position+'|'+state.wisps.join(',')+'|'+state.stones.join(',');
+ return state.position+'|'+state.wisps.join(',')+'|'+state.stones.join(',')+'|'+state.keys.join(',');
 }
 export type BraveAnalysis={
  issues:string[];
@@ -134,7 +151,7 @@ export function analyzeBravePuzzle(level:BraveLevel):BraveAnalysis{
     seen.set(other,result.state);
     parent.set(other,{previous:key,direction});
     queue.push(result.state);
-    if(queue.length>50000)return empty(['Puzzle state space is too large to validate']);
+    if(queue.length>120000)return empty(['Puzzle state space is too large to validate']);
    }
   }
  }
