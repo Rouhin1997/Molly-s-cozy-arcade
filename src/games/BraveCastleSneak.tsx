@@ -6,7 +6,7 @@ const buttons:[BraveStealthAction,string][]=[
 ];
 export default function BraveCastleSneak({onComplete}:{onComplete:()=>void}){
  const [state,setState]=useState(braveStealthInitial);
- const [notice,setNotice]=useState('The guard patrols back and forth. Each step you take advances his route.');
+ const [notice,setNotice]=useState('The guard watches the next tile beside him, too. Each step advances his patrol. Hide in alcoves or use the triplets’ distraction.');
  const [celebrated,setCelebrated]=useState(false);
  function act(a:BraveStealthAction){
   if(celebrated)return;
@@ -31,7 +31,7 @@ export default function BraveCastleSneak({onComplete}:{onComplete:()=>void}){
  const guard=braveGuardColumn(state.tick),next=braveGuardColumn(state.tick+1);
  return <section className="brave-stealth-game" aria-label="Sneak past the predictable castle guard" onKeyDown={onKey} tabIndex={0}>
   <div className="brave-stealth-scene">
-   <div className="brave-stealth-caption"><span>THE WEST GALLERY</span><strong>Walk when the guard turns away</strong></div>
+   <div className="brave-stealth-caption"><span>THE WEST GALLERY</span><strong>The guard sees his own tile and its neighbours</strong></div>
    <div className="brave-stealth-board" style={{gridTemplateColumns:'repeat(13,1fr)'}} aria-hidden="true">
     {braveStealthMap.join('').split('').map((tile,i)=><div key={i}
      className={'brave-stealth-cell '+(tile==='#'?'is-stone':'is-floor')+
