@@ -1,6 +1,7 @@
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { NineNinePortrait } from '../components/NineNinePortrait';
+import { nineCasePresentation,nineDeductionImpact } from '../data/nineNinePresentation';
 import { readPreferredDifficulty,savePreferredDifficulty,type Difficulty } from '../lib/passport';
 import { nineCases,dailyNineCase,heistCaseIds,caseCandidates,type NineCase } from '../data/nineNine';
 import {
@@ -14,7 +15,6 @@ import {
 type Props={today:string;progress:NineProgress;setProgress:Dispatch<SetStateAction<NineProgress>>;onHome:()=>void};
 type Mode='daily'|'cases'|'heist';
 const tierNames:Record<Difficulty,string>={easy:'Cozy',medium:'Clever',hard:'Expert'};
-const supervisors=['Jake','Holt','Amy','Rosa','Terry','Charles'];
 const categories:Record<string,string>={scene:'SCENE',record:'RECORD',forensics:'FORENSICS',interview:'INTERVIEW'};
 const coverIcon:Record<string,string>={interrogation:'🗣️',timeline:'⏱️',forensics:'🔬',heist:'🎃'};
 
@@ -37,6 +37,9 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
  const solvedCids=Object.keys(progress.bestAwards??{}).filter(k=>k.startsWith('99:')&&(progress.bestAwards[k]??0)>0);
  const choice=nineCases.filter(x=>x.difficulty===level&&x.track==='detective');
  const heistStages=heistCaseIds.map(id=>nineCases.find(x=>x.id===id)!);
+ const presentation=c?nineCasePresentation(c):null;
+ const nextLink=c?.deductions.find(d=>!round?.linked.includes(d.id));
+ const cozyAnchor=level==='easy'&&round?.status==='playing'&&nextLink?nextLink.pair[0]:null;
 
  function chooseDifficulty(next:Difficulty){
   if(mode==='heist'||locked||next===level)return;
@@ -93,7 +96,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
   changeRound((r,c)=>inspectNineEvidence(r,c,id));
  }
 
- return <main className="game-page nn-game">
+ return <main className={`game-page nn-game ${mode==='heist'?'nn-heist-event':''}`}>
    <button className="back-link" onClick={onHome}>← Back to the game shelf</button>
    <div className="nn-masthead">
      <div><span className="overline">THE LITTLE PUZZLE CLUB / GAME 05 · HONORARY DETECTIVE</span>
@@ -109,7 +112,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
    {mode!=='heist'?<DifficultyPicker value={level} onChange={chooseDifficulty} disabled={locked}
      lockedMessage="This case is underway or closed. Select a new difficulty for your next practice investigation."/>:
      <div className="nn-heist-difficulty"><span>🔐</span><p>The heist grows harder as the squad advances: <strong>Cozy → Clever → Expert.</strong> Finish a stage to unlock the next one.</p></div>}
-   <div className="mode-intro"><span>🔎</span><p><strong>Detective, you're on the case.</strong> Read exhibits, select two documents that form a logical connection, then accuse a suspect using the correct method and decisive proof. This is an original fan-made investigation—not an episode trivia quiz.</p></div>
+   <div className="mode-intro"><span>🔎</span><p><strong>Detective Molly, you're on the case.</strong> Read the exhibits, pair two documents to establish a deduction, and submit the culprit, method and decisive proof. {mode==='heist'?'Tonight the usual precinct rules come with a Halloween twist.':level==='easy'?'Cozy offers a suggested first document, two hints and generous retries.':level==='medium'?'Clever gives you the questions but lets you find the evidence pairs.':'Expert offers only unidentified investigation threads; you must discover their links yourself.'}</p></div>
 
    {mode==='cases'&&<section className="nn-files-shelf">
      <div className="nn-shelf-title"><div><span className="overline">DETECTIVE CASE ARCHIVE</span><h2>The open files</h2>
@@ -127,6 +130,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
    </section>}
 
    {mode==='heist'&&<section className="nn-heist-shelf">
+     <div className="nn-heist-marquee" aria-hidden="true"><span>🦇</span><span>🎃</span><span>✦ 99 ✦</span><span>🕸️</span><span>🍬</span></div>
      <div><span className="overline">THE SPECIAL THREE-STAGE CAMPAIGN</span><h2>🎃 The Halloween Heist</h2>
        <p>Three interconnected original heist investigations. Every solved stage unlocks a harder one, ending with an ultimate precinct-wide deception.</p></div>
      <div className="nn-heist-stages">
@@ -161,7 +165,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
          <div className="nn-panel-heading"><span>🔬</span><div><h3>Evidence locker</h3><p>Select each exhibit to inspect its full contents and pin it to the board.</p></div></div>
          <div className="nn-evidence-grid">
            {c.evidence.map(exhibit=><button type="button" key={exhibit.id}
-             className={`nn-evidence-card ${round.inspected.includes(exhibit.id)?'is-open':''} ${round.selected.includes(exhibit.id)?'is-selected':''}`}
+             className={`nn-evidence-card ${round.inspected.includes(exhibit.id)?'is-open':''} ${round.selected.includes(exhibit.id)?'is-selected':''} ${cozyAnchor===exhibit.id?'is-guided':''}`}
              disabled={round.status!=='playing'}
              aria-pressed={round.selected.includes(exhibit.id)}
              onClick={()=>inspect(exhibit.id)}>
@@ -174,9 +178,13 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
          </div>
          <div className="nn-document" aria-live="polite">
            <div className="nn-document-top"><span>📄 PRECINCT EVIDENCE REPORT</span><small>{evidenceNow?evidenceNow.id.toUpperCase():'UNOPENED'}</small></div>
-           {evidenceNow?<><h4>{evidenceNow.title}</h4><p>{evidenceNow.text}</p><small>Category: {categories[evidenceNow.kind]} · Investigation only</small></>:
+           {evidenceNow?<><h4>{evidenceNow.title}</h4>
+             <p>{evidenceNow.text.split(' PRECINCT CROSS-CHECK: ')[0]}</p>
+             {evidenceNow.text.includes(' PRECINCT CROSS-CHECK: ')&&<div className="nn-crosscheck"><strong>Supplemental record</strong><p>{evidenceNow.text.split(' PRECINCT CROSS-CHECK: ')[1]}</p></div>}
+             <small>Category: {categories[evidenceNow.kind]} · Investigation only</small></>:
              <><h4>Choose an evidence card</h4><p>Read witnesses, forensics and records before forming connections. Every document contributes to a solvable case.</p></>}
          </div>
+         {cozyAnchor&&<p className="nn-cozy-guidance">🧭 <strong>Cozy guide:</strong> Begin with {c.evidence.find(e=>e.id===cozyAnchor)?.title}; find the second report that tests the same claim.</p>}
          {round.status==='playing'&&<div className="nn-connection-action">
            <div><strong>Connect two exhibits</strong>
              <p>{round.selected.length?round.selected.map(id=>c.evidence.find(e=>e.id===id)?.title).join(' + '):'Select any two documents that support one deduction.'}</p></div>
@@ -191,9 +199,23 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
            <ol className="nn-question-list">
              {links.map((d,i)=>{
                const done=round.linked.includes(d.id);
+               const sequence=round.linked.indexOf(d.id);
+               const impact=done?nineDeductionImpact(c,round.linked.slice(0,sequence),d):null;
+               const first=c.evidence.find(e=>e.id===d.pair[0])!;
+               const second=c.evidence.find(e=>e.id===d.pair[1])!;
                return <li className={done?'is-solved':''} key={d.id}>
-                 <div><span>{done?'✓':String(i+1)}</span><strong>{d.prompt}</strong></div>
-                 <p>{done?d.conclusion:'This link is still unresolved. Inspect the reports for a contradiction or matching detail.'}</p>
+                 <div><span>{done?'✓':String(i+1)}</span><strong>{done||level!=='hard'?d.prompt:`Sealed investigation thread ${i+1}`}</strong></div>
+                 {done?<div className="nn-deduction-explain">
+                   <p><strong>Compare:</strong> {first.title} + {second.title}</p>
+                   <p><strong>Deduction:</strong> {d.conclusion}</p>
+                   {impact&&<p className="nn-eliminations">
+                     {impact.removedSuspects.length>0?`Excluded suspects: ${impact.removedSuspects.join(', ')}. `:''}
+                     {impact.removedMethods.length>0?`Excluded methods: ${impact.removedMethods.join(', ')}. `:''}
+                     <strong>{impact.after} possible combination{impact.after===1?'':'s'} remain.</strong>
+                   </p>}
+                 </div>:<p>{level==='easy'? `Cozy tip: start with ${first.title}; find a supporting or contradictory report.`:
+                   level==='medium'?'Inspect the reports and decide which two records establish this claim.':
+                   'Investigate the exhibits to discover the two records behind this sealed thread.'}</p>}
                </li>;
              })}
            </ol>
@@ -203,9 +225,9 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
              onClick={()=>changeRound(hintNine)}>💡 Holt's hint ({nineHintLimit(level)-round.hints})</button>}
          </div>
          <div className="nn-squad-corner">
-           <div className="nn-panel-heading"><span>🚔</span><div><h3>Case team</h3><p>Precinct desk notes · original squad artwork</p></div></div>
-           <div className="nn-squad-pictures">{supervisors.slice(0,4).map(name=><div key={name}><NineNinePortrait name={name} size={60}/><small>{name}</small></div>)}</div>
-           <p>Jake wants a dramatic reveal. Amy wants a binder. Holt wants a complete chain of evidence.</p>
+           <div className="nn-panel-heading"><span>🚔</span><div><h3>Case team</h3></div></div>
+           <div className="nn-squad-pictures">{presentation?.team.map(name=><div key={name} className={name==='Molly'?'nn-molly-lead':''}><NineNinePortrait name={name} size={73}/><small>{name==='Molly'?'⭐ Molly':name}</small></div>)}</div>
+           <p>{presentation?.teamNote}</p>
          </div>
        </section>
      </div>
@@ -236,14 +258,23 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
      </section>}
      {round.status!=='playing'&&<section className={`nn-verdict ${round.status==='won'?'is-won':'is-lost'}`} role="status">
        <div className="nn-verdict-art">
-         <NineNinePortrait name={round.status==='won'?'Holt':'Jake'} size={145}/>
+         <NineNinePortrait name={round.status==='won'?'Molly':'Holt'} size={145}/>
          <span>{round.status==='won'?'✨':'📁'}</span>
        </div>
        <div><span className="overline">{round.status==='won'?'CASE SOLVED • NINE-NINE!':'THE FILE IS CLOSED — FOR NOW'}</span>
          <h3>{round.status==='won'?'Case closed, Detective Molly!':'Unsolved, but not forgotten.'}</h3>
          <p>{round.status==='won'?c.finale:'Captain Holt has archived this investigation. You can review the evidence and try a fresh copy.'}</p>
          {round.status==='won'&&<strong>+{round.score} stars · {c.deductions.length} connected deductions</strong>}
-         <details><summary>Read the verified case solution</summary><p><strong>{c.culprit}</strong> used <strong>{c.method}</strong>. {c.deductions.find(x=>x.id===c.decisive)?.conclusion}</p></details>
+         <details className="nn-solution-story"><summary>Read the verified case solution</summary>
+           <div className="nn-story-chapter"><strong>01 · The incident</strong><p>{presentation?.scene}</p></div>
+           <div className="nn-story-chapter"><strong>02 · Why it happened</strong><p>{presentation?.motivation}</p></div>
+           <div className="nn-story-chapter"><strong>03 · How the evidence closes the case</strong><p>{presentation?.reconstruction}</p>
+             <p><strong>Verified finding:</strong> {c.culprit} used {c.method}. The decisive link was “{c.deductions.find(x=>x.id===c.decisive)?.prompt}”,
+               supported by {c.deductions.find(x=>x.id===c.decisive)?.pair.map(id=>c.evidence.find(e=>e.id===id)?.title).join(' and ')}.
+               After all cross-checks, {caseCandidates(c,c.deductions.map(d=>d.id)).length} viable suspect-and-method combination remains.</p>
+           </div>
+           <div className="nn-story-chapter"><strong>04 · Back at the Nine-Nine</strong><p>{presentation?.closing}</p></div>
+         </details>
        </div>
        <button className="btn btn-primary" onClick={()=>{
          if(mode==='heist'){

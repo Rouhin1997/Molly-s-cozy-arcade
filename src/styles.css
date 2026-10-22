@@ -629,3 +629,82 @@
 @media(max-width:930px){.nn-desk{grid-template-columns:1fr}.nn-case-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.nn-masthead{padding:18px 14px}.nn-masthead h1{font-size:39px}.nn-masthead p{font-size:12px}.nn-badge{width:78px;height:105px;border-width:5px}.nn-badge strong{font-size:39px}.nn-badge small,.nn-badge span{font-size:6px}.nn-files-shelf,.nn-heist-shelf{padding:15px 12px}.nn-case-grid{grid-template-columns:1fr}.nn-case-card{min-height:145px}.nn-shelf-title{flex-wrap:wrap}.nn-dossier{padding:15px 9px}.nn-case-ticket{min-width:91px;max-width:100px}.nn-case-ticket>strong{font-size:23px}.nn-case-ticket small{font-size:9px}.nn-case-head h2{font-size:26px}.nn-case-head p{font-size:11px}.nn-progress{gap:5px}.nn-progress span{font-size:9px;padding:7px 9px}.nn-evidence-side{padding:13px 8px}.nn-evidence-grid{gap:6px}.nn-evidence-card{padding:7px 5px;gap:5px;min-height:85px}.nn-evidence-art{width:35px;height:43px;font-size:22px}.nn-evidence-info strong{font-size:10px}.nn-evidence-info small,.nn-evidence-info em{font-size:7px}.nn-corkboard{border-width:5px;padding:11px}.nn-accusation-grid{grid-template-columns:1fr}.nn-accusation{padding:14px 11px}.nn-heist-stages{gap:6px}.nn-heist-stage{padding:10px 4px}.nn-heist-stage strong{font-size:11px}.nn-heist-stage small{font-size:9px}.nn-verdict{padding:14px 10px}.nn-verdict-art .nn-portrait{width:100px!important;height:100px!important}}
 @media(prefers-reduced-motion:reduce){.nn-evidence-card,.nn-case-card{transition:none}}
+
+/* Phase 2H — Detective Molly and evidence-story polish */
+.nn-squad-corner{background:linear-gradient(148deg,#fbf2ee,#f5ebf5);border-color:#e8d8dd;padding:17px}
+.nn-squad-pictures{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;align-items:start;margin-top:8px}
+.nn-squad-pictures>div{gap:5px;min-width:0}
+.nn-squad-pictures .nn-portrait{filter:drop-shadow(0 5px 4px #61485d32);transition:transform .2s}
+.nn-squad-pictures>div:hover .nn-portrait{transform:rotate(-3deg) translateY(-3px)}
+.nn-squad-pictures .nn-molly-lead{border:2px solid #d9a773;background:linear-gradient(#fffaf2,#fcebdc);padding:5px 1px 6px;border-radius:14px;margin-top:-7px;box-shadow:0 3px 9px #a6797225}
+.nn-molly-lead small{color:#925d66!important;font-size:11px!important}
+.nn-squad-corner>p{font-size:11px;line-height:1.7;margin-top:12px;color:#866e80}
+.nn-evidence-card.is-guided:not(.is-selected){border-color:#d4a86d;background:linear-gradient(140deg,#fff7df,#fffdf7);box-shadow:inset 0 0 0 1px #f0d4a5}
+.nn-cozy-guidance{font-size:11px;line-height:1.65;color:#79634a;background:#fff6da;border:1px solid #e2c595;padding:12px 14px;border-radius:12px;margin:12px 0 0}
+.nn-crosscheck{border-left:3px solid #c3a0b9;background:#f7edf3a8;border-radius:0 9px 9px 0;margin:13px 0;padding:10px 12px}
+.nn-crosscheck strong{font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:#89617a}
+.nn-crosscheck p{font-size:11px;color:#6d5968;line-height:1.7;margin:5px 0 0}
+.nn-deduction-explain{border-left:3px solid #83a789;padding:5px 0 5px 10px;margin-top:9px}
+.nn-deduction-explain p{line-height:1.7;margin:4px 0 8px!important}
+.nn-deduction-explain p strong{color:#47634c}
+.nn-deduction-explain .nn-eliminations{font-size:10px;color:#537459;background:#e2f2dd;border-radius:8px;padding:9px}
+.nn-solution-story{margin-top:15px!important;background:#fffefbcc!important;border-color:#dac6d2!important}
+.nn-solution-story>summary{font-size:12px!important;line-height:1.5}
+.nn-story-chapter{margin-top:13px;padding:12px 14px;border-radius:11px;background:#f8f1f4}
+.nn-story-chapter:nth-of-type(even){background:#f7f2e9}
+.nn-story-chapter>strong{display:block!important;font-size:11px!important;text-transform:uppercase;letter-spacing:.06em;color:#875b78!important}
+.nn-story-chapter p{font-size:12px!important;line-height:1.72!important;color:#695968!important;margin:6px 0 0!important}
+.nn-story-chapter p strong{color:#75566e!important}
+/* The Halloween event is a separate play space, not merely a tab tint. */
+.nn-heist-event{padding:18px;border:1px solid #513d67;border-radius:27px;background:
+ radial-gradient(circle at 92% 9%,#d5a45f28 0,#d5a45f13 95px,transparent 97px),
+ radial-gradient(circle at 5% 39%,#7f5baf4a 0,transparent 310px),
+ linear-gradient(145deg,#29243f 0%,#3c2a52 44%,#392847 100%);
+ box-shadow:0 16px 48px #3021392d}
+.nn-heist-event>.back-link{color:#f2dac9!important}
+.nn-heist-event .nn-masthead{background:linear-gradient(115deg,#433151,#292942 80%);border:1px solid #78546f;box-shadow:inset 0 0 0 1px #d4a16b24}
+.nn-heist-event .nn-masthead h1{color:#ffe4ae}
+.nn-heist-event .nn-masthead .overline{color:#d0abda}
+.nn-heist-event .nn-masthead p{color:#f1dbe2}
+.nn-heist-event .nn-badge{background:linear-gradient(140deg,#ffdd9e,#bd7d50,#fbdcab);border-color:#ffce7c;box-shadow:0 3px 28px #d7a16270;color:#5a3246}
+.nn-heist-event .nn-mode-tabs{background:#291f3d;border:1px solid #72536f}
+.nn-heist-event .nn-mode-tabs button{color:#e2cbdc}
+.nn-heist-event .nn-mode-tabs button.active{background:#edc48d;color:#443047;border-color:#fce3b4}
+.nn-heist-event .mode-intro{background:#f6e8d9;border-radius:14px;border:1px solid #dfae86}
+.nn-heist-event .nn-heist-difficulty{background:#4f3552;border:1px solid #9f6c72;color:#f2d8ba}
+.nn-heist-event .nn-heist-difficulty p{color:#f3dbca}
+.nn-heist-event .nn-heist-shelf{position:relative;overflow:hidden;background:
+ radial-gradient(circle at 90% 20%,#f6be6638,transparent 36%),
+ linear-gradient(135deg,#493358,#713950);border:2px solid #d9a86b;box-shadow:0 7px 0 #25172c5c}
+.nn-heist-event .nn-heist-shelf h2{font-size:32px;color:#ffdfb0}
+.nn-heist-event .nn-heist-shelf .overline{color:#f4be9b}
+.nn-heist-event .nn-heist-shelf p{color:#f2d9d2;font-size:12px}
+.nn-heist-marquee{display:flex;justify-content:space-around;gap:10px;align-items:center;border:1px dashed #e7b9897a;background:#271f3d88;border-radius:15px;margin-bottom:17px;padding:13px 8px;color:#ffdc9b}
+.nn-heist-marquee span{font-size:26px;line-height:1}
+.nn-heist-marquee span:nth-child(3){font-family:Georgia,serif;font-weight:900;font-size:21px;letter-spacing:.15em;text-shadow:0 2px 6px #fcdcae70}
+.nn-heist-stage{background:#322941;color:#f0dfd4;border:2px dashed #ac7894}
+.nn-heist-stage.is-active{border:2px solid #ffca79;background:linear-gradient(#624259,#45354b);box-shadow:0 0 0 3px #ffc67d2f}
+.nn-heist-stage strong{color:#fbe3c4}
+.nn-heist-stage small{color:#dfb9c8}
+.nn-heist-stage em{color:#ffce8a}
+.nn-heist-event .nn-dossier{background:#f5eae0;border:2px solid #d1a780;box-shadow:0 9px 0 #261b34b0}
+.nn-heist-event .nn-case-head h2{color:#5c365b}
+.nn-heist-event .nn-case-ticket{background:#50334f;border:2px dashed #cf9d70;color:#fce2b3}
+.nn-heist-event .nn-case-ticket small,.nn-heist-event .nn-case-ticket span{color:#ffdfbf}
+.nn-heist-event .nn-progress span{background:#503853;color:#ffdbab}
+.nn-heist-event .nn-evidence-side{background:linear-gradient(145deg,#f8e5d3,#f0dece)}
+.nn-heist-event .nn-corkboard{border-color:#99637a;background:repeating-linear-gradient(135deg,#ecc2a0 0,#ecc2a0 14px,#f0cbb6 14px,#f0cbb6 28px)}
+.nn-heist-event .nn-question-list li{background:#fff2df;border-color:#bd8e8a}
+.nn-heist-event .nn-question-list li.is-solved{background:#e7f1d9;border-color:#9bba85}
+.nn-heist-event .nn-squad-corner{background:#f0dfe8;border-color:#d3b4d1}
+.nn-heist-event .nn-feedback{background:#523a58;color:#ffddac;border-color:#d49b76}
+.nn-heist-event .nn-verdict{border-color:#e1af70;background:linear-gradient(125deg,#f2d9bd,#ead8e5)}
+.nn-heist-event .privacy-note{color:#e8cbdc}
+@media(max-width:600px){
+ .nn-heist-event{padding:8px;border-radius:19px}
+ .nn-heist-marquee span{font-size:22px}.nn-heist-marquee span:nth-child(3){font-size:14px}
+ .nn-squad-pictures .nn-portrait{width:59px!important;height:59px!important}
+ .nn-squad-pictures{gap:3px}.nn-squad-corner{padding:12px}
+ .nn-story-chapter{padding:10px 11px}
+}
+@media(prefers-reduced-motion:reduce){.nn-squad-pictures .nn-portrait{transition:none}}

@@ -1,5 +1,16 @@
 # The 99 Files — Gameplay, lore and original art
 
+## Phase 2H — Molly likeness, portraits and clearer investigations
+
+- A user-supplied personal reference image was viewed privately to design the original Detective Molly SVG (dark side-parted hair, warm smile, checked blazer, small necklace). **The actual photograph is not committed to GitHub or distributed on the live site**, nor is the poster visible in that photo. The game uses only original vector code.
+- Other character portraits now use distinctive original hair, expression, outfits and silhouettes, referencing the squad's traits rather than copying cast photographs.
+- All case teams now contain Molly and exactly three plot-relevant characters, plus unique team notes. No redundant artwork subheading remains.
+- Each successful link displays the two source exhibits, its explanation, names/methods really removed by the case's hypothesis solver, and possibilities remaining. The first-exhibit anchor is Cozy-only; Clever has no anchor; Expert conceals the unlinked investigation prompt until solved.
+- Verified solutions are mini-mysteries: incident, imagined character motivation, evidence reconstruction and a small comedic epilogue, plus exact decisive proof. Motives are fictional narrative flavour, not claims about real episodes.
+- Halloween Heist has separate spooky-cute evening colours, stage badges and decorative icons; original puzzles and progression unchanged.
+- Test every tier and all Heist stages, inspect a full solution, and check Molly's illustrated resemblance on phone and desktop. Automated tests cannot judge portrait aesthetics.
+
+
 **Status:** Phase 2G. A fully playable, unofficial fan-made game with 12 original investigations, a three-stage Halloween Heist and a standalone evidence-deduction engine.
 
 **Copyright/rights note:** The Nine-Nine and its characters are references to the television series *Brooklyn Nine-Nine*, not a licensed collaboration. Do **not** assume that giving credit permits copied photographs, TV stills, soundtracks, set designs or actor likenesses. This version uses **original code-drawn SVG chibi badges, CSS evidence-board illustrations and new fictional case narratives**, not TV footage or ripped artwork.

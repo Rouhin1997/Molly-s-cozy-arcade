@@ -1,8 +1,15 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 2H — Detective Molly & Nine-Nine polish
+
+Detective Molly (an **original SVG portrait inspired by a private reference photo, not a publicly stored photo**) now leads each case-specific four-person squad, alongside redesigned and more recognizable Nine-Nine character stickers. Successful evidence links explain exactly which source reports were compared, which suspects and methods the logic excludes, and how many candidate hypotheses remain. Cozy highlights the starting evidence card; Clever does not; Expert hides unsolved investigation questions and requires four evidence connections.
+
+Every one of the twelve cases has a concise four-part story resolution. The Halloween Heist has a visually distinct twilight-purple, pumpkin-and-amber festival theme, with the same three-stage campaign logic and saved progress. No existing saves, games, awards or Passport import versions have changed.
+
+
 A tiny, cheerful puzzle arcade built as a birthday gift, and designed to be fun all year long.
 
-**Status: Milestone 2G — The 99 Files launches, plus Bazinga scenario polish.** Five games are playable. The 99 Files is a fully interactive detective game with 12 original evidence cases and a three-stage Halloween Heist. Bazinga has custom clue-panel titles for each scenario, improved seat naming and a lighter map presentation. Pink Rush and the November 13 Birthday Quest/coupon wallet remain planned.
+**Status: Milestone 2H — Detective Molly and Nine-Nine polish.** Five games are playable. The 99 Files is a fully interactive detective game with 12 original evidence cases and a three-stage Halloween Heist. Bazinga has custom clue-panel titles for each scenario, improved seat naming and a lighter map presentation. Pink Rush and the November 13 Birthday Quest/coupon wallet remain planned.
 
 ## Play locally
 
