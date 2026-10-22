@@ -92,7 +92,7 @@ export function braveMove(level:BraveLevel,state:BravePuzzleState,dir:BraveDirec
  const next=nr*w+nc,tile=braveTile(level,next);
  if(tile==='#')return {state,moved:false,event:null,reason:'The old stones block the way.'};
  if(tile==='G'&&state.stones.length<1){
-  return {state,moved:false,event:null,reason:'The gate sleeps until a rune stone wakes.'};
+  return {state,moved:false,event:null,reason:'Awaken a rune stone before crossing this gate.'};
  }
  if(tile==='H'&&state.stones.length<2){
   return {state,moved:false,event:null,reason:'Both rune stones must sing to open the moon gate.'};
