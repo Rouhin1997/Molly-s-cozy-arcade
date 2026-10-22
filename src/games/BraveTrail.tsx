@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState,type CSSProperties} from 'react';
 import {braveChapters,readBraveSave,writeBraveSave,type BraveIntroChoice,type BravePreviewSave} from '../data/braveWorld';
 import {startBraveMusic,type BraveMusicPlayer} from '../lib/braveMusic';
-import BraveCrossing from './BraveCrossing';
+import BraveJourney from './BraveJourney';
 
 /** Original illustrated Highland panorama. All paths are handmade vector art. */
 function HighlandMap({active,onSelect}:{active:string;onSelect:(id:string)=>void}){
@@ -159,7 +159,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
     <span className="brave-crest" aria-hidden="true">❦</span>
     <div><span className="brave-kicker">A HIGHLAND STORY FOR MOLLY</span><h1>Brave <i>—</i> <em>The Wisps’ Trail</em></h1>
     <p>Beyond the castle walls, the hills remember old magic. One little wisp has chosen a Keeper. The adventure begins with a promise.</p>
-    <button className="brave-banner-cta" onClick={()=>setIntroOpen(true)}>✧ {save.prologueSeen?'Read the prologue again':'Open the storybook'} ↗</button></div>
+    <div className="brave-banner-actions"><button className="brave-banner-cta" onClick={()=>setIntroOpen(true)}>✧ {save.prologueSeen?'Read the prologue again':'Open the storybook'} ↗</button><button className="brave-banner-cta brave-banner-play" onClick={()=>document.getElementById('brave-journey')?.scrollIntoView({behavior:'smooth',block:'start'})}>Begin the journey ↓</button></div></div>
     <div className="brave-wisp-sigil" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
    </header>
    <section className="brave-illustrated-world" aria-labelledby="brave-map-title">
@@ -197,7 +197,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
      </article>
     </div>
    </section>
-   <BraveCrossing/>
+   <BraveJourney onChapterChange={selectChapter}/>
    <section className="brave-keeper-panel">
     <div className="brave-keeper-symbol" aria-hidden="true">✧</div>
     <div><span className="brave-kicker">THE KEEPER’S JOURNAL</span><h2>A promise made in the moonlight</h2>
