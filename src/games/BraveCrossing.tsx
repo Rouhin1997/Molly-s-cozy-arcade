@@ -40,11 +40,12 @@ export default function BraveCrossing(){
   if(directions[event.key]){event.preventDefault();move(directions[event.key])}
  }
  return <section className="brave-crossing" aria-labelledby="brave-crossing-title"
-  aria-describedby="brave-crossing-help" onKeyDown={keyDown} tabIndex={0}>
+  aria-describedby="brave-crossing-help" onKeyDown={keyDown} tabIndex={0}
+  onPointerDown={event=>{if(event.target instanceof HTMLElement && !event.target.closest("button"))event.currentTarget.focus()}}>
   <div className="brave-crossing-heading">
     <span className="brave-kicker">THE KEEPER'S FIRST JOURNEY</span>
     <h2 id="brave-crossing-title">{level.title}</h2>
-    <p id="brave-crossing-help">A stray wisp waits beside an old path. Carry its light to the standing stone, awaken the gate, and find the far glen. Use the arrow keys or the path buttons to move. There is no timer.</p>
+    <p id="brave-crossing-help">A stray wisp waits beside an old path. Carry its light to the standing stone, awaken the gate, and find the far glen. Select the path, then use arrow keys or WASD; touch players can use the direction buttons. There is no timer.</p>
   </div>
   <div className="brave-crossing-content">
    <div className="brave-crossing-grid-frame">
