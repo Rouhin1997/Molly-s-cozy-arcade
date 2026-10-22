@@ -1560,3 +1560,19 @@
  .brave-rune-piece-tray{gap:5px}
  .brave-rune-piece-tray button{flex-basis:76px;padding:10px 4px}
 }
+
+
+/* The adventure is primary; the atlas becomes an optional chapter explorer. */
+.brave-world-atlas{margin:22px 9px;border:2px solid #bac4a3;border-radius:15px;background:#eff0d9;overflow:hidden}
+.brave-world-atlas>summary{display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;padding:19px 23px;color:#3d6e61;font:bold 16px Georgia,serif;list-style:none}
+.brave-world-atlas>summary::-webkit-details-marker{display:none}
+.brave-world-atlas>summary span{font:800 10px 'DM Sans',sans-serif;letter-spacing:.07em;color:#728b7d}
+.brave-world-atlas[open]>summary{border-bottom:1px solid #c4c8ac;background:#e1ead8}
+.brave-world-atlas .brave-illustrated-world{padding:15px}
+.brave-journey-review{display:flex;align-items:center;flex-wrap:wrap;gap:13px;margin:0 0 15px;color:#729180;font:italic 11px Georgia,serif}
+@media(max-width:670px){
+ .brave-world-atlas{margin:15px 0}
+ .brave-world-atlas>summary{padding:15px;font-size:13px}
+ .brave-world-atlas>summary span{font-size:9px;text-align:right}
+ .brave-world-atlas .brave-illustrated-world{padding:8px}
+}
