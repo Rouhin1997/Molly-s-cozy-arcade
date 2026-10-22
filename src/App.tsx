@@ -26,7 +26,7 @@ type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'pi
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
-  { icon: '🏹', name: 'Brave: The Wisps’ Trail', tag: 'Magical adventure', teaser: 'Open the storybook, meet the wisps and explore an illustrated Highland chapter map.', theme: 'mint', detail: 'Explore the painted Highlands, meet the wisps, choose your Keeper’s promise and try the first enchanted crossing.' },
+  { icon: '🏹', name: 'Brave: The Wisps’ Trail', tag: 'Magical adventure', teaser: 'Six illustrated Highland chapters, enchanted puzzles, archery, secret passages and a tapestry finale.', theme: 'mint', detail: 'Journey with Merida through DunBroch, the Whispering Wood, the Witch’s Workshop and the forgotten stones. Solve all eighteen story scenes and mend the golden tapestry.' },
 ];
 
 function dateUntilBirthday(now = new Date()): number {
