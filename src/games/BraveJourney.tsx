@@ -24,7 +24,7 @@ function JourneyRoute({stage,history,onMove,notice,onUndo,onRestart}:{
  const position=bravePosition(level,state.position);
  return <div className="brave-crossing-content brave-journey-playfield">
   <div className="brave-crossing-grid-frame brave-journey-maze-scroll" role="region" aria-label="Scrollable illustrated puzzle labyrinth" tabIndex={0}>
-   <div className="brave-crossing-grid" style={{gridTemplateColumns:'repeat('+braveWidth(level)+',minmax(0,1fr))'}} aria-hidden="true">
+   <div className="brave-crossing-grid" style={{gridTemplateColumns:'repeat('+braveWidth(level)+',minmax(0,1fr))',minWidth:braveWidth(level)*30+'px'}} aria-hidden="true">
     {level.rows.join('').split('').map((_,i)=>{
      const tile=braveTile(level,i),at=i===state.position;
      const found=tile==='W'&&state.wisps.includes(i);
