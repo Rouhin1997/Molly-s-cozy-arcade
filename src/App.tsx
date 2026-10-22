@@ -145,7 +145,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
             <button className="card-link" onClick={() => onNavigate('pink')}>Enter the concert <span aria-hidden="true">↗</span></button></div>
         </article>
         {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
-          <div className="card-topline"><span className="soon-pill">IN THE WORKS</span><span className="card-number">0{index + 7} / 07</span></div>
+          <div className="card-topline"><span className="soon-pill">COMING SOON</span><span className="card-number">0{index + 7} / 07</span></div>
           <div className="game-emoji" aria-hidden="true">{game.icon}</div>
           <div className="card-content"><span className="card-category">{game.tag.toUpperCase()}</span><h3>{game.name}</h3><p>{game.teaser}</p>
             <button className="card-link" onClick={() => onChooseGame(game.name)}>Sneak peek <span aria-hidden="true">↗</span></button></div>
