@@ -164,6 +164,9 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
     <div className="brave-banner-actions"><button className="brave-banner-cta" onClick={()=>setIntroOpen(true)}>✧ {save.prologueSeen?'Read the prologue again':'Open the storybook'} ↗</button><button className="brave-banner-cta brave-banner-play" onClick={()=>{const current=braveCampaignStages.find(c=>c.id===readBraveJourney().current);if(current)selectChapter(current.chapterId);document.getElementById('brave-journey')?.scrollIntoView({behavior:'smooth',block:'start'})}}>Begin the journey ↓</button></div></div>
     <div className="brave-wisp-sigil" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
    </header>
+   <BraveJourney onChapterChange={selectChapter}/>
+   <details className="brave-world-atlas">
+    <summary>✧ Open the illustrated Highlands atlas <span>Explore the six chapter locations ↗</span></summary>
    <section className="brave-illustrated-world" aria-labelledby="brave-map-title">
     <div className="brave-world-heading"><div><span className="brave-kicker">THE CHAPTER MAP</span>
      <h2 id="brave-map-title">Where shall the wisps lead?</h2>
@@ -199,7 +202,8 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
      </article>
     </div>
    </section>
-   <BraveJourney onChapterChange={selectChapter}/>
+
+   </details>
    <section className="brave-keeper-panel">
     <div className="brave-keeper-symbol" aria-hidden="true">✧</div>
     <div><span className="brave-kicker">THE KEEPER’S JOURNAL</span><h2>A promise made in the moonlight</h2>
