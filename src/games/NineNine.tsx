@@ -69,6 +69,14 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
   if(index<0||index>heistUnlocked)return;
   setSelectedHeist(id);setActiveExhibit(null);setMode('heist');
  }
+ function retryHeist(){
+  setProgress(prev=>{
+   const caseFile=nineCases.find(x=>x.id===selectedHeist);
+   if(!caseFile)return prev;
+   return {...prev,heist:{...prev.heist,[selectedHeist]:newNineRound(caseFile)}};
+  });
+  setActiveExhibit(null);
+ }
  function changeRound(transform:(r:NineRound,c:NineCase)=>NineRound){
   setProgress(prev=>{
    const existing=mode==='daily'?getNineDaily(prev,today,difficulty):mode==='cases'?prev.practice:prev.heist[selectedHeist]??newNineRound(nineCases.find(c=>c.id===selectedHeist)!);
@@ -130,7 +138,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
            disabled={!unlocked} onClick={()=>selectHeist(stage.id)} aria-label={`Stage ${i+1}: ${stage.title}${unlocked?'':' locked'}`}>
            <span>{!unlocked?'🔒':won?'🏆':stage.icon}</span>
            <strong>Stage {i+1}</strong><small>{tierNames[stage.difficulty]}</small>
-           <em>{won?'Solved':unlocked?'Investigate':'Locked'}</em>
+           <em>{won?'Solved · Review':unlocked&&progress.heist[stage.id]?.status==='lost'?'Lost · Retry':unlocked?'Investigate':'Locked'}</em>
          </button>;
        })}
      </div>
@@ -243,9 +251,10 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
          if(mode==='heist'){
            const i=heistCaseIds.indexOf(selectedHeist as typeof heistCaseIds[number]);
            if(round.status==='won'&&i<2)selectHeist(heistCaseIds[i+1]);
+           else if(round.status==='lost')retryHeist();
            else setMode('cases');
          }else surprise(level);
-       }}>{mode==='heist'?(round.status==='won'&&selectedHeist!=='heist-three'?'Next heist stage ↗':'Browse case files ↗'):'Next investigation ↗'}</button>
+       }}>{mode==='heist'?(round.status==='lost'?'Retry this heist ↗':selectedHeist!=='heist-three'?'Next heist stage ↗':'Browse case files ↗'):'Next investigation ↗'}</button>
      </section>}
    </section>}
    <p className="privacy-note">♡ Unofficial fan-made homage to Brooklyn Nine-Nine. All case scenarios, evidence-board art and illustrated badges are original; no show stills, cast photos or audio. Scores are saved in this browser.</p>
