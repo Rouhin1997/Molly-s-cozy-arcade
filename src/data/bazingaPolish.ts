@@ -179,3 +179,29 @@ export function polishRoomCases(all:RoomCase[]):RoomCase[]{
     return next?{...c,story:next.story,rules:next.rules,winning:next.winning,losing:'Bazinga! You lose!'}:c;
   });
 }
+
+/** Seat captions are local to each story, not the resident's identity.
+ * In particular, never explicitly reveal which cushion belongs to Sheldon. */
+const scenarioSeatNames:Record<string,Record<string,string>>={
+ 'star-wars-4a':{'spot':'Sofa · window-end cushion','middle':'Sofa · centre cushion','right':'Sofa · hallway end','armchair':'Reading armchair'},
+ 'penny-pizza':{'love-left':'Love seat · kitchen side','love-right':'Love seat · window side','armchair':'Living-room armchair','counter':'Breakfast-counter stool'},
+ 'dinner-wolowitz':{'north':'Dining table · head','west-upper':'Left side · kitchen end','east-upper':'Right side · doorway end','south':'Dining table · far end'},
+ 'comics-release':{'counter':'Cash-register chair','shelf':'Collectibles corner','aisle':'Main shop aisle','rickety':'Wobbly back stool'},
+ 'cafeteria-lunch':{'west-head':'Table · west end','top-left':'Window side · west','east-head':'Table · passage end','bottom-left':'Serving counter side'},
+ 'movie-night':{'front-left':'Row A · left aisle','front-centre':'Row A · centre','back-left':'Row C · left aisle','back-centre':'Row C · centre'},
+ 'raj-mystery':{'couch-left':'Velvet sofa · left','couch-right':'Velvet sofa · right','chair':'Reading armchair','snack':'Refreshments-side stool','entry':'Hallway entry stool'},
+ 'sick-day':{'love-left':'Love seat · kitchen end','love-right':'Love seat · far end','armchair':'Armchair by rug','window':'Window-side chair','entry':'Doorway stool'},
+ 'halo-marathon':{'spot':'Player sofa · window end','middle':'Player sofa · centre','right':'Player sofa · doorway end','armchair':'Multiplayer armchair','stool':'Extra controller stool'},
+ 'wolowitz-thanksgiving':{'north':'Host’s end of table','west-upper':'Kitchen-side · upper','west-lower':'Kitchen-side · lower','east-upper':'Door-side · upper','south':'Dining table · far end'},
+ 'lab-flag-show':{'safe':'Shielded workbench','scope':'Telescope station','laser':'Laser workstation','computer':'Monitor workstation','exit':'Emergency exit desk'},
+ 'comic-tournament':{'counter':'Register stool','shelf':'Rare editions corner','window':'Display-window seat','aisle':'Tournament aisle','rickety':'Spare folding stool'},
+ 'sheldon-spot-war':{'spot':'Sofa · window end','middle':'Sofa · middle','right':'Sofa · doorway end','armchair':'Comfortable armchair','desk':'Computer desk chair','stool':'Kitchen overflow stool'},
+ 'cinema-empire':{'front-left':'Row A · left','front-centre':'Row A · centre','front-right':'Row A · right','back-left':'Row C · left','back-centre':'Row C · centre','back-right':'Row C · right'},
+ 'raj-midnight':{'couch-left':'Velvet sofa · west','couch-right':'Velvet sofa · east','chair':'Lounge chair','snack':'Buffet stool','window':'Window alcove','entry':'Corridor-side stool'},
+ 'nobel-banquet':{'north':'Banquet table · head','west-upper':'Left · upper','west-lower':'Left · lower','east-upper':'Right · upper','east-lower':'Right · lower','south':'Banquet table · far end'},
+ 'caltech-quantum':{'safe':'Shielded bench','scope':'Telescope platform','laser':'Laser table','computer':'Data-analysis chair','vent':'Ventilation stool','exit':'Exit-side workstation'},
+ 'cafeteria-summit':{'west-head':'Quiet west end','top-left':'Window side · west','top-right':'Window side · east','east-head':'Walkway end','bottom-left':'Serving side · west','bottom-right':'Serving side · east'},
+};
+export function seatLabelForCase(c:RoomCase,id:string,defaultLabel:string):string{
+ return scenarioSeatNames[c.id]?.[id]??defaultLabel;
+}
