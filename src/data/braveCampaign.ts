@@ -147,11 +147,11 @@ export const braveCampaignStages:readonly BraveStage[]=[
  },
  {
  id:'runes',chapterId:'witch',index:7,title:'The Rune Sequence',kind:'runes',
- scene:'Three small bear carvings turn their wooden heads toward Molly. Above them, someone has written: REMEMBER THE ROAD, NOT THE DESTINATION.',
- merida:'“The first was where we began. The second showed us where to go. And the last… well. That is what we are trying to protect.”',
- molly:'You remember the oak by the castle wall, the star-like wisp in the wood, and the warm hearth you hope to return to.',
- ending:'Oak, light, hearth. The carvings nod, one after another. The little spindle begins to spin a thread that points toward the back room.',
- hint:'Remember the journey: first the oak, then the guiding light, then the warmth of home.'
+ scene:'Four enchanted wooden carvings turn toward Molly. A fifth bear carving smiles mischievously. The Witch has left a riddle: ROOT BEFORE CURRENT; LIGHT BEFORE WARMTH. THE STREAM COMES AFTER THE TREE, AND BEFORE THE GUIDING STAR.',
+ merida:'“She always hides the answer in the telling. Start where the old oak stood; the rest is a journey, not a guess.”',
+ molly:'A carved river curves beneath the other signs. Which four marks tell our journey—and in what order?',
+ ending:'The oak roots, the river flows, the wisp shines and the hearth glows. The four carvings bow. The spindle begins to spin a golden thread toward the back room.',
+ hint:'Read the inscription carefully: the stream must come after the tree, and the guiding light comes before home.'
  },
  {
  id:'secret',chapterId:'witch',index:8,title:'The Witch’s Secret',kind:'route',
@@ -181,10 +181,11 @@ export const braveArcheryTargets=[
  {name:'The Far Pennant',wind:-1,crosswind:-6,distance:68,height:4.2,range:'far' as const,description:'The blue pennant streams west across the long clearing.'},
  {name:'The Last Feather',wind:0,crosswind:4,distance:75,height:7.8,range:'far' as const,description:'High on the wooden frame, a feather twists in an easterly crosswind.'}
 ];
-export const braveRuneOrder=['oak','light','hearth'] as const;
+export const braveRuneOrder=['oak','river','light','hearth'] as const;
 export const braveRuneOptions=[
  {id:'hearth',symbol:'♨',label:'Hearth'},
  {id:'light',symbol:'✧',label:'Wisp-light'},
  {id:'oak',symbol:'❧',label:'Oak'},
- {id:'river',symbol:'≈',label:'River'}
+ {id:'river',symbol:'≈',label:'River'},
+ {id:'bear',symbol:'♧',label:'Carved Bear'}
 ] as const;
