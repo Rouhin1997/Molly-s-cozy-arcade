@@ -109,7 +109,7 @@ export const verifiedCases:Record<string,VerifiedCase>={
  ],
  scene:'A prized Halloween medal is missing from its locked display despite no damage to the cabinet or the nearby vent.',
  motivation:'Amy prepared a meticulous opening trick for the annual competition, confident that her teammates would chase an imaginary break-in.',
- reconstruction:'The corridor video places Rosa at the checkpoint and Charles at his training meeting, while the freshly painted vent seal has never been disturbed. Holt's Office key remains on his signed key ring, disproving that route without yet identifying who used the authorized rehearsal access. Only the final gold-resin flake, the matching commission and the rehearsal photograph establish Amy's Medal duplicate; Jake was at the security desk when she switched it.',
+ reconstruction:'The corridor video places Rosa at the checkpoint and Charles at his training meeting, while the freshly painted vent seal has never been disturbed. Holt’s Office key remains on his signed key ring, disproving that route without yet identifying who used the authorized rehearsal access. Only the final gold-resin flake, the matching commission and the rehearsal photograph establish Amy’s Medal duplicate; Jake was at the security desk when she switched it.',
  closing:'Holt records the first result. Jake announces that this was merely the warm-up. Amy has already filed a victory memo.'
 },
 'pontiac-switch':{
