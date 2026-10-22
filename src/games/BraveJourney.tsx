@@ -2,6 +2,7 @@ import {useRef,useState,type KeyboardEvent} from 'react';
 import {braveCampaignStages,braveChapterBridges,braveArcheryTargets,braveRuneOptions,braveRuneOrder,type BraveStage} from '../data/braveCampaign';
 import {braveInitialState,braveMove,braveCompleted,braveWidth,bravePosition,braveTile,type BravePuzzleState,type BraveDirection} from '../lib/bravePuzzle';
 import {readBraveJourney,writeBraveJourney,completeBraveStage,chooseBraveStage,type BraveJourneySave} from '../lib/braveProgress';
+import {braveShotIsCorrect,braveRuneStep,type BraveAim,type BraveDraw} from '../lib/braveChallenges';
 
 const roman:Record<string,string>={highland:'I',forest:'II',witch:'III'};
 const directions:Record<string,BraveDirection>={
@@ -117,8 +118,8 @@ export default function BraveJourney({onChapterChange}:{
  const [history,setHistory]=useState<BravePuzzleState[]>(()=>openingHistory(braveCampaignStages[initial<0?0:initial]));
  const [notice,setNotice]=useState('A path opens in the heather. Listen for the little light.');
  const [finished,setFinished]=useState(()=>progress.completed.includes(progress.current));
- const [aim,setAim]=useState<'left'|'centre'|'right'>('centre');
- const [draw,setDraw]=useState<'gentle'|'strong'>('gentle');
+ const [aim,setAim]=useState<BraveAim>('centre');
+ const [draw,setDraw]=useState<BraveDraw>('gentle');
  const [shots,setShots]=useState(0);
  const [runeSteps,setRuneSteps]=useState(0);
  const sectionRef=useRef<HTMLElement|null>(null);
@@ -164,10 +165,9 @@ export default function BraveJourney({onChapterChange}:{
   if(finished)return;
   const target=braveArcheryTargets[shots];
   if(!target)return;
-  const correctAim=target.wind===1?'left':target.wind===-1?'right':'centre';
-  const correctDraw=target.range==='near'?'gentle':'strong';
-  if(aim!==correctAim||draw!==correctDraw){
-   setNotice(aim!==correctAim
+  if(!braveShotIsCorrect(target,aim,draw)){
+   const rightAim=target.wind===1?'left':target.wind===-1?'right':'centre';
+   setNotice(aim!==rightAim
     ?'The crosswind carries your arrow aside. Aim into the wind to correct it.'
     :'The arrow falls short or flies too hard. Match the draw to the distance.');
    return;
@@ -178,8 +178,9 @@ export default function BraveJourney({onChapterChange}:{
  }
  function rune(id:string){
   if(finished)return;
-  if(id!==braveRuneOrder[runeSteps]){setNotice('The little bear shakes its head. Remember the order of your journey.');return}
-  setRuneSteps(runeSteps+1);
+  const next=braveRuneStep(runeSteps,id,braveRuneOrder);
+  if(next===runeSteps){setNotice('The little bear shakes its head. Remember the order of your journey.');return}
+  setRuneSteps(next);
   if(runeSteps+1===braveRuneOrder.length){setNotice('The three carvings nod. The spindle begins to glow.');markFinished()}
   else setNotice('A rune glimmers. The next carving waits.');
  }
