@@ -1,9 +1,10 @@
 /** Fan-made concert puzzles: original prose, factual song/release references
  * checked against official BLACKPINK discography, no reproduced lyrics/audio.
  * Difficulty is purposefully one welcoming-to-BLINK setting. */
+import { pinkFanQuestions } from './pinkRushFan';
 export type PinkMember='JISOO'|'JENNIE'|'ROSÉ'|'LISA';
 export type PinkChallenge={
- id:string;kind:'track'|'era'|'spotlight'|'encore'; title:string;
+ id:string;kind:'track'|'era'|'spotlight'|'fan'|'encore'; category?:string; title:string;
  prompt:string;emoji:string;answer:string;options:string[];
  explanation:string;year:string;source:string;
 };
@@ -79,7 +80,8 @@ export const pinkEncoreVariants=[
  [0,2,1,3],[1,0,3,2,1],[2,2,0,1,3],[3,1,0,2,0,3],
  [0,3,2,1,2],[1,2,3,0,1],[3,0,1,3,2],[2,1,0,3,0],
 ] as const;
-export const pinkQuestionPool=[...pinkTrackQuestions,...pinkEraQuestions,...pinkSpotQuestions];
+export const pinkQuestionPool=[...pinkTrackQuestions,...pinkEraQuestions,...pinkSpotQuestions,...pinkFanQuestions];
+export {pinkFanQuestions};
 export function pinkQuestionById(id:string):PinkChallenge|undefined{
  return pinkQuestionPool.find(q=>q.id===id);
 }
@@ -91,15 +93,18 @@ function hashSeed(text:string){
 function pickFromPool(pool:PinkChallenge[],count:number,seed:string):string[]{
  const offset=hashSeed(seed)%pool.length;
  // Prime stride; ensures there is no repetition within each show.
- const stride=pool.length===20?7:pool.length===12?5:3;
+ const stride=pool.length===20?7:pool.length===12?5:pool.length===30?7:3;
  return Array.from({length:count},(_,i)=>pool[(offset+stride*i)%pool.length].id);
 }
 export function pinkSetlist(seed:string):string[]{
- const tracks=pickFromPool(pinkTrackQuestions,3,'tracks:'+seed);
- const eras=pickFromPool(pinkEraQuestions,2,'eras:'+seed);
- const members=pickFromPool(pinkSpotQuestions,2,'spot:'+seed);
+ const tracks=pickFromPool(pinkTrackQuestions,2,'tracks:'+seed);
+ const eras=pickFromPool(pinkEraQuestions,1,'eras:'+seed);
+ const members=pickFromPool(pinkSpotQuestions,3,'spot:'+seed);
+ const culture=pickFromPool(pinkFanQuestions,5,'culture:'+seed);
  const encore=hashSeed('encore:'+seed)%pinkEncoreVariants.length;
- return [tracks[0],eras[0],members[0],tracks[1],eras[1],members[1],tracks[2],'encore-'+encore];
+ // Twelve acts, not an ordinary album quiz: the fan-life rounds are dominant.
+ return [culture[0],tracks[0],members[0],culture[1],eras[0],culture[2],
+   members[1],culture[3],tracks[1],members[2],culture[4],'encore-'+encore];
 }
 export function pinkChallengeFor(id:string):PinkChallenge{
  if(id.startsWith('encore-')){
@@ -117,7 +122,7 @@ export function pinkQuestionIssues():string[]{
  const issues:string[]=[];
  const ids=pinkQuestionPool.map(q=>q.id);
  if(new Set(ids).size!==ids.length)issues.push('duplicate question ids');
- if(pinkTrackQuestions.length<18||pinkEraQuestions.length<7||pinkSpotQuestions.length<12)issues.push('insufficient BLINK variety');
+ if(pinkTrackQuestions.length<18||pinkEraQuestions.length<7||pinkSpotQuestions.length<12||pinkFanQuestions.length<25)issues.push('insufficient BLINK variety');
  for(const c of pinkQuestionPool){
   if(c.options.length<3||new Set(c.options).size!==c.options.length)issues.push(c.id+': invalid options');
   if(c.kind!=='era'&&!c.options.includes(c.answer))issues.push(c.id+': answer not in choices');
@@ -126,9 +131,10 @@ export function pinkQuestionIssues():string[]{
  }
  for(const seed of ['2026-10-22','show-3','practice-100']){
   const plan=pinkSetlist(seed);
-  if(plan.length!==8||new Set(plan).size!==8)issues.push(seed+': duplicate show items');
-  if(plan.filter(id=>id.startsWith('track-')).length!==3||plan.filter(id=>id.startsWith('era-')).length!==2||
-     plan.filter(id=>id.startsWith('spot-')).length!==2||!plan[7].startsWith('encore-'))issues.push(seed+': missing station');
+  if(plan.length!==12||new Set(plan).size!==12)issues.push(seed+': duplicate show items');
+  if(plan.filter(id=>id.startsWith('track-')).length!==2||plan.filter(id=>id.startsWith('era-')).length!==1||
+     plan.filter(id=>id.startsWith('spot-')).length!==3||plan.filter(id=>id.startsWith('fan-')).length!==5||
+     !plan[11].startsWith('encore-'))issues.push(seed+': missing fan-festival act');
  }
  return issues;
 }
