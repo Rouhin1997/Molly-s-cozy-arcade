@@ -1,5 +1,12 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 2H — Evidence quality and portrait redesign (implemented)
+
+Nine-Nine uses original, individualized chibi sticker portraits; private user reference photos are never checked into GitHub. Detective Molly appears first in every case-specific squad. Cozy offers one suggested first exhibit, two optional hints and generous attempts; Clever uses questions without direct evidence anchors; Expert must uncover four sealed investigation threads, with no hints and stricter guessing. At every difficulty the full reports remain readable and completed deductions reveal paired document sources plus deductions, eliminated suspect/method options and the remaining candidate count from the actual solver.
+
+Every case now has an original four-part story resolution (scene, motive, forensic reconstruction and squad reaction). The Halloween Heist mode is a visually distinct nighttime precinct world featuring amber/gold, pumpkins, purple and festive evidence. The same all-case uniqueness tests, score ledgers, save keys, Passport v3 schema and original art-only content policy are preserved.
+
+
 **Launch target:** a meaningful birthday experience by November 13, 2026. **Evergreen goal:** a real puzzle website to revisit all year.
 
 ## Design pillars
