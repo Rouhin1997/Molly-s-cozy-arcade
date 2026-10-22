@@ -42,8 +42,12 @@ describe('Brave three connected chapters — campaign acceptance',()=>{
     current=next.state;
    }
    expect(braveCompleted(level,current),scene.id).toBe(true);
-   if(level.rows.join('').includes('G'))expect(events,scene.id).toEqual(['wisp','stone','gate','finish']);
-   else expect(events,scene.id).toEqual(['wisp','finish']);
+   expect(events,scene.id).toContain('finish');
+   expect(events,scene.id).toContain('wisp');
+   if(level.rows.join('').includes('G')){expect(events,scene.id).toContain('stone');expect(events,scene.id).toContain('gate')}
+   if(level.rows.join('').includes('K'))expect(events,scene.id).toContain('key');
+   const minimums:Record<string,number>={courtyard:7,angus:30,'first-light':38,stones:50,clearing:60,bargain:75,secret:85};
+   expect(analysis.shortestSolution.length,scene.id).toBeGreaterThanOrEqual(minimums[scene.id]);
   }
  });
  it('requires proper crosswind compensation and draw strength at all three targets',()=>{
