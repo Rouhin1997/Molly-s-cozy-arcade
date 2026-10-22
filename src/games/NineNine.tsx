@@ -67,6 +67,11 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
  function selectHeist(id:string){
   const index=heistCaseIds.indexOf(id as typeof heistCaseIds[number]);
   if(index<0||index>heistUnlocked)return;
+  // The stage card also reopens a failed investigation without losing awards.
+  if(progress.heist[id]?.status==='lost'){
+   const story=nineCases.find(c=>c.id===id);
+   if(story)setProgress(prev=>({...prev,heist:{...prev.heist,[id]:newNineRound(story)}}));
+  }
   setSelectedHeist(id);setActiveExhibit(null);setMode('heist');
  }
  function retryHeist(){
