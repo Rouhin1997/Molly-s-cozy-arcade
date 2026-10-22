@@ -1,5 +1,16 @@
 # Molly's Cozy Arcade ✿
 
+## Phase 3B — Brave Module 02: The First Crossing (22 October 2026)
+
+**Owner feedback and approval:** Module 01's illustrated storybook interface was approved. Player-facing developer phrases ("movement puzzles will arrive", "18 adventures planned", "in development" and "world preview") have been removed or replaced with in-world language. The gentle ambient melody has been made noticeably quicker and more melodic. Each of the six chapters now has its own original instrumental theme; music switches immediately when the player selects a new map chapter and remains opt-in/muted until enabled.
+
+**Module 02 implementation:** A single small, playable **First Crossing** room sits beneath the storybook map. The player follows an 11×7 path, gathers the wisp, lights the standing stone, opens its gate and reaches the far glen using keyboard (arrow/WASD) or touch controls, with undo and reset. This is one engine demonstrator, **not** Chapter I's three finished levels or the 18-level campaign. It awards no Passport stars and has no persistent gameplay scores yet.
+
+**Safety and puzzle proof:** New pure deterministic src/lib/bravePuzzle.ts models movement, blocked steps, pickups, stone activation and gated passage. The BFS validator checks EVERY reachable game state for a route to completion (not just one happy-path solution). The authored room has a shortest winning route of 16 moves, including the mandatory wisp, stone and gate, and the tests cover illegal moves, undo immutability, replay, invalid maps, all-state reachability and six distinct chapter music sketches. src/games/BraveCrossing.tsx is a small accessible player-facing view; src/lib/braveMusic.ts synthesizes six fully original live melodies, preserving audio cleanup and small mute button.
+
+**Next production gate:** Have the owner play the First Crossing on desktop/phone and judge whether the controls and puzzle feel like part of the illustrated world. Tune visuals/music/mechanics before Module 03, which is reserved for THREE polished Highland Games levels and the first environmental archery. Keep the remaining chapters out of scope until individually reviewed.
+
+
 ## Phase 3A · Brave: The Wisps’ Trail — STORYBOOK WORLD PREVIEW
 
 **Module 01 of the approved, carefully staged Brave adventure** is available on the game shelf as **WORLD PREVIEW**. It is an original illustrated Scottish Highlands chapter map with castle, standing stones, Witch’s cottage, moonlit ruins and magical clearing. Click or tap any of six locations to read its original scene, Merida dialogue, wisp message and three proposed future levels. Molly becomes the Keeper of the Wisps in a short interactive prologue, choosing to **listen** or **follow**. The choice and visited locations persist in a dedicated local save; none of the existing six games, coupon rewards or Passport stars are affected.

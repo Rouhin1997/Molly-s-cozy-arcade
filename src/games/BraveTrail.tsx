@@ -1,5 +1,7 @@
 import {useEffect,useRef,useState,type CSSProperties} from 'react';
 import {braveChapters,readBraveSave,writeBraveSave,type BraveIntroChoice,type BravePreviewSave} from '../data/braveWorld';
+import {startBraveMusic,type BraveMusicPlayer} from '../lib/braveMusic';
+import BraveCrossing from './BraveCrossing';
 
 /** Original illustrated Highland panorama. All paths are handmade vector art. */
 function HighlandMap({active,onSelect}:{active:string;onSelect:(id:string)=>void}){
@@ -121,42 +123,17 @@ function HighlandMap({active,onSelect}:{active:string;onSelect:(id:string)=>void
  </div>;
 }
 
-function startBraveAmbience():()=>void{
- // No samples, MIDI, copyrighted tune or continuous timers without cleanup.
- let ctx:AudioContext;
- try{ctx=new window.AudioContext()}catch{return ()=>{}}
- if(ctx.state==='suspended')void ctx.resume();
- const master=ctx.createGain();master.gain.value=.075;master.connect(ctx.destination);
- const wind=ctx.createOscillator();wind.type='sine';wind.frequency.value=96;
- const windGain=ctx.createGain();windGain.gain.value=.012;wind.connect(windGain);windGain.connect(master);wind.start();
- const windLfo=ctx.createOscillator(),lfoGain=ctx.createGain();
- windLfo.frequency.value=.17;lfoGain.gain.value=9;windLfo.connect(lfoGain);lfoGain.connect(wind.frequency);windLfo.start();
- const notes=[293.66,392,440,523.25,587.33,440,392,349.23];
- let step=0;
- function pluck(){
-  if(ctx.state==='closed')return;
-  const t=ctx.currentTime,osc=ctx.createOscillator(),env=ctx.createGain(),filter=ctx.createBiquadFilter();
-  osc.type='triangle';osc.frequency.value=notes[step++%notes.length];
-  filter.type='lowpass';filter.frequency.value=1500;
-  env.gain.setValueAtTime(.0001,t);
-  env.gain.exponentialRampToValueAtTime(.36,t+.035);
-  env.gain.exponentialRampToValueAtTime(.0001,t+1.9);
-  osc.connect(filter);filter.connect(env);env.connect(master);
-  osc.start(t);osc.stop(t+2);
- }
- pluck();const timer=window.setInterval(pluck,2100);
- return ()=>{window.clearInterval(timer);void ctx.close()};
-}
 export default function BraveTrail({onHome}:{onHome:()=>void}){
  const [save,setSave]=useState<BravePreviewSave>(()=>({...readBraveSave(),soundEnabled:false}));
  const [active,setActive]=useState(braveChapters[0].id);
  const [introOpen,setIntroOpen]=useState(()=>!readBraveSave().prologueSeen);
  const [dialogueOpen,setDialogueOpen]=useState(false);
- const stopAudio=useRef<(()=>void)|null>(null);
+ const audio=useRef<BraveMusicPlayer|null>(null);
  const chapter=braveChapters.find(c=>c.id===active)??braveChapters[0];
  function update(next:BravePreviewSave){setSave(next);writeBraveSave(next)}
  function selectChapter(id:string){
   setActive(id);setDialogueOpen(false);
+  audio.current?.setChapter(id);
   if(!save.inspected.includes(id))update({...save,inspected:[...save.inspected,id]});
  }
  function chooseVow(vow:BraveIntroChoice){
@@ -164,10 +141,10 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
   setIntroOpen(false);setDialogueOpen(true);
  }
  function toggleSound(){
-  if(stopAudio.current){stopAudio.current();stopAudio.current=null;update({...save,soundEnabled:false});return}
-  stopAudio.current=startBraveAmbience();update({...save,soundEnabled:true});
+  if(audio.current){audio.current.stop();audio.current=null;update({...save,soundEnabled:false});return}
+  audio.current=startBraveMusic(active);update({...save,soundEnabled:true});
  }
- useEffect(()=>()=>{stopAudio.current?.();stopAudio.current=null},[]);
+ useEffect(()=>()=>{audio.current?.stop();audio.current=null},[]);
  const vowNote=save.vow==='listen'
   ?'You chose to listen for the smallest things. The wisps seem to trust you already.'
   :save.vow==='follow'
@@ -175,7 +152,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
   :'The wisps are waiting for their Keeper to make a first promise.';
  return <main className="brave-game">
    <div className="brave-topline"><button className="brave-back" onClick={onHome}>← Molly’s arcade</button>
-    <span>THE WISPS’ TRAIL · STORYBOOK WORLD PREVIEW</span>
+    <span>THE WISPS’ TRAIL · THE KEEPER’S TALE</span>
     <button className="brave-audio-button" onClick={toggleSound} aria-label={save.soundEnabled?'Mute Highland ambience':'Play Highland ambience'} aria-pressed={save.soundEnabled} title={save.soundEnabled?'Mute ambience':'Play gentle ambience'}>{save.soundEnabled?'♫':'♪'}</button>
    </div>
    <header className="brave-banner">
@@ -188,8 +165,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
    <section className="brave-illustrated-world" aria-labelledby="brave-map-title">
     <div className="brave-world-heading"><div><span className="brave-kicker">THE CHAPTER MAP</span>
      <h2 id="brave-map-title">Where shall the wisps lead?</h2>
-     <p>Explore six illustrated locations and their stories. The movement puzzles and chapters will arrive as we build the adventure together.</p></div>
-     <span className="brave-world-stamp">6 PLACES TO DISCOVER<br/>18 ADVENTURES PLANNED</span>
+     <p>From DunBroch’s sunlit courtyards to the whispering stones beyond the mist, every winding road carries a story.</p></div>
     </div>
     <div className="brave-world-layout">
      <div className="brave-map-column">
@@ -214,18 +190,18 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
       <button className="brave-dialogue-trigger" onClick={()=>setDialogueOpen(v=>!v)} aria-expanded={dialogueOpen}>
        ✧ {dialogueOpen?'Close the wisp’s message':'Listen to the wisp'} <span>→</span></button>
       {dialogueOpen&&<div className="brave-wisp-message" role="status"><span>✦ THE WISP ✦</span><p>{chapter.wisp}</p></div>}
-      <div className="brave-scroll-levels"><span>THE THREE ADVENTURES</span>
-       {chapter.levelTitles.map((title,i)=><div key={title}><span>0{i+1}</span><strong>{title}</strong><small>In development</small></div>)}
+      <div className="brave-scroll-levels"><span>PATHS THROUGH THIS CHAPTER</span>
+       {chapter.levelTitles.map((title,i)=><div key={title}><span>0{i+1}</span><strong>{title}</strong></div>)}
       </div>
       <div className="brave-snapshot-tags">{chapter.environment.map(x=><span key={x}>{x}</span>)}</div>
-      <div className="brave-scroll-footer">This is a world preview. Levels are not yet playable. ♡</div>
      </article>
     </div>
    </section>
+   <BraveCrossing/>
    <section className="brave-keeper-panel">
     <div className="brave-keeper-symbol" aria-hidden="true">✧</div>
     <div><span className="brave-kicker">THE KEEPER’S JOURNAL</span><h2>A promise made in the moonlight</h2>
-     <p>{vowNote}</p><small>{save.inspected.length} of 6 places explored on this illustrated map · your promise is saved in this browser</small></div>
+     <p>{vowNote}</p><small>{save.inspected.length} paths explored · the wisps remember your promise</small></div>
     <button className="brave-dialogue-trigger" onClick={()=>setIntroOpen(true)}>Read the opening ↗</button>
    </section>
    <p className="brave-credits">An unofficial, fan-made storybook inspired by <i>Brave</i>, with an original new adventure for Molly.</p>
