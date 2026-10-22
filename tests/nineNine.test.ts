@@ -4,7 +4,7 @@ import {
   freshNineProgress,newNineRound,inspectNineEvidence,connectNineEvidence,
   hintNine,allNineLinksSolved,setNineAccusation,submitNineAccusation,
   creditNineResult,pristineNineRound,nineHintLimit,nineGuessLimit,nineWrongPairLimit,
-  readNineProgress,writeNineProgress,unlockedHeistCount,
+  readNineProgress,writeNineProgress,unlockedHeistCount,retryNineHeist,
 } from '../src/lib/nineNine';
 describe('Twelve curated 99 precinct files',()=>{
   it('covers all tiers and three linked Halloween Heist stages',()=>{
@@ -101,6 +101,23 @@ describe('Evidence investigation and deduction gameplay',()=>{
     const twice=creditNineResult(once,r);
     expect(twice.stats.stars).toBe(once.stats.stars);
     expect(twice.stats.solved).toBe(once.stats.solved);
+  });
+  it('restarts failed unlocked heist stages while preserving old points and blocking locked stages',()=>{
+    const first=nineCases.find(c=>c.id==='heist-one')!;
+    const old=freshNineProgress();
+    old.stats.stars=245;
+    const failed={...newNineRound(first),status:'lost' as const,wrongPairs:8};
+    old.heist['heist-one']=failed;
+    const attempted=retryNineHeist(old,'heist-one');
+    expect(attempted.heist['heist-one'].status).toBe('playing');
+    expect(attempted.heist['heist-one'].wrongPairs).toBe(0);
+    expect(attempted.stats.stars).toBe(245);
+    expect(retryNineHeist(attempted,'heist-three')).toBe(attempted);
+    // A previously awarded stage can be replayed without forfeiting its unlock.
+    attempted.bestAwards['99:heist-one']=210;
+    const stageTwo=retryNineHeist(attempted,'heist-two');
+    expect(stageTwo.heist['heist-two'].status).toBe('playing');
+    expect(unlockedHeistCount(stageTwo)).toBe(1);
   });
   it('round-trip reads and writes a versioned local save',()=>{
     const memory=new Map<string,string>();
