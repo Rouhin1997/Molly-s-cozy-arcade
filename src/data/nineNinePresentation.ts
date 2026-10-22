@@ -1,4 +1,5 @@
 import { type NineCase, caseCandidates, type Deduction } from './nineNine';
+import { verifiedCases } from './nineNineVerified';
 /** Scenario-specific cast lists and original little case epilogues.
  * Detective Molly is the player character in every investigation. The portrait
  * is illustrated from a privately provided photo; the photo is never published.
@@ -117,14 +118,16 @@ export function nineDeductionImpact(c:NineCase,linkedBefore:readonly string[],de
   remainingSuspects:[...newSuspects],remainingMethods:[...newMethods]};
 }
 export function nineCasePresentation(c:NineCase):NinePresentation {
- const p=ninePresentation[c.id];
- if(!p)throw new Error('Missing story resolution for '+c.id);
- return p;
+ const team=ninePresentation[c.id];
+ const verified=verifiedCases[c.id];
+ if(!team||!verified)throw new Error('Missing verified story resolution for '+c.id);
+ return {...team,scene:verified.scene,motivation:verified.motivation,
+   reconstruction:verified.reconstruction,closing:verified.closing};
 }
 export function ninePresentationIssues(cases:NineCase[]):string[]{
  const issues:string[]=[];
  for(const c of cases){
-  const p=ninePresentation[c.id];
+  const p=nineCasePresentation(c);
   if(!p){issues.push(c.id+': missing presentation');continue;}
   if(p.team.length!==4||p.team[0]!=='Molly'||new Set(p.team).size!==4)issues.push(c.id+': bad team');
   if(p.reconstruction.length<230||p.closing.length<45||p.scene.length<65)issues.push(c.id+': too-short solution');
