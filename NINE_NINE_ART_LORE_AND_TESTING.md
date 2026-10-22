@@ -1,5 +1,13 @@
 # The 99 Files — Gameplay, lore and original art
 
+## Phase 2I — Mystery-fairness audit and Holt portrait
+
+The earlier `src/data/nineNineAudit.ts` recorded a first-generation evidence audit, but those descriptions sometimes eliminated multiple suspects before the investigation was interesting. **`src/data/nineNineVerified.ts` is now the definitive casebook.** Each of the twelve stories has newly written physical exhibits, independent alibis/timing records, at least one decisive forensic pair, explicit and readable causes for each elimination, and a coherent short reconstruction. Only the case names and outcomes are preserved for backwards-compatible stars.
+
+The new test `tests/nineNineLogicAudit.test.ts` enumerates every proper subset of the 3/4 correct evidence pairs; none can prove the entire culprit-and-method accusation. For Clever/Expert the first 2/3 correct pairings must also leave more than one viable culprit. Reports that rule out a named person or method must mention that person/method and the specific contradictory observation. Difficulty comes from narrative inference—not concealing the question.
+
+Holt's sticker now depicts his nearly bald/shaved head, broad brow and serious expression, consistent with the familiar costume-era portrayal by Andre Braugher. The original SVG remains hand-coded and stylized; no likeness has been traced from an official photo. The reference image of Molly stays private, and her existing sticker is unchanged. Useful character styling references: [TV Insider cast portraits](https://www.tvinsider.com/gallery/brooklyn-nine-nine-then-now-nbc-jake-amy-holt/), [Holt role retrospective](https://www.theguardian.com/tv-and-radio/2023/dec/13/andre-braugher-greatest-ever-brooklyn-nine-nine-moments).
+
 ## Phase 2H — Molly likeness, portraits and clearer investigations
 
 - A user-supplied personal reference image was viewed privately to design the original Detective Molly SVG (dark side-parted hair, warm smile, checked blazer, small necklace). **The actual photograph is not committed to GitHub or distributed on the live site**, nor is the poster visible in that photo. The game uses only original vector code.
