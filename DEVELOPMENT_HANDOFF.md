@@ -1,10 +1,41 @@
 # Molly's Cozy Arcade — Development Handoff
 
-**Checkpoint:** 22 October 2026, Phase 2F (richer BBT logic, spatial-fairness and polished storybook maps)
+**Checkpoint:** 22 October 2026, Phase 2G — five playable games, refined Bazinga UI and launched The 99 Files
 **Repository:** https://github.com/Rouhin1997/Molly-s-cozy-arcade
 **Live arcade:** https://rouhin1997.github.io/Molly-s-cozy-arcade/
 **Default branch:** `main`; GitHub Actions publishes `main` to GitHub Pages
 **Primary milestone:** complete a meaningful November 13 birthday experience. All regular games should remain playable year-round.
+
+## Latest release — Phase 2G: Bazinga final touches + The 99 Files (22 October 2026)
+
+**User authorization:** After playing Bazinga! Lab, the owner approved a finish pass for its clue wording and seat names plus a new *Brooklyn Nine-Nine*-inspired detective game with **both standalone investigations and a connected Halloween Heist campaign**. User will browser-test the new game later. The next chat should prioritize their real play-test feedback, then planning Pink Rush and November 13 Birthday Quest.
+
+### A — Bazinga! Lab polish
+
+- Removed the duplicate schematic/blueprint disclaimer above the room map; retained the fan-made copyright notice at the page bottom.
+- `src/games/BazingaRoomGame.tsx`: `casePanelTitles` now provides 18 bespoke clue-card headings and taglines. The Roommate Agreement is reserved for Apartment 4A scenes. Examples: The Lunch Protocol, Bernadette's Dinner Plan, the Mystery Dossier, the Viewing Protocol, the Caltech Lab Safety Protocol.
+- `src/data/bazingaPolish.ts`: `seatLabelForCase()` provides story-specific descriptive labels (cinema row A/C, cafeteria table sides, sofa/window ends, lab workstations, Howard/Bernadette table sides). Labels describe physical positions, not occupants; no explicit “Sheldon's spot” in map text.
+- `tests/bazingaWorld.test.ts` now checks all 18 headings exist and all case-specific seat labels are unique, meaningful and do not name a character.
+- Existing 18 Room Adventures cases, spatial validity tests, exact original character artwork, 18 Classic Lab cases and all saved stars/puzzles remain unchanged. Further human clue-writing feedback is expected from actual play-testing.
+
+### B — The 99 Files (fifth fully playable game)
+
+**New gameplay:** player becomes honorary precinct detective Molly. Choose **Daily case**, **Open case files** or **Halloween Heist**. Inspect evidence documents (reports, interview notes, forensic and scene cards), pin **two** documents together on a corkboard to create a deduction, then submit a three-field accusation: suspect + method + decisive proof. The system penalizes incorrect pairs and allegations within tier-specific limits.
+
+- 12 original cases, four per tier, with 9 standalone investigations and **3 sequential Halloween Heist stages**. The Heist is its own mode and unlocks Stage II (Clever) and Stage III (Expert) only after prior heists are won. Daily cases rotate among all four tier-matching cases; an independent practice gallery has three case choices per tier.
+- Recurring B99 inspirations: Captain Holt, Jake Peralta, Amy Santiago, Rosa Diaz, Charles Boyle, Terry Jeffords, Gina Linetti, corgi Cheddar, Doug Judy / the Pontiac Bandit, Jimmy Jab Games, Halloween Heists, Terry's yogurt, Amy's color-coded binders and the *The Box* interrogation dynamic. All twelve crime puzzles and cast reactions are new/fan-fictional, **not reenactments, ripped dialogue or official pictures**.
+- Evidence architecture: case suspects x candidate methods form a grid of twelve hypotheses. Individual correct paired links progressively narrow that grid. Tests verify each link reduces hypotheses, that the last link is necessary, and that the finished case has exactly **one** suspect-and-method answer. A source-provenance auditor additionally requires eliminated names and methods to be explicitly supported in the **two readable paired evidence reports**, via the handmade precinct cross-checks. The player must cite the linked **decisive** proof at accusation, not only pick the culprit.
+- `src/data/nineNine.ts`: twelve original case stories, evidence records, authored pairs, candidate solver, deterministic selectors and validation. `src/data/nineNineAudit.ts`: written alibi and method eliminations tied to specific document pairs. `src/lib/nineNine.ts`: document inspection, matching, hints, accusation, scoring, local save, sequential heist unlocking. `src/games/NineNine.tsx`: polished precinct case UI and interactions. `src/components/NineNinePortrait.tsx`: **original scalable vector caricature-inspired stickers**, not actual cast photographs or official assets. `src/styles.css`: responsive pastel detective stationery, corkboard and case art.
+- `tests/nineNine.test.ts`: data validation, completed scripted investigations for all cases, evidence matching, wrong comparisons, required decisive proof, grade-based hints/attempts, personal-best anti-farming, heist progression and save round-trip.
+- `src/App.tsx`: fifth playable shelf card, navigation, persisted fifth-game state and sitewide star totals. `src/lib/passport.ts`: three new achievements (Honorary Detective, Evidence Whisperer, Heist Champion). `src/games/Passport.tsx`: **JSON export version 3** now contains all five game states. Version 1 (three games) and version 2 (four games) still import, preserving missing newer game data; no automatic cloud sync. New key **`mollys-99-files-v1`**.
+- Full art, specific story inspirations and QA checklist: **`NINE_NINE_ART_LORE_AND_TESTING.md`**. GitHub public site must never ship licensed photographs/scripts/audio without permission.
+
+### Next development session
+
+1. Ask what the user thought of The 99 Files during actual desktop/mobile browser play. Start with an easy case like Terry's Yogurt, a Clever interrogation case and a difficult case, then evaluate the Halloween Heist’s sequential unlocks and logical fairness of real evidence reports.
+2. Fix user-reported narrative or mechanical inconsistencies, cross-check every evidence linkage, compare visual balance with Bazinga, and protect older Passport saves. Automated correctness does **not** guarantee human narrative plausibility or browser accessibility.
+3. If the fifth game is approved, next likely priorities: Pink Rush (BLACKPINK era/setlist original-art game) and **November 13 Birthday Quest**. Do not let the birthday deadline be eclipsed by content polishing.
+4. **Preserve all achievements, save keys, versioned Passport imports, four other working games and both Bazinga editions.** Current GitHub handoff is authoritative for restarting.
 
 ## Latest polish — Phase 2F: Deduction depth, canon calibration and room clarity
 
