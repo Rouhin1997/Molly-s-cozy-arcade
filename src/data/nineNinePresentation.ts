@@ -42,7 +42,7 @@ export const ninePresentation:Record<string,NinePresentation>={
   teamNote:'Jake recognises a familiar Pontiac problem. Rosa is handling the garage records; Boyle is on witness duty.',
   scene:'An impounded vintage Pontiac was replaced with a convincing stand-in before anyone noticed its different tyres.',
   motivation:'Doug Judy could not resist a clever automotive disappearing act, especially one likely to make Jake call him.',
-  reconstruction:'The checkpoint image proves an entire car crossed the garage threshold with the expected plates; it was not just a plate swap. The tow permit was created after the replacement, Anita was on a recorded call, and the other workers were at another garage. Scratches on the lock and the key blank purchased under Judy’s alias point to a cloned garage key.',
+  reconstruction:'The checkpoint image proves an entire car crossed the garage threshold with the expected plates; it was not just a plate swap. The tow permit was created after the replacement, Anita was on a recorded call, and the other workers were at another garage. Scratches on the lock and the key blank purchased under Doug Judy’s alias point to a cloned garage key.',
   closing:'Jake admires the engineering for approximately four seconds before Holt reminds him it is still a crime.',
  },
  'interrogation-contradiction':{
