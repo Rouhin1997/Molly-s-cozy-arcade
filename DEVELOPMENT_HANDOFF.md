@@ -1,5 +1,27 @@
 # Molly's Cozy Arcade — Development Handoff
 
+## Latest release — Phase 2K: Pink Rush 2.0, fuller BLINK trivia + one-time wallet (22 October 2026)
+
+**Greenlight:** User played the first Pink Rush, wanted (1) black/pink theme with less explanatory filler; (2) wider BLINK fan-culture trivia, including pets/brand ambassadors/film-TV/Coachella/Lisa's FIFA 2026 song/Labubu, not just albums; (3) concert stage and gameplay **simultaneously visible on PC/phone**; (4) pulsing stage, synth crowd cheering that rises with a correct answer and dims on mistakes, plus a spectacle finale; (5) consequential mistakes that turn off a lit stage light and require replaying the previous act; (6) greater variety/replayability and a one-time blind-choice coupon for Molly.
+
+### Implemented
+- New canonical `src/data/pinkRushFan.ts`: 30 public, checked fan-life cards, attributed to sources such as FIFA, Yonhap, CNA, Tatler, Reuters, License Global. Song/solo/era content remains; ~70 total items. `src/data/pinkRush.ts`: new deterministically rotating **12-act** setlist with 5 fan-life, 3 solo spotlights, 2 group tracks, 1 era ordering and 1 encore. Old eight-act saved shows still work.
+- `src/lib/pinkRush.ts`: genuinely consequential mistake rollback (decrements session index, resets the previous won round while preserving the current failed answer), score-best anti-farming and reward state machine.
+- **Voucher choices:** (A) Teach Rouhin a short BLACKPINK or BP solo dance, (B) Have Rouhin sing a BLACKPINK or solo song, (C) Rouhin gives one full minute praising Lisa. `src/games/PinkWallet.tsx`: three blind cards, player choice, reveals all prizes after selection, one active gift, Redeem confirmation, ability to **surrender it for a new draw only after completing another full concert**, and permanent redeemed keepsake. The wallet is reachable through navigation, Pink Rush and Passport.
+- On redemption, `PinkProgress.coupon.status='redeemed'` forever unless user tampers with/clears browser state; replay never issues a second reward. A separate `mollys-pink-rush-redeemed-v1` marker is written and merged into loaded saves and imported Passport backups. **Do not claim client-only/browser-local permanence is secure across browsers or devices.** Backend auth + durable reward ledger is future work if user needs unforgeable entitlement.
+- `src/lib/pinkConcertAudio.ts`: original synthesized crowd-cheer wash, pulse accents and finale fanfare, independent of copyrighted sound samples. Sound enabled on actual click, mute control present. 
+- `src/games/PinkRush.tsx`: responsive black/pink **stage and trivia board in one live composition**, sticky compact stage above question controls on phones; correct-answer light pulses, wrong-answer dimming, finale fullscreen animated celebration and mystery reward entry; replaces decorative bottom scrapbook with real interactive 12-act tour log.
+- `src/styles.css`: full black/hot-pink concert identity, sticky responsive mobile stage, wallet blind-card views, redeem UI and full-screen crescendo finale. No rework to the other five games.
+- `src/App.tsx`: sixth game's route now passes `onWallet`, plus a dedicated Wallet nav; Birthday Vault is still a separate planned feature. `src/games/Passport.tsx`: redeemed gift archived on Passport; restore reconciles irreversible local redeemed marker. Passport **format version 4** unchanged.
+- `tests/pinkRush.test.ts`: reworked to test fan-life pool, deterministic 12 acts, wrong choice rollback, comeback path, personal best and anti-farming, three unique hidden rewards, surrender/replay, permanent redemption, old eight-act shows, local redemption marker and stale-backup imports.
+
+### Next session / owner's browser QA
+1. Test Pink Rush on desktop and phone: stage **must** remain visible while tapping choices/encore; check subtle member light pulses and synthesized crowd at comfortable volume. Check sound mute/unmute and fullscreen final celebration.
+2. Try one wrong answer from act 2 onward: previous stage light should go dark, previous act should become playable again, and the originally failed act should resume afterward. Replay cannot double-award stars.
+3. Finish a fresh show, select one of three blind gifts, check that other two reveal afterward. Verify Wallet and Passport display it. Try the **surrender-and-repeat** route on an unredeemed coupon; redeem one and verify it becomes terminal even after another concert and an older backup restore.
+4. Real-world coupon redemption enforcement across devices is NOT secure in current browser-only architecture; future server-backend task requires owner decision. Existing private birthday-coupon wallet architecture remains a separate longer-term concern.
+5. Beta testers and owner should judge whether factual BLINK content feels playful; any fan fact not matching official/public reputable sources should be corrected. Brave still **Coming Soon** and still needs its own greenlight. November 13 Birthday Quest remains important.
+
 ## Latest development — Phase 2J: BLACKPINK Pink Rush + Brave approved docket (22 October 2026)
 
 **Direct user approval:** Plan BOTH games as dedicated worlds. Implement **Pink Rush** immediately and place the *Brave*-inspired adventure on the **Coming Soon** shelf. The user explicitly requested **NO difficulty levels** for Pink Rush: a relaxed, joyful BLINK memory-lane challenge appealing to a knowledgeable fan but not crushingly hard. Harder detective puzzles remain appropriate to The 99 Files, not this music game.
