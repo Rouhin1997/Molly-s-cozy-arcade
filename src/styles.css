@@ -1250,3 +1250,22 @@
  .brave-wisp-orb,.brave-wisp-sigil span,.brave-chapter-scroll{animation:none}
  .brave-map-pin,.brave-vow-choices button{transition:none}
 }
+
+/* Map shell preserves the art's coordinates on all screen sizes. */
+.brave-map-column{min-width:0}
+.brave-map-scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;scrollbar-color:#77998d #d8e4ca;border-radius:17px}
+.brave-map-scroll:focus-visible{outline:3px solid #67beb4;outline-offset:2px}
+.brave-swipe-tip{display:none}
+.brave-chapter-shortcuts{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-top:9px}
+.brave-chapter-shortcuts button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 2px;background:#e3e9d1;border:1px solid #b8c8b1;border-radius:9px;color:#53766b;font:700 10px 'DM Sans',sans-serif}
+.brave-chapter-shortcuts button>span{font-size:20px}
+.brave-chapter-shortcuts button.is-selected{background:#316d62;color:#f5f2d6;border-color:#3c8272;box-shadow:0 0 7px #6cb6a4a1}
+@media(max-width:670px){
+ .brave-map-scroll{max-width:100%;overflow-x:auto}
+ .brave-map-view{width:760px;min-width:760px;height:auto;aspect-ratio:1100/600}
+ .brave-map-art{width:100%;height:100%;object-fit:contain}
+ .brave-swipe-tip{display:block;text-align:center;font:700 10px 'DM Sans',sans-serif;color:#61847a;margin:5px 0}
+ .brave-chapter-shortcuts{gap:3px;margin-top:5px}
+ .brave-chapter-shortcuts button{padding:8px 0;font-size:8px}
+ .brave-chapter-shortcuts button>span{font-size:17px}
+}
