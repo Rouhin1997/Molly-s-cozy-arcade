@@ -125,7 +125,7 @@ function HighlandMap({active,onSelect}:{active:string;onSelect:(id:string)=>void
  </div>;
 }
 
-export default function BraveTrail({onHome}:{onHome:()=>void}){
+export default function BraveTrail({onHome,onPassport}:{onHome:()=>void;onPassport:()=>void}){
  const [save,setSave]=useState<BravePreviewSave>(()=>({...readBraveSave(),soundEnabled:false}));
  const [active,setActive]=useState(()=>braveCampaignStages.find(c=>c.id===readBraveJourney().current)?.chapterId??braveChapters[0].id);
  const [introOpen,setIntroOpen]=useState(()=>!readBraveSave().prologueSeen);
@@ -164,7 +164,7 @@ export default function BraveTrail({onHome}:{onHome:()=>void}){
     <div className="brave-banner-actions"><button className="brave-banner-cta" onClick={()=>setIntroOpen(true)}>✧ {save.prologueSeen?'Read the prologue again':'Open the storybook'} ↗</button><button className="brave-banner-cta brave-banner-play" onClick={()=>{const current=braveCampaignStages.find(c=>c.id===readBraveJourney().current);if(current)selectChapter(current.chapterId);document.getElementById('brave-journey')?.scrollIntoView({behavior:'smooth',block:'start'})}}>Begin the journey ↓</button></div></div>
     <div className="brave-wisp-sigil" aria-hidden="true"><span>✦</span><span>✧</span><span>✦</span></div>
    </header>
-   <BraveJourney onChapterChange={selectChapter}/>
+   <BraveJourney onChapterChange={selectChapter} onPassport={onPassport}/>
    <details className="brave-world-atlas">
     <summary>✧ Open the illustrated Highlands atlas <span>Explore the six chapter locations ↗</span></summary>
    <section className="brave-illustrated-world" aria-labelledby="brave-map-title">
