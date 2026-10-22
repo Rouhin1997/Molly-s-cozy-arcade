@@ -26,7 +26,7 @@ type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'pi
 type Mode = 'daily' | 'practice';
 
 const upcoming = [
-  { icon: '🏹', name: 'Brave: The Wisps’ Trail', tag: 'Magical adventure', teaser: 'Open the storybook, meet the wisps and explore an illustrated Highland chapter map.', theme: 'mint', detail: 'The interactive world preview is open! Wander across six painted Highland locations, read Merida’s new story and choose the Keeper’s promise. The adventure levels will follow in careful chapters.' },
+  { icon: '🏹', name: 'Brave: The Wisps’ Trail', tag: 'Magical adventure', teaser: 'Open the storybook, meet the wisps and explore an illustrated Highland chapter map.', theme: 'mint', detail: 'Explore the painted Highlands, meet the wisps, choose your Keeper’s promise and try the first enchanted crossing.' },
 ];
 
 function dateUntilBirthday(now = new Date()): number {
@@ -147,7 +147,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
             <button className="card-link" onClick={() => onNavigate('pink')}>Enter the concert <span aria-hidden="true">↗</span></button></div>
         </article>
         {upcoming.map((game, index) => <article key={game.name} className={`game-card game-card-${game.theme}`}>
-          <div className="card-topline"><span className="soon-pill">WORLD PREVIEW</span><span className="card-number">0{index + 7} / 07</span></div>
+          <div className="card-topline"><span className="soon-pill">OPEN STORYBOOK</span><span className="card-number">0{index + 7} / 07</span></div>
           <div className="game-emoji" aria-hidden="true">{game.icon}</div>
           <div className="card-content"><span className="card-category">{game.tag.toUpperCase()}</span><h3>{game.name}</h3><p>{game.teaser}</p>
             <button className="card-link" onClick={() => game.name.startsWith('Brave') ? onNavigate('brave') : onChooseGame(game.name)}>Open the storybook <span aria-hidden="true">↗</span></button></div>
