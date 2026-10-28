@@ -2,7 +2,7 @@
  * The schedule follows estimated human action time plus cooking time and buffer,
  * not artificial time limits that make recipes mathematically impossible.
  */
-import type {RecipeId,Guest} from './noodleShop';
+import type {RecipeId,Guest} from './noodleShopV2';
 export type ShiftGuest={recipeId:RecipeId;guest:Guest;arrivesAt:number;patience:number};
 export type KitchenLevel={id:number;name:string;subtitle:string;description:string;theme:string;
  orders:readonly ShiftGuest[];duration:number;starTarget:number};
