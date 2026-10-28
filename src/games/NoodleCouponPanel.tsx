@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {awardNoodleCoupon,couponRemaining,readNoodleCoupon,redeemNoodleCoupon,
+import {couponRemaining,readNoodleCoupon,redeemNoodleCoupon,
  threeMonthsLater,writeNoodleCoupon,type NoodleDishChoice,type NoodleCoupon} from '../lib/noodleCoupon';
 
 /** Independent wallet keepsake. The voucher is awarded only in the Level 8 win
