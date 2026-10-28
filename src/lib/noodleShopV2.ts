@@ -208,7 +208,7 @@ export const defaultNoodleSave=():NoodleSave=>({
 export function normalizeNoodleSave(input:unknown):NoodleSave{
  const base=defaultNoodleSave();
  if(!input||typeof input!=='object')return base;
- const p=input as Partial<NoodleSave>&{version?:number};
+ const p=input as Omit<Partial<NoodleSave>,'version'> & {version?:number};
  const sane=(n:unknown)=>typeof n==='number'&&Number.isFinite(n)&&n>=0?Math.floor(n):0;
  if(p.version===1)return {...base,tutorialDone:p.tutorialDone===true,bestScore:sane(p.bestScore),
   bestServed:sane(p.bestServed),shifts:sane(p.shifts)};
