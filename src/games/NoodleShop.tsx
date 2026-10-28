@@ -182,7 +182,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    <div className="noodle-hero-copy">
     <span>✦ THE VALLEY OF PEACE · A NEW KITCHEN ADVENTURE ✦</span>
     <h1>Noodles of <em>Destiny</em></h1>
-    <p>Mr. Ping's kitchen needs a helping paw. Welcome, Chef Molly!</p>
+    <p>Po's hungry. The whole Valley is next. Aprons on!</p>
    </div>
    <div className="noodle-hero-ping"><KitchenCharacter who="ping" size={130}/></div>
    <div className="noodle-hero-po"><KitchenCharacter who="po" size={155}/></div>
@@ -190,9 +190,9 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
   {!game?<section className="noodle-welcome">
    <div className="noodle-opening-story">
     <div className="noodle-letterhead">A NOTE FROM MR. PING ✧</div>
-    <h2>Every legendary chef starts with one bowl.</h2>
-    <p>Po has eaten all the test dumplings, the lunch crowd is coming, and Mr. Ping has decided that <strong>Molly</strong> is the perfect person to save his kitchen. Drag ingredients, cook them at the right station, assemble each dish, and ring the bell when it's ready.</p>
-    <p>Begin with an untimed lesson, then progress through eight lively martial-arts kitchen shifts. Run the pot and steamer together and dress two plates at once!</p>
+    <h2>One shop. One hungry Valley.</h2>
+    <p>Po has eaten the lunch specials—and the customers are at the door! Help Mr. Ping cook, plate and serve before the bell.</p>
+    <p>Start with a relaxed lesson, then master eight lively shifts. Cook and plate two orders side by side!</p>
     <div className="noodle-welcome-actions">
      <button className="btn btn-primary" onClick={()=>launch('tutorial')}>{saved.tutorialDone?'↶ Replay the tutorial':'🥣 Start the guided tutorial'} ↗</button>
      <button className="btn btn-soft" disabled={!saved.tutorialDone} onClick={()=>launch('shift',levelChoice)}>🎐 Play Level {levelChoice} ↗</button>
@@ -216,7 +216,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    <div className="noodle-menu-preview">
     <span className="noodle-menu-top">✿ TODAY'S MENU ✿</span>
     {Object.values(RECIPES).map(r=><div key={r.id}><span>{r.emoji}</span><div><strong>{r.name}</strong><small>{r.description}</small></div></div>)}
-    <small>Original hand-drawn scenery · Drag, drop, simmer and serve.</small>
+    <small>Fresh noodles · Steaming dumplings · Happy customers</small>
    </div>
   </section>:<>
    <section className="noodle-game-toolbar">
@@ -342,6 +342,6 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    </>}
   </>}
   {ghost&&<div className="noodle-drag-ghost" style={{left:ghost.x,top:ghost.y}} aria-hidden="true"><span>{sourceIcon(ghost.source)}</span><small>{sourceName(ghost.source)}</small></div>}
-  <p className="noodle-fan-note">An original, unofficial fan-made cooking mini-adventure for Molly. Illustrated entirely with in-project artwork; no film images or soundtrack assets are used. Eight handcrafted shifts with original fan-art, recipes and music. This is an unofficial personal fan game.</p>
+  <p className="noodle-fan-note">An unofficial fan-made cooking adventure.</p>
  </main>;
 }
