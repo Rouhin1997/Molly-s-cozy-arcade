@@ -41,9 +41,10 @@ const SHIFT_ORDERS:{recipeId:RecipeId;guest:Guest;arrivesAt:number;patience:numb
  {recipeId:'mushroom',guest:'tigress',arrivesAt:41,patience:67}
 ];
 export function newKitchen(mode:Mode):KitchenState{
- const orders:KitchenOrder[]=(mode==='tutorial'
-  ?[{recipeId:'garden',guest:'po' as Guest,arrivesAt:0,patience:Infinity}]
-  :SHIFT_ORDERS).map((o,i)=>({...o,id:mode+'-'+i,status:o.arrivesAt===0?'waiting' as const:'pending' as const}));
+ const seeds:{recipeId:RecipeId;guest:Guest;arrivesAt:number;patience:number}[]=mode==='tutorial'
+  ?[{recipeId:'garden',guest:'po',arrivesAt:0,patience:Infinity}]
+  :SHIFT_ORDERS;
+ const orders:KitchenOrder[]=seeds.map((o,i)=>({...o,id:mode+'-'+i,status:o.arrivesAt===0?'waiting' as const:'pending' as const}));
  return {mode,elapsed:0,paused:false,status:'playing',orders,activeOrderId:orders[0].id,
   dish:{vessel:null,items:[]},pot:null,steamer:null,
   served:0,missed:0,score:0,mistakes:0,
