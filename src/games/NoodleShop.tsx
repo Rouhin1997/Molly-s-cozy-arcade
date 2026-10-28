@@ -44,7 +44,7 @@ function KitchenMeal({state,slot}:{state:KitchenState;slot:0|1}){
 export default function NoodleShop({onHome}:{onHome:()=>void}){
  const [saved,setSaved]=useState<NoodleSave>(readNoodleSave);
  const [levelChoice,setLevelChoice]=useState(1);
- const [musicOn,setMusicOn]=useState(()=>localStorage.getItem('molly-noodle-music')!=='off');
+ const [musicOn,setMusicOn]=useState(()=>{try{return localStorage.getItem('molly-noodle-music')!=='off'}catch{return true}});
  const player=useRef<NoodleMusic|null>(null);
  const [game,setGame]=useState<KitchenState|null>(null);
  const [selected,setSelected]=useState<Source|null>(null);
