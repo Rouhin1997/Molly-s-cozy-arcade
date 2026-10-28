@@ -1,5 +1,6 @@
 import {useEffect,useRef,useState,type PointerEvent as ReactPointerEvent,type KeyboardEvent} from 'react';
-import {KitchenCharacter,NoodleShopScenery} from './NoodleShopArt';
+import {KitchenCharacter} from './NoodleShopArt';
+import {TempleNoodleBackdrop,KitchenPotArt} from './NoodleWorldArt';
 import NoodleDishArt from './NoodleDishArt';
 import NoodleCouponPanel from './NoodleCouponPanel';
 import {KITCHEN_LEVELS,shiftForLevel} from '../lib/noodleShopCampaign';
@@ -143,11 +144,10 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
   const percent=cookingFraction(game!,id)*100;
   const label=id==='pot'?'Boiling pot':'Bamboo steamer';
   const ready=id==='pot'?'🍜':'🥟';
-  const icon=id==='pot'?'🍲':'🧺';
   const age=cooking?game!.elapsed-cooking.startedAt:0;
   return zone(id,<div className={'noodle-appliance phase-'+phase}>
    <div className="noodle-machine-title"><strong>{label}</strong><span>{id==='pot'?'01 · BOIL':'02 · STEAM'}</span></div>
-   <span className="noodle-machine-emoji" aria-hidden="true">{icon}</span>
+   <KitchenPotArt type={id} active={!!cooking}/>
    <div className="noodle-appliance-food">
     {cooking?draggable({kind:'cooker',appliance:id},<>
       <span className="noodle-cooked-icon">{phase==='burnt'?'💨':phase==='ready'?ready:iconForIngredient(cooking.item)}</span>
@@ -173,7 +173,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
  return <main className="noodle-page">
   <button className="back-link" onClick={onHome}>← Back to the arcade</button>
   <header className="noodle-hero">
-   <NoodleShopScenery/>
+   <TempleNoodleBackdrop/>
    <div className="noodle-hero-copy">
     <span>✦ THE VALLEY OF PEACE · A NEW KITCHEN ADVENTURE ✦</span>
     <h1>Noodles of <em>Destiny</em></h1>
@@ -323,6 +323,16 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
       })}
      </div>
     </section>}
+    {selected&&<div className="noodle-quickdrop" role="group" aria-label="Quick-drop selected food">
+      <span>✋ {sourceName(selected)} · place at:</span>
+      <div>
+       {(['pot','steamer','board','board2','serve','bin'] as Target[]).map(t=>
+        <button type="button" key={t} onClick={()=>dispatch(selected,t)}>
+          {{pot:'🍲 Pot',steamer:'🥟 Steamer',board:'① Board',board2:'② Board',serve:'🔔 Serve',bin:'🗑️ Discard'}[t]}
+        </button>)}
+       <button type="button" onClick={()=>setSelected(null)} aria-label="Cancel selected item">✕</button>
+      </div>
+     </div>}
     <p className="noodle-input-hint">✧ <strong>Drag and drop</strong> ingredients or cooked food to the right station. On touchscreens, or with a keyboard, <strong>select an item and then tap or activate its destination</strong>. Esc clears a selection. {selected?'Selected: '+sourceName(selected):feedback}</p>
    </>}
   </>}
