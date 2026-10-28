@@ -161,10 +161,10 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
             <button className="card-link" onClick={() => onNavigate('brave')}>Begin your adventure <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-yellow noodle-game-card">
-          <div className="card-topline"><span className="live-pill"><span/> NEW PLAYTEST</span><span className="card-number">08 / 08</span></div>
+          <div className="card-topline"><span className="live-pill"><span/> NEW GAME</span><span className="card-number">08 / 08</span></div>
           <div className="game-emoji" aria-hidden="true">🐼🥟</div>
-          <div className="card-content"><span className="card-category">INTERACTIVE KITCHEN · TUTORIAL + LEVEL 1</span><h3>Noodles of Destiny</h3>
-           <p>Learn from Mr. Ping, drag ingredients between appliances, cook real recipes and serve hungry guests in the Valley of Peace.</p>
+          <div className="card-content"><span className="card-category">DRAGON CHEF KITCHEN · EIGHT LEVELS</span><h3>Noodles of Destiny</h3>
+           <p>Master eight lively cooking shifts, decorate two dishes at once and earn a special homemade meal coupon for Molly.</p>
            <button className="card-link" onClick={() => onNavigate('noodles')}>Open the noodle shop <span aria-hidden="true">↗</span></button></div>
         </article>
       </div>
