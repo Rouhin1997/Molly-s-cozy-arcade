@@ -237,7 +237,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    {game.status==='finished'?<section className="noodle-results">
     <span className="noodle-result-medal">{game.mode==='tutorial'?'🏮':levelWon(game)?'🏆':game.served>=2?'🥇':game.served===1?'🥟':'🍵'}</span>
     <span className="noodle-game-kicker">{game.mode==='tutorial'?'TUTORIAL COMPLETE':'SHIFT COMPLETE'}</span>
-    <h2>{game.mode==='tutorial'?'A new chef joins the Valley!':levelWon(game)?'The Valley cheers for Chef Molly!':game.served>=2?'A promising kitchen shift!':game.served===1?'Every chef starts somewhere!':'The kitchen will be ready tomorrow.'}</h2>
+    <h2>{game.mode==='tutorial'?'A new chef joins the Valley!':levelWon(game)?'The Valley cheers for the Dragon Chef!':game.served>=2?'A promising kitchen shift!':game.served===1?'Every chef starts somewhere!':'The kitchen will be ready tomorrow.'}</h2>
     <p>{game.mode==='tutorial'?'Po has already requested a second serving. You can replay this lesson whenever you want.':
       'You served '+game.served+' of '+game.orders.length+' guests, scored '+game.score+' points and made '+game.mistakes+' little mistakes. '+(levelWon(game)?'A new chapter awaits!':'Serve at least '+shiftForLevel(game.level).starTarget+' guests to pass this chapter; you can retry freely.')}</p>
     <div className="noodle-result-orders">{game.orders.map(o=><div key={o.id}><KitchenCharacter who={o.guest} size={65}/><strong>{GUEST_NAMES[o.guest]}</strong><small>{o.status==='served'?'✓ Served':'○ Missed'}</small></div>)}</div>
