@@ -50,11 +50,11 @@ describe('Molly’s Chronicle and arcade directory',()=>{
   expect(ending.paragraphs.join(' ')).toMatch(/Molly/);
   expect(ending.paragraphs.join(' ')).toMatch(/Merida/);
  });
- it('separates upcoming game concepts from the live seven-game shelf',()=>{
+ it('keeps the three unbuilt game concepts separate from the live arcade and kitchen playtest',()=>{
   expect(comingSoonGames.map(g=>g.name)).toEqual([
-   'Kung Fu Panda','Courage the Cowardly Dog','Toy Story','The Addams Family'
+   'Courage the Cowardly Dog','Toy Story','The Addams Family'
   ]);
-  expect(new Set(comingSoonGames.map(g=>g.name)).size).toBe(4);
+  expect(new Set(comingSoonGames.map(g=>g.name)).size).toBe(3);
   expect(comingSoonGames.some(g=>g.name.includes('Brave'))).toBe(false);
   expect(comingSoonGames.every(g=>g.detail.includes('date')||g.detail.includes('Date'))).toBe(true);
  });

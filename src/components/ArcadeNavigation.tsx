@@ -1,7 +1,7 @@
 import {useRef} from 'react';
 import {comingSoonGames,developerNotes,upcomingArcadeEvents} from '../data/arcadeHub';
 
-export type ArcadeRoute='home'|'guess'|'connections'|'toon'|'bazinga'|'nine'|'pink'|'wallet'|'brave'|'passport'|'vault';
+export type ArcadeRoute='home'|'guess'|'connections'|'toon'|'bazinga'|'nine'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
 
 type Props={
  active:ArcadeRoute;
@@ -16,7 +16,8 @@ const liveGames:{route:ArcadeRoute;icon:string;name:string;subtitle:string}[]=[
  {route:'bazinga',icon:'⚛️',name:'Bazinga! Lab',subtitle:'Logic and seating'},
  {route:'nine',icon:'🕵️',name:'The 99 Files',subtitle:'Detective mysteries'},
  {route:'pink',icon:'🩷',name:'Pink Rush!',subtitle:'Musical memories'},
- {route:'brave',icon:'🏹',name:'Brave: The Wisps’ Trail',subtitle:'Six-chapter adventure'}
+ {route:'brave',icon:'🏹',name:'Brave: The Wisps’ Trail',subtitle:'Six-chapter adventure'},
+ {route:'noodles',icon:'🐼',name:'Noodles of Destiny',subtitle:'Kitchen tutorial + Level 1 playtest'}
 ];
 export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSoon}:Props){
  const games=useRef<HTMLDetailsElement>(null);
@@ -35,11 +36,11 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
   <details className="hub-menu" ref={games} onToggle={e=>{
    if(e.currentTarget.open)for(const m of [future,events,notes])if(m.current)m.current.open=false;
   }}>
-   <summary className={'hub-nav-trigger '+(['guess','connections','toon','bazinga','nine','pink','brave'].includes(active)?'is-active':'')}>
+   <summary className={'hub-nav-trigger '+(['guess','connections','toon','bazinga','nine','pink','brave','noodles'].includes(active)?'is-active':'')}>
     <span className="hub-nav-icon" aria-hidden="true">🎮</span> Games <span className="hub-chevron" aria-hidden="true">⌄</span>
    </summary>
    <div className="hub-popover hub-popover-games">
-    <div className="hub-popover-heading"><strong>Ready to play</strong><small>Seven adventures</small></div>
+    <div className="hub-popover-heading"><strong>Ready to play</strong><small>Eight playable titles</small></div>
     <div className="hub-popover-list">
      {liveGames.map(game=><button key={game.route} className={'hub-popover-item '+(active===game.route?'is-current':'')}
       onClick={()=>nav(game.route)}>
