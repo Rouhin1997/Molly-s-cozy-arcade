@@ -24,7 +24,7 @@ export const KITCHEN_LEVELS:readonly KitchenLevel[]=[
  {id:5,name:'Five-Style Feast',subtitle:'A parade of delicious requests',theme:'festival',
   description:'Five guests and clever timing. No frantic clicking required.',
   orders:line(['jade','fire','dumpling','mushroom','fiveSpice'],['rabbit','po','monkey','tigress'],23,93),duration:215,starTarget:4},
- {id:6,name:'The Master's Table',subtitle:'The masters come for dinner',theme:'temple',
+ {id:6,name:'The Master’s Table',subtitle:'The masters come for dinner',theme:'temple',
   description:'Steaming and plating overlap as more orders arrive.',
   orders:line(['fiveSpice','sesame','fire','jade','dumpling'],['tigress','monkey','rabbit','po','tigress'],22,90),duration:213,starTarget:4},
  {id:7,name:'Dragon Lantern Night',subtitle:'A special evening service',theme:'dragon',
