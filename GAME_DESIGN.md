@@ -1,5 +1,14 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 5B — Dragon Chef, eight-level kitchen release (28 October 2026)
+
+Following the owner's successful one-level playtest, Noodles of Destiny now has **eight hand-paced shifts**, eight recipes, fully independent **two-dish assembly boards**, simultaneous cooking and topping placement, richer original vector dish art, a distinctive sunset-ink temple world (cinnabar red, gold, bamboo green), and an original pacy 118–136 BPM percussion/plucked-string soundtrack with mute and pause. Mouse drag, touch dragging and a sticky mobile select/drop toolbar are supported. The tutorial remains untimed and replayable. Each shift has explicitly measured estimated cooking/action work, a 2.5× minimum per-guest patience buffer, and a fair overall finishing window; passing thresholds range from 2/3 to 5/6 guests, not perfect-only.
+
+Winning the final **Level 8: The Dragon Chef** grants exactly one coupon for Molly: Rouhin will cook homemade **Soup Dumplings or Ramen**. She may redeem it **twice in total within three calendar months from its original unlock date**; both redemptions are confirmed and recorded with dates, and replay does not reset expiry or uses. This lives separately from Pink Rush in her Coupon Wallet and is included with kitchen progress in Passport backup **v6**, retaining older backup compatibility.
+
+Read [NOODLES_DRAGON_CHEF_RELEASE.md](NOODLES_DRAGON_CHEF_RELEASE.md) for the eight-level schedule, mechanics, art, sound, phone testing and coupon details. New regression coverage in tests/noodleShopV2.test.ts exercises full-level solutions, multitasking, deadlines, migration and the two-use/three-month boundary. Existing games remain unchanged. The original music is procedural synthesis, not copyrighted film music; final presentation should still be playtested on a real phone before further polish.
+
+
 ## Phase 5A — Noodles of Destiny kitchen pilot (28 October 2026)
 
 **Owner-approved first slice:** A real interactive Kung Fu Panda-inspired noodle shop, with original in-repository SVG artwork for Ping, Po, three guests and a Valley of Peace shop panorama. Mouse and touch pointer-drag follow/drop, select-then-tap alternative for touchscreen/keyboard, illustrated assembled dishes, physical pantry, two appliances (boiling pot + bamboo steamer), cooking meters, ready and burnt phases, discard bin, and serving bell. Everything is new implementation rather than quiz-answer buttons.

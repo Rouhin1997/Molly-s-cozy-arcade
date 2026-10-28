@@ -2173,3 +2173,231 @@
 }
 @keyframes noodle-golden-focus{50%{box-shadow:0 0 0 7px #f8dc8a67,0 7px 16px #cba55160}}
 @media(prefers-reduced-motion:reduce){.noodle-pantry-item .noodle-guide-glow{animation:none}}
+
+
+/* ━━━ NOODLES OF DESTINY: DRAGON TEMPLE EDITION ━━━
+ * Distinctive cinnabar / ink / brushed-gold visual language.
+ * 8 shifts, live dual boards, responsive play, original fan-made artwork.
+ */
+.noodle-page{
+ --noodle-ink:#1c3936;--noodle-red:#ab4330;--noodle-gold:#e9b662;--noodle-parch:#faebca;
+ color:#f5e3c1;background:
+ radial-gradient(circle at 18% 15%,#426554 0,transparent 35%),
+ repeating-linear-gradient(105deg,#1f3b35 0,#1f3b35 3px,#203d36 3px,#203d36 7px);
+ padding:14px clamp(12px,2vw,26px) 45px;border-radius:24px;
+ border:1px solid #426656;
+ box-shadow:inset 0 0 0 5px #162f2b,0 25px 65px #132b2c40;
+}
+.noodle-page>.back-link{color:#f5d79d}
+.noodle-hero{height:335px;margin-top:12px;background:#b56a4a;border:7px solid #502c27;border-radius:9px;
+ box-shadow:0 0 0 3px #e6ba73,0 15px 35px #050e0d80;position:relative}
+.noodle-temple-art{position:absolute;inset:0;width:100%;height:100%}
+.noodle-hero::after{background:linear-gradient(90deg,#152e2cf0,#1a302bc9 38%,#1a302b44 73%,#1c2e2955)}
+.noodle-hero-copy{left:5%;top:18%;max-width:64%}
+.noodle-hero-copy h1{font-size:clamp(40px,5.9vw,75px);color:#fff6db;letter-spacing:-.05em;text-shadow:0 4px 0 #402920,0 8px 15px #111}
+.noodle-hero-copy h1 em{color:#f2ad61}
+.noodle-hero-copy>span{font-weight:900;color:#f5d092;letter-spacing:.2em}
+.noodle-hero-copy p{font-size:16px;color:#ffe3b9}
+.noodle-hero-ping{right:3%}
+.noodle-hero-po{right:16%}
+.noodle-opening-story{background:linear-gradient(127deg,#f9dfb3,#fff2d4);border:6px double #ae5d3e;
+ box-shadow:inset 0 0 0 3px #f7d59d,0 10px 24px #0c1b1b50;border-radius:10px}
+.noodle-opening-story h2{color:#693e33}
+.noodle-letterhead,.noodle-game-kicker{color:#a74f37}
+.noodle-menu-preview{background:radial-gradient(circle at 50% 0,#3b6050,#192e2a);
+ border:6px double #d4a35f;border-radius:8px;transform:rotate(.8deg)}
+.noodle-menu-top{color:#f8ce85}
+.noodle-menu-preview>div{padding:9px 0}
+.noodle-menu-preview>div>span{font-size:29px}
+.noodle-menu-preview strong{font-size:13px}
+.noodle-menu-preview small{font-size:10px}
+.noodle-welcome{margin-top:24px;grid-template-columns:minmax(0,1.2fr) minmax(250px,.7fr)}
+.noodle-level-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:23px 0 12px}
+.noodle-level-heading>span{color:#a35336;font:bold 11px 'DM Sans',sans-serif;letter-spacing:1.2px}
+.noodle-level-heading small{font:italic 11px Georgia,serif;color:#98735b}
+.noodle-level-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.noodle-level-tile{background:#fff7e4;border:2px solid #dec196;padding:11px;border-radius:8px;min-width:0;min-height:108px;
+ display:grid;gap:5px;text-align:left;color:#643e32;transition:transform .2s,background .2s}
+.noodle-level-tile>span{font-size:16px;color:#bc824c}
+.noodle-level-tile strong{font:700 13px Georgia,serif}
+.noodle-level-tile small{font:10px 'DM Sans',sans-serif;color:#966f52}
+.noodle-level-tile em{font:italic 10px Georgia,serif;color:#8a694b}
+.noodle-level-tile.is-picked{border-color:#a74737;background:#fde8bc;box-shadow:0 0 0 3px #a747372a}
+.noodle-level-tile:disabled{opacity:.5;cursor:not-allowed;filter:saturate(.55)}
+.noodle-level-tile:not(:disabled):hover{transform:translateY(-2px)}
+.noodle-chosen-level{font:italic 12px/1.65 Georgia,serif;color:#83674e;margin:15px 0 0;border-left:3px solid #ba8552;padding-left:10px}
+.noodle-game-toolbar{background:#f0d0a2;border:4px double #834632;border-radius:9px;box-shadow:0 8px 0 #152c2866}
+.noodle-game-toolbar h2{color:#633d2b}
+.noodle-game-stats>div{background:#204138;color:#f9e8c8;border:2px solid #b89056;border-radius:7px}
+.noodle-game-stats small{color:#dbb888}
+.noodle-game-stats strong{color:#fff2cb}
+.noodle-toolbar-actions button{border-radius:7px;background:#fff0ca;border-color:#b6884c;color:#77402d;min-height:40px}
+.noodle-toolbar-actions button.noodle-music-toggle{background:#244739;color:#ffdc9d;border-color:#e5bd78}
+.noodle-order-board{border:8px solid #774333;background:repeating-linear-gradient(0deg,#8a5b40 0,#8a5b40 18px,#815439 18px,#815439 20px);border-radius:10px}
+.noodle-order-head{color:#ffe5b7}
+.noodle-order-head span{color:#e3c595}
+.noodle-order-ticket{border-radius:3px;min-width:0;background:#ffe9bd;
+ box-shadow:5px 5px 0 #412f2755;transform:rotate(-.7deg)}
+.noodle-order-ticket:nth-child(2n){transform:rotate(.8deg)}
+.noodle-order-ticket.is-current{border-color:#c85138;background:#fff4d7;box-shadow:0 0 0 3px #e8bc6d,4px 6px 0 #412f2740}
+.noodle-patience>span{background:linear-gradient(90deg,#bd533d,#c5ba63,#65a271)}
+.noodle-instruction{background:#274a3c;border:3px solid #d3a66b;border-radius:9px;color:#f6e9c5}
+.noodle-instruction>div:nth-child(2)>span{color:#e4b57c}
+.noodle-instruction strong{color:#f8dda2}
+.noodle-instruction p{color:#d0d8b2}
+.noodle-lesson-dots i.done{background:#f1c774}
+.noodle-kitchen{grid-template-columns:minmax(0,1fr) minmax(0,.95fr) minmax(0,1.35fr);gap:13px}
+.noodle-wooden-frame{background:#eaca92;border:6px solid #79442f;box-shadow:inset 0 0 0 3px #d19b58,0 8px 18px #111d1b62;border-radius:9px;color:#513426;padding:13px}
+.noodle-section-title{border-color:#b57946;color:#693a2b}
+.noodle-section-title>span:first-child{background:#a94634;border-radius:5px}
+.noodle-section-title strong{font-size:17px}
+.noodle-pantry{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.noodle-pantry-item .noodle-draggable{height:102px;border:2px solid #c99d5e;background:#fff0c9;border-radius:7px;padding:7px 3px}
+.noodle-pantry-item .noodle-draggable:hover,.noodle-pantry-item .noodle-draggable.is-selected{background:#e5ecc2;border-color:#40815d}
+.noodle-item-emoji{font-size:31px}
+.noodle-pantry-item strong{font-size:10px;line-height:1.3}
+.noodle-pantry-item small{font-size:9px}
+.noodle-appliance-zone{background:linear-gradient(150deg,#d9ac6e,#f8dc9e);border:3px solid #a4653d;border-radius:9px;padding:9px;min-height:231px}
+.noodle-appliance{grid-template-columns:1fr auto}
+.noodle-machine-art{width:113px;height:85px;filter:drop-shadow(0 6px 4px #6b3b2670)}
+.noodle-steam-lines{animation:noodle-steam-rise 1.6s ease-in-out infinite}
+@keyframes noodle-steam-rise{50%{opacity:.45;transform:translateY(-5px)}}
+.noodle-machine-title strong{font-size:15px}
+.noodle-appliance-food{background:#fff6d4d6;border-color:#b97f4b}
+.noodle-cooked-drag{border-radius:6px;background:#fff2cc}
+.noodle-appliance.phase-ready .noodle-cooked-drag{background:#d6eabf;border-color:#53865c}
+.noodle-appliance.phase-burnt .noodle-cooked-drag{background:#e8bb9c;border-color:#b6493a}
+.noodle-board-frame{min-width:0;display:flex;flex-direction:column;gap:7px}
+.noodle-two-boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;flex:1}
+.noodle-board-label{display:flex;justify-content:space-between;align-items:center;gap:5px;color:#683d28}
+.noodle-board-label strong{font:900 10px 'DM Sans',sans-serif;letter-spacing:1px}
+.noodle-board-label small{font:italic 10px Georgia,serif;text-align:right;color:#905d3f}
+.noodle-board-zone{min-width:0;flex:1;min-height:210px;background:repeating-linear-gradient(25deg,#c4945e 0,#c4945e 9px,#d8ad73 10px,#d8ad73 19px);border:4px solid #9e5e3d;border-radius:7px;padding:6px}
+.noodle-dish-drag{width:100%;max-width:218px;aspect-ratio:auto;min-height:160px;background:transparent;border:none;border-radius:11px;padding:3px;box-shadow:none}
+.noodle-dish-drag.is-selected{outline:3px solid #77a06e;outline-offset:2px}
+.noodle-plated-food{height:100%;min-width:0}
+.noodle-painted-meal{display:block;width:100%;height:auto;max-height:180px;aspect-ratio:260/220;overflow:visible;filter:drop-shadow(0 8px 5px #4c2b2440)}
+.noodle-food-steam{animation:noodle-steam-rise 2.5s ease-in-out infinite}
+.noodle-plated-food strong{font-size:11px;line-height:1.3;text-align:center;margin:0}
+.noodle-plated-food small{font-size:9px;text-align:center;overflow-wrap:anywhere}
+.noodle-empty-dish{font-size:12px}
+.noodle-empty-dish>span{font-size:40px}
+.noodle-empty-dish strong{font-size:13px}
+.noodle-service-row{margin-top:10px}
+.noodle-bell-zone{background:#fce3ab;border-color:#bb793b;border-radius:7px}
+.noodle-bell.is-ready{filter:drop-shadow(0 0 9px #ffe581)}
+.noodle-bin-zone{border-color:#91745e;background:#e5ccaa;border-radius:7px}
+.noodle-recipe-card{background:#f6dbad;border:4px double #a1683c;border-radius:8px;color:#61432f}
+.noodle-recipe-card h3{color:#6e3d2b}
+.noodle-recipe-steps span{background:#dfbc88;border-radius:5px}
+.noodle-recipe-steps span.is-checked{background:#9ebe8f;color:#234e3b}
+.noodle-input-hint{color:#f5dcae}
+.noodle-input-hint strong{color:#fff7d5}
+.noodle-results{background:radial-gradient(circle at 50% 0,#fff5cf,#eabe85);border:9px double #ad5537;border-radius:12px}
+.noodle-results h2{color:#8b412d}
+.noodle-results>p{color:#785540}
+.noodle-result-orders>div{border-radius:6px}
+.noodle-pause-banner{background:#7b382b;border:3px solid #f3c27c;border-radius:8px}
+.noodle-fan-note{color:#cbbf9f}
+.noodle-quickdrop{position:sticky;bottom:10px;z-index:95;margin:12px auto;padding:10px 14px;
+ display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#204d42;box-shadow:0 15px 35px #081b1bba;
+ color:#ffecbe;border:3px solid #e8ba67;border-radius:9px}
+.noodle-quickdrop>span{font:700 12px Georgia,serif}
+.noodle-quickdrop>div{display:flex;flex-wrap:wrap;gap:6px}
+.noodle-quickdrop button{background:#fae6b9;border:1px solid #a66a3d;border-radius:6px;padding:10px 12px;font-size:12px;font-weight:800;color:#764431;min-height:42px}
+.noodle-quickdrop button:hover{background:#fff5d8}
+.noodle-voucher{display:flex;gap:18px;align-items:center;margin:25px auto;padding:21px;
+ background:linear-gradient(122deg,#f3cd84,#fff1c7);border:6px double #a74b36;
+ border-radius:9px;color:#693c2c;box-shadow:0 13px 26px #2a281a36}
+.noodle-voucher.is-locked{filter:saturate(.7)}
+.noodle-voucher-art{display:grid;min-width:110px;text-align:center;gap:0;align-self:stretch;
+ justify-content:center;background:#204c41;color:#f0d491;border:4px solid #d4a35b;border-radius:7px;padding:12px}
+.noodle-voucher-art span{font-size:38px}
+.noodle-voucher-kicker{font:900 10px 'DM Sans',sans-serif;letter-spacing:1.4px;color:#a65c34}
+.noodle-voucher-body{min-width:0;flex:1}
+.noodle-voucher h2{font:700 clamp(24px,2.6vw,35px) 'Fraunces',Georgia,serif;color:#7b3d30;margin:10px 0}
+.noodle-voucher p{font:14px/1.7 Georgia,serif;color:#77563d}
+.noodle-voucher-body>small{display:block;color:#92775c;font:italic 11px/1.6 Georgia,serif;margin-top:13px}
+.noodle-voucher-details{display:flex;gap:12px;flex-wrap:wrap}
+.noodle-voucher-details>div{display:grid;gap:3px;padding:10px;background:#fff2d4;border:1px solid #d4ae7c;border-radius:5px}
+.noodle-voucher-details strong{font:700 19px Georgia,serif;color:#77492f}
+.noodle-voucher-details small{font-size:10px;color:#a07753}
+.noodle-voucher-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.noodle-voucher-actions button{background:#a94934;color:#ffeac4;border:2px solid #843729;padding:12px 17px;border-radius:7px;font-size:12px;font-weight:800;min-height:45px}
+.noodle-voucher-actions button:hover{background:#7d3629}
+.noodle-voucher-history{display:grid;gap:6px;margin:15px 0;color:#784932}
+.noodle-voucher-history span{font:italic 12px Georgia,serif}
+.noodle-voucher-finished,.noodle-voucher-locked{display:block;color:#7c422f;margin-top:13px;font:700 14px Georgia,serif}
+.noodle-voucher-message{background:#def0d0;border:1px solid #9fba8b;border-radius:4px;padding:9px;font-size:12px}
+.noodle-winner-coupon{margin-top:20px}
+.noodle-winner-coupon>strong{font:700 22px Georgia,serif;color:#874a31}
+.noodle-winner-coupon>p{font:14px Georgia,serif;color:#745d45}
+@media(max-width:1080px){
+ .noodle-kitchen{grid-template-columns:minmax(0,.95fr) minmax(0,1.1fr)}
+ .noodle-final-stations{grid-column:1/-1}
+ .noodle-two-boards{gap:12px}
+ .noodle-board-zone{min-height:240px}
+ .noodle-welcome{grid-template-columns:1fr}
+ .noodle-menu-preview{max-width:none;display:grid;grid-template-columns:1fr 1fr;column-gap:20px}
+ .noodle-menu-top,.noodle-menu-preview>small{grid-column:1/-1}
+}
+@media(max-width:680px){
+ .noodle-page{border-radius:10px;padding:9px 8px 22px;margin:0 auto}
+ .noodle-hero{height:245px;border-width:4px;border-radius:5px}
+ .noodle-hero-copy{left:5%;top:15%;max-width:78%}
+ .noodle-hero-copy h1{font-size:clamp(33px,8vw,49px)}
+ .noodle-hero-copy>span{font-size:8px}
+ .noodle-hero-copy p{font-size:12px;max-width:190px}
+ .noodle-hero-ping{right:-1%;transform:scale(.55);transform-origin:bottom right}
+ .noodle-hero-po{right:13%;transform:scale(.58);transform-origin:bottom right}
+ .noodle-opening-story{padding:22px 15px}
+ .noodle-level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .noodle-level-tile{min-height:105px;padding:8px}
+ .noodle-level-tile strong{font-size:11px}
+ .noodle-level-tile small{font-size:9px}
+ .noodle-menu-preview{display:block}
+ .noodle-game-toolbar{padding:12px}
+ .noodle-game-stats{gap:6px}
+ .noodle-game-stats>div{padding:6px;min-width:0}
+ .noodle-game-stats strong{font-size:19px}
+ .noodle-order-board{padding:10px;border-width:5px}
+ .noodle-order-list{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(235px,75vw);
+   grid-template-columns:none;gap:9px;overflow-x:auto;scroll-snap-type:x proximity;padding:6px 2px 21px}
+ .noodle-order-ticket{scroll-snap-align:start;min-height:160px;display:flex;flex-direction:column;flex-wrap:nowrap}
+ .noodle-ticket-guest{flex:initial}
+ .noodle-ticket-food{flex:initial}
+ .noodle-patience{margin:8px 0 0}
+ .noodle-kitchen{grid-template-columns:1fr}
+ .noodle-final-stations{grid-column:auto}
+ .noodle-pantry{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ .noodle-pantry-item .noodle-draggable{height:94px}
+ .noodle-pantry-item strong{font-size:9px}
+ .noodle-pantry-item small{display:none}
+ .noodle-item-emoji{font-size:28px}
+ .noodle-appliances{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .noodle-appliance-zone{min-height:219px;padding:6px}
+ .noodle-machine-art{width:78px;height:62px}
+ .noodle-board-zone{min-height:166px;padding:3px}
+ .noodle-two-boards{gap:6px}
+ .noodle-board-label small{font-size:8px}
+ .noodle-dish-drag{min-height:156px}
+ .noodle-painted-meal{max-height:125px}
+ .noodle-plated-food strong{font-size:10px}
+ .noodle-plated-food small{font-size:8px}
+ .noodle-quickdrop{bottom:5px;padding:8px;gap:7px}
+ .noodle-quickdrop>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%}
+ .noodle-quickdrop button{font-size:10px;padding:10px 5px}
+ .noodle-voucher{display:block;padding:14px}
+ .noodle-voucher-art{display:flex;align-items:center;justify-content:center;min-height:78px;gap:24px;margin-bottom:13px}
+ .noodle-voucher-art span{font-size:30px}
+ .noodle-voucher-actions button{width:100%}
+}
+@media(max-width:380px){
+ .noodle-pantry{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .noodle-order-list{grid-auto-columns:minmax(215px,82vw)}
+ .noodle-board-zone{min-height:145px}
+ .noodle-machine-art{width:65px;height:57px}
+}
+@media(prefers-reduced-motion:reduce){
+ .noodle-steam-lines,.noodle-food-steam{animation:none}
+}

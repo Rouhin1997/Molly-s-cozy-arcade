@@ -1,5 +1,8 @@
 # Noodles of Destiny — first-slice playtest
 
+> **Update (28 October 2026):** The original tutorial + one-shift pilot described below has now been expanded into an eight-level Dragon Chef game. For the current rules, timing, visual overhaul, two-board concurrency, original music and three-month coupon, read [NOODLES_DRAGON_CHEF_RELEASE.md](NOODLES_DRAGON_CHEF_RELEASE.md). This document is retained as the original vertical-slice checkpoint.
+
+
 **Status:** playable tutorial + Level 1 only, awaiting Molly's owner's playtest. Not the complete game.
 
 ## Creative direction
