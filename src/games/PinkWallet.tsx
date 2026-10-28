@@ -1,3 +1,4 @@
+import NoodleCouponPanel from './NoodleCouponPanel';
 import {useState,type Dispatch,type SetStateAction} from 'react';
 import {choosePinkCoupon,couponGifts,pinkMysteryCards,pinkNextPractice,pinkReplaceCoupon,redeemPinkCoupon,type PinkProgress} from '../lib/pinkRush';
 
@@ -33,8 +34,8 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
  return <main className="game-page pink-wallet-page">
   <button className="back-link" onClick={onHome}>← Return to the arcade</button>
   <div className="pink-wallet-heading"><span className="overline">MOLLY’S BLACKPINK VIP REWARDS</span>
-   <h1>🖤 Molly’s BLINK Wallet 🩷</h1>
-   <p>Three little promises from Rouhin. The prize stays a mystery until you pick a card.</p>
+   <h1>🎟️ Molly’s Special Coupon Wallet</h1>
+   <p>A little collection of promises made for Molly—concert surprises and now a homemade Dragon Chef treat.</p>
   </div>
   {coupon.status==='ready'&&<section className="pink-wallet-draw">
    <h2>Choose one secret backstage gift</h2>
@@ -72,6 +73,7 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
      'Finish your first full Pink Rush show to unlock three hidden reward cards and choose one to keep.'}</p>
    <button className="btn btn-primary" onClick={replace}>🎤 Play Pink Rush! ↗</button>
   </section>}
+  <NoodleCouponPanel/>
   {message&&<p className="pink-wallet-status" role="status">{message}</p>}
   <p className="pink-wallet-fine">One active Pink Rush coupon at a time. Before redemption, you may surrender it and complete another concert for a fresh choice. After redemption, the gift is permanently marked redeemed in this browser’s Passport and cannot be earned again. Save a Passport backup; fully tamper-proof and cross-device enforcement would require a private account/server.</p>
  </main>;
