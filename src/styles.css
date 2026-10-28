@@ -2158,3 +2158,18 @@
 @media(prefers-reduced-motion:reduce){
  .noodle-appliance.phase-ready .noodle-cooked-drag,.noodle-bell.is-ready span{animation:none}
 }
+
+
+/* Beginner guidance: unobtrusive golden rim for the next ingredient/target. */
+.noodle-pantry-item .noodle-guide-glow{
+ border-color:#d9a951;background:#fff8d6;
+ box-shadow:0 0 0 4px #f6d9898c,0 5px 13px #d8b7693a;
+ animation:noodle-golden-focus 1.8s ease-in-out infinite
+}
+.noodle-dropzone.noodle-guide-target{
+ border-color:#d4ac64;
+ outline:3px dashed #edcd75;
+ outline-offset:-5px
+}
+@keyframes noodle-golden-focus{50%{box-shadow:0 0 0 7px #f8dc8a67,0 7px 16px #cba55160}}
+@media(prefers-reduced-motion:reduce){.noodle-pantry-item .noodle-guide-glow{animation:none}}
