@@ -62,7 +62,7 @@ export function newKitchen(mode:Mode,level=1):KitchenState{
  return {mode,level:config.id,elapsed:0,paused:false,status:'playing',
   orders,activeOrderId:orders[0].id,dish:emptyDish(),secondDish:emptyDish(),
   pot:null,steamer:null,served:0,missed:0,score:0,mistakes:0,
-  message:mode==='tutorial'?'Welcome, Chef Molly! Start with the golden broth and a bowl.':'The kitchen is open. You can cook and plate at the same time!'};
+  message:mode==='tutorial'?'Welcome, chef! A hungry panda is waiting—start with a bowl or the boiling pot.':'The kitchen is open. You can cook and plate at the same time!'};
 }
 export function activeOrder(s:KitchenState){return orderFor(s,s.activeOrderId)}
 export function activeRecipe(s:KitchenState){const o=activeOrder(s);return o?RECIPES[o.recipeId]:undefined}
