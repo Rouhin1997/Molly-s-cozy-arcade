@@ -1,5 +1,16 @@
 # Molly's Cozy Arcade — game design & roadmap
 
+## Phase 5A — Noodles of Destiny kitchen pilot (28 October 2026)
+
+**Owner-approved first slice:** A real interactive Kung Fu Panda-inspired noodle shop, with original in-repository SVG artwork for Ping, Po, three guests and a Valley of Peace shop panorama. Mouse and touch pointer-drag follow/drop, select-then-tap alternative for touchscreen/keyboard, illustrated assembled dishes, physical pantry, two appliances (boiling pot + bamboo steamer), cooking meters, ready and burnt phases, discard bin, and serving bell. Everything is new implementation rather than quiz-answer buttons.
+
+**Guided tutorial:** Unhurried, replayable lesson with Mr. Ping: bowl → noodles into pot → wait ~3.6s → lift cooked noodles onto bowl → broth → greens → bell. Save tutorial completion under isolated key `molly-noodles-of-destiny-v1`; replay at any time.
+
+**Level 1: Lunch Rush:** Three real timed orders arrive at 0, 19 and 41 seconds: Bunny Garden Noodles, Monkey Dumpling Plate with dipping sauce (~4.8s steamer), and Tigress Mushroom Noodles. Customers have distinct patience bars; 155-second shift cap, scores, missed orders, explicit pause, wrong-drop feedback, overcooked food recovery, and saved best attempts. An illustrated recipe strip and task guidance keep the game approachable. The new pilot appears in the active game shelf / header as eighth playable title, replacing its Coming Soon concept card. No existing game/coupon logic changed.
+
+**Testing / next gate:** Pure-state regression tests in `tests/noodleShop.test.ts` simulate tutorial and all three recipes, deadlines, burn/retry, pause, correct equipment and local save. The updated existing catalogue test expects three still-unbuilt concepts. `NOODLES_PLAYTEST.md` documents owner testing on desktop/mobile. Do not add further levels, Passport rewards or game music until the owner reviews interaction and artwork; this is a fan-made personal edition, not the later commercial project.
+
+
 ## Phase 4B — Name suggestions for free-text game answers (22 October 2026)
 
 **Owner requested:** When typing in expert-level games (especially Toon Rewind and Guess Who?), help recall a forgotten show or ingredient name using a matching catalogue/autocomplete rather than requiring perfect spelling. Make this a lightweight usability aid rather than reducing the mystery to an automatically revealed solution.
