@@ -9,6 +9,8 @@ import {couponGifts,reconcilePinkImport,type PinkProgress} from '../lib/pinkRush
 import {readBraveJourney,writeBraveJourney,normalizeBraveJourney,braveChronicleUnlocked,type BraveJourneySave} from '../lib/braveProgress';
 import {braveCampaignStages} from '../data/braveCampaign';
 import BraveChronicle from './BraveChronicle';
+import {readNoodleSave,normalizeNoodleSave,writeNoodleSave,type NoodleSave} from '../lib/noodleShopV2';
+import {readNoodleCoupon,normalizeNoodleCoupon,writeNoodleCoupon,couponRemaining,type NoodleCoupon} from '../lib/noodleCoupon';
 
 type Props = {
   guess: Progress;
@@ -33,14 +35,17 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
   const [feedback, setFeedback] = useState('');
   const [braveSave,setBraveSave] = useState<BraveJourneySave>(readBraveJourney);
   const [chronicleOpen,setChronicleOpen] = useState(false);
+  const [noodleSave,setNoodleSave] = useState<NoodleSave>(readNoodleSave);
+  const [noodleCoupon,setNoodleCoupon] = useState<NoodleCoupon|null>(readNoodleCoupon);
   const braveCompletedCount=braveSave.completed.length;
   const chronicleUnlocked=braveChronicleUnlocked(braveSave);
 
   function exportBackup() {
     const backup = {
       format: 'mollys-cozy-arcade',
-      version: 5,
+      version: 6,
       brave: braveSave,
+      noodles: noodleSave, noodleCoupon,
       exportedAt: new Date().toISOString(),
       guess, connections, toon, bazinga, nine, pink,
     };
@@ -65,7 +70,7 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       const parsed: unknown = JSON.parse(await file.text());
       if (!parsed || typeof parsed !== 'object') throw new Error('Invalid backup.');
       const data = parsed as Record<string, unknown>;
-      if (data.format !== 'mollys-cozy-arcade' || (data.version !== 1 && data.version !== 2 && data.version !== 3 && data.version !== 4 && data.version !== 5)) throw new Error('This is not a compatible Molly’s Arcade backup.');
+      if (data.format !== 'mollys-cozy-arcade' || (data.version !== 1 && data.version !== 2 && data.version !== 3 && data.version !== 4 && data.version !== 5 && data.version !== 6)) throw new Error('This is not a compatible Molly’s Arcade backup.');
       const g = data.guess as Progress, c = data.connections as ConnectionProgress, t = data.toon as ToonProgress;
       const b = data.bazinga as BazingaProgress | undefined;
       const n = data.nine as NineProgress | undefined;
@@ -74,10 +79,13 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
         typeof g?.stats?.points !== 'number' || typeof c?.stats?.stars !== 'number' ||
         typeof t?.stats?.stars !== 'number' || !g.daily || !c.daily || !t.daily ||
         (data.version !== 1 && (b?.version !== 1 || typeof b.stats?.stars !== 'number' || !b.daily)) ||
-        ((data.version === 3 || data.version === 4 || data.version === 5) && (n?.version !== 1 || typeof n.stats?.stars !== 'number' || !n.daily || !n.heist)) ||
-        ((data.version === 4 || data.version === 5) && (pr?.version !== 1 || typeof pr.stats?.stars !== 'number' || !pr.daily)) ||
-        (data.version===5 && (!data.brave||typeof data.brave!=='object'||(data.brave as Partial<BraveJourneySave>).version!==1
-          ||!Array.isArray((data.brave as Partial<BraveJourneySave>).completed)))) throw new Error('Some saved game data is missing.');
+        ((data.version === 3 || data.version === 4 || data.version === 5 || data.version === 6) && (n?.version !== 1 || typeof n.stats?.stars !== 'number' || !n.daily || !n.heist)) ||
+        ((data.version === 4 || data.version === 5 || data.version === 6) && (pr?.version !== 1 || typeof pr.stats?.stars !== 'number' || !pr.daily)) ||
+        ((data.version===5 || data.version===6) && (!data.brave||typeof data.brave!=='object'||(data.brave as Partial<BraveJourneySave>).version!==1
+          ||!Array.isArray((data.brave as Partial<BraveJourneySave>).completed))) ||
+        (data.version===6&&(!data.noodles||typeof data.noodles!=='object'||
+          ![1,2].includes((data.noodles as NoodleSave).version)||
+          (data.noodleCoupon!==null&&!normalizeNoodleCoupon(data.noodleCoupon))))) throw new Error('Some saved game data is missing.');
       if (!window.confirm('Replace this browser’s current arcade progress with the imported backup? This cannot be undone.')) {
         setFeedback('Import cancelled. Your current progress was kept.');
         return;
@@ -88,12 +96,18 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       if (b) setBazinga(b);
       if (n) setNine(normalizeNineProgress(n));
       if (pr) setPink(previous=>reconcilePinkImport(pr,previous));
-      if (data.version===5){
+      if (data.version===5||data.version===6){
         const importedBrave=normalizeBraveJourney(data.brave);
         setBraveSave(importedBrave);
         writeBraveJourney(importedBrave);
       }
-      setFeedback(data.version===5 ? 'Your games and Keeper’s Chronicle progress have been restored!' : pr ? 'Six arcade game records restored; your Brave adventure progress was kept.' : 'Older Passport restored! Games not included in that backup were left unchanged.');
+      if(data.version===6){
+        const importedNoodles=normalizeNoodleSave(data.noodles);
+        setNoodleSave(importedNoodles);writeNoodleSave(importedNoodles);
+        if(data.noodleCoupon){const reward=normalizeNoodleCoupon(data.noodleCoupon);
+         if(reward){setNoodleCoupon(reward);writeNoodleCoupon(reward)}}
+      }
+      setFeedback(data.version===6?'All arcade games and kitchen rewards restored!' : data.version===5 ? 'Your games and Keeper’s Chronicle progress have been restored!' : pr ? 'Six arcade game records restored; your Brave adventure progress was kept.' : 'Older Passport restored! Games not included in that backup were left unchanged.');
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : 'Unable to read that backup file.');
     }
@@ -171,6 +185,14 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
           <div><strong>{game.best}</strong><small>{game.bestLabel}</small></div>
         </div>)}
         <div className="passport-game-record brave-passport-record">
+          <div className="passport-game-icon" aria-hidden="true">🥟</div>
+          <div className="passport-game-title"><strong>Noodles of Destiny</strong>
+            <small>8 cooking shifts · {noodleSave.tutorialDone?'training complete':'training awaits'}</small></div>
+          <div><strong>Level {noodleSave.unlockedLevel}/8</strong><small>Best shift: {noodleSave.bestScore} points</small></div>
+          <div><strong>{noodleCoupon?'🏮 Dragon Chef':'🥢 Apprentice'}</strong>
+            <small>{noodleCoupon?couponRemaining(noodleCoupon)+'/2 homemade meals left':'Secret coupon awaits'}</small></div>
+        </div>
+        <div className="passport-game-record brave-passport-record">
           <div className="passport-game-icon" aria-hidden="true">🏹</div>
           <div className="passport-game-title"><strong>Brave: The Wisps’ Trail</strong><small>{braveCompletedCount} of 18 story scenes · six chapters</small></div>
           <div><strong>{chronicleUnlocked?'✧ Complete':'On the trail'}</strong><small>Adventure journey</small></div>
@@ -179,7 +201,7 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       </div>
     </section>
     <section className="passport-backup">
-      <div><span className="overline">KEEP YOUR MEMORIES SAFE</span><h2>Passport backup</h2><p>Your scores live in this browser, not on a server yet. Download a backup of all seven games including Brave’s Chronicle unlock, or restore one from another device (older backups still work). We'll support optional cloud sync later.</p></div>
+      <div><span className="overline">KEEP YOUR MEMORIES SAFE</span><h2>Passport backup</h2><p>Your scores live in this browser, not on a server yet. Download a backup of all eight games including Brave’s Chronicle and the Dragon Chef rewards, or restore one from another device (older backups still work). We'll support optional cloud sync later.</p></div>
       <div className="passport-backup-actions">
         <button className="btn btn-primary" onClick={exportBackup}>↓ Export passport</button>
         <button className="btn btn-outline" onClick={()=>inputRef.current?.click()}>↑ Restore backup</button>
