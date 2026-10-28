@@ -1,5 +1,12 @@
 # Molly's Cozy Arcade — Development Handoff
 
+## Phase 5C — Concise noodle-shop story and deliberate two-order rushes (28 October 2026)
+
+The owner requested tighter in-game copy and no long disclaimer or Molly-specific language in ordinary game descriptions. The in-game footer now simply says **"An unofficial fan-made cooking adventure."** Mr. Ping's introduction and the homepage game card are shorter and focus on Po, customers, cooking and the bell.
+
+**Gameplay cadence:** Levels 1–3 retain their forgiving sequential arrivals. Levels **4–8 now begin with two waiting customers simultaneously**, deliberately combining noodle/pot + dumpling/steamer dishes so both appliances and both serving boards have a useful job from time zero. Levels 7–8 also contain a second paired order wave at 55 or 58 seconds. Existing 86–110 second guest patience and total shift windows stay unchanged; the campaign validator checks monotonic arrivals, maximum two simultaneous tickets and enough time to prepare paired orders even sequentially. Automated tests simulate actual simultaneous dual-board and dual-cooker preparation and servicing. See [NOODLES_DRAGON_CHEF_RELEASE.md](NOODLES_DRAGON_CHEF_RELEASE.md) for exact timestamps.
+
+
 ## Phase 5B — Dragon Chef, eight-level kitchen release (28 October 2026)
 
 Following the owner's successful one-level playtest, Noodles of Destiny now has **eight hand-paced shifts**, eight recipes, fully independent **two-dish assembly boards**, simultaneous cooking and topping placement, richer original vector dish art, a distinctive sunset-ink temple world (cinnabar red, gold, bamboo green), and an original pacy 118–136 BPM percussion/plucked-string soundtrack with mute and pause. Mouse drag, touch dragging and a sticky mobile select/drop toolbar are supported. The tutorial remains untimed and replayable. Each shift has explicitly measured estimated cooking/action work, a 2.5× minimum per-guest patience buffer, and a fair overall finishing window; passing thresholds range from 2/3 to 5/6 guests, not perfect-only.
