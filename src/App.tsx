@@ -164,7 +164,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
           <div className="card-topline"><span className="live-pill"><span/> NEW GAME</span><span className="card-number">08 / 08</span></div>
           <div className="game-emoji" aria-hidden="true">🐼🥟</div>
           <div className="card-content"><span className="card-category">DRAGON CHEF KITCHEN · EIGHT LEVELS</span><h3>Noodles of Destiny</h3>
-           <p>Master eight lively cooking shifts, decorate two dishes at once and earn a special homemade meal coupon for Molly.</p>
+           <p>Cook, plate and serve through eight lively shifts, juggling two orders and earning the Dragon Chef reward.</p>
            <button className="card-link" onClick={() => onNavigate('noodles')}>Open the noodle shop <span aria-hidden="true">↗</span></button></div>
         </article>
       </div>

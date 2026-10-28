@@ -24,6 +24,64 @@ function cook(s:KitchenState,recipeId:keyof typeof RECIPES,slot:0|1=0){
  expect(recipeComplete(s,slot)).toBe(true);
  return s;
 }
+describe('Paired customer arrivals in later shifts',()=>{
+ it('keeps Levels 1–3 as taught and unlocks TWO live tickets immediately in Levels 4–8',()=>{
+  for(const l of KITCHEN_LEVELS){
+   const kitchen=newKitchen('shift',l.id);
+   const early=kitchen.orders.filter(o=>o.status==='waiting');
+   expect(early.length).toBe(l.id>=4?2:1);
+   if(l.id>=4){
+    expect(early.map(o=>RECIPES[o.recipeId].appliance)).toEqual(['pot','steamer']);
+    expect(l.orders[0].arrivesAt).toBe(0);
+    expect(l.orders[1].arrivesAt).toBe(0);
+   }
+  }
+ });
+ it('introduces a SECOND paired wave in both finale shifts, with a long breathing interval',()=>{
+  for(const id of [7,8]){
+   const level=KITCHEN_LEVELS[id-1];
+   expect(level.orders[2].arrivesAt).toBeGreaterThanOrEqual(55);
+   expect(level.orders[2].arrivesAt).toBe(level.orders[3].arrivesAt);
+   expect(RECIPES[level.orders[2].recipeId].appliance).toBe('pot');
+   expect(RECIPES[level.orders[3].recipeId].appliance).toBe('steamer');
+   const kitchen=advance(newKitchen('shift',id),level.orders[2].arrivesAt);
+   expect(kitchen.orders.filter(o=>o.status==='waiting')).toHaveLength(4);
+  }
+ });
+ it('allows two orders at time zero to cook, garnish and serve fully in parallel',()=>{
+  let s=newKitchen('shift',4);
+  const [one,two]=s.orders;
+  expect(one.status).toBe('waiting');
+  expect(two.status).toBe('waiting');
+  s=stock(s,'noodles','pot');
+  s=stock(s,'bowl','board');
+  for(const ingredient of RECIPES[one.recipeId].extras)s=stock(s,ingredient,'board');
+  s=chooseKitchenOrder(s,two.id);
+  s=stock(s,'dumplings','steamer');
+  s=stock(s,'plate','board2');
+  for(const ingredient of RECIPES[two.recipeId].extras)s=stock(s,ingredient,'board2');
+  expect(s.pot?.orderId).toBe(one.id);
+  expect(s.steamer?.orderId).toBe(two.id);
+  expect(s.dish.orderId).toBe(one.id);
+  expect(s.secondDish.orderId).toBe(two.id);
+  s=advance(s,6);
+  s=dropInKitchen(s,{kind:'cooker',appliance:'pot'},'board');
+  s=dropInKitchen(s,{kind:'cooker',appliance:'steamer'},'board2');
+  expect(recipeComplete(s,0)).toBe(true);
+  expect(recipeComplete(s,1)).toBe(true);
+  s=dropInKitchen(s,{kind:'dish',slot:1},'serve');
+  s=dropInKitchen(s,{kind:'dish',slot:0},'serve');
+  expect(s.served).toBe(2);
+  expect(s.orders[0].status).toBe('served');
+  expect(s.orders[1].status).toBe('served');
+  expect(s.orders[2].status).toBe('pending');
+  expect(s.activeOrderId).toBeNull();
+  s=advance(s,45);
+  expect(s.orders[2].status).toBe('waiting');
+  expect(s.activeOrderId).toBe(s.orders[2].id);
+ });
+});
+
 describe('Eight-shift campaign: fairness, progression and concurrency',()=>{
  it('provides eight genuinely different paced shifts, with adequate human action allowances',()=>{
   expect(KITCHEN_LEVELS.map(l=>l.id)).toEqual([1,2,3,4,5,6,7,8]);

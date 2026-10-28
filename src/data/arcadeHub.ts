@@ -39,6 +39,7 @@ export type DeveloperNote={
  id:string;date:string;title:string;message:string;icon:string;
 };
 export const developerNotes:readonly DeveloperNote[]=[
+ {id:'noodle-duo',date:'28 October 2026',icon:'🥟',title:'Two orders at once — from Level 4!',message:'Levels 4–8 now open with a noodle order and a dumpling order together. The final two shifts add a second paired rush. Mr. Ping has also trimmed the introduction and footer.'},
  {id:'noodle-pilot',date:'28 October 2026',icon:'🐼',title:'Dragon Chef kitchen — eight levels!',message:'The noodle shop now has eight balanced shifts, two preparation boards, original pacy music, new illustrations and a two-use homemade Ramen or Soup Dumplings reward.'},
  {id:'quest',date:'22 October 2026',icon:'🏹',title:'The full Brave adventure is here',
   message:'All eighteen story scenes across six Highland chapters are playable. Complete the final tapestry to earn your Keeper’s Chronicle.'},

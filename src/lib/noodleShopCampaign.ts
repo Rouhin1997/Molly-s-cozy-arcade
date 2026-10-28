@@ -1,4 +1,4 @@
-/** Eight fair, hand-paced noodle-shop shifts. Kitchen mechanics are in noodleShop.ts.
+/** Eight fair, hand-paced noodle-shop shifts. Kitchen mechanics are in noodleShopV2.ts.
  * The schedule follows estimated human action time plus cooking time and buffer,
  * not artificial time limits that make recipes mathematically impossible.
  */
@@ -8,6 +8,13 @@ export type KitchenLevel={id:number;name:string;subtitle:string;description:stri
  orders:readonly ShiftGuest[];duration:number;starTarget:number};
 const line=(menu:readonly RecipeId[],guests:readonly Guest[],step:number,patience:number):ShiftGuest[]=>
  menu.map((recipeId,i)=>({recipeId,guest:guests[i%guests.length],arrivesAt:i*step,patience}));
+/** Later levels open with a two-ticket rush; the last two levels add a second
+ * paired wave. Times are explicit so we can guarantee a break between waves.
+ */
+const waves=(menu:readonly RecipeId[],guests:readonly Guest[],arrivals:readonly number[],patience:number):ShiftGuest[]=>{
+ if(menu.length!==arrivals.length)throw new Error('Order schedule must include one arrival for every recipe.');
+ return menu.map((recipeId,i)=>({recipeId,guest:guests[i%guests.length],arrivesAt:arrivals[i],patience}));
+};
 export const KITCHEN_LEVELS:readonly KitchenLevel[]=[
  {id:1,name:'First Bell',subtitle:'The kitchen wakes up',theme:'jade',
   description:'Three gentle orders. Practice noodles, dumplings and the serving bell.',
@@ -19,20 +26,20 @@ export const KITCHEN_LEVELS:readonly KitchenLevel[]=[
   description:'Four orders and two plating boards. Balance the pot and steamer.',
   orders:line(['mushroom','dumpling','jade','sesame'],['tigress','rabbit','monkey','po'],23,100),duration:196,starTarget:3},
  {id:4,name:'Lantern Festival',subtitle:'The evening crowd arrives',theme:'lantern',
-  description:'Warm lanterns and new aromas. Keep both boards ready.',
-  orders:line(['fire','garden','sesame','dumpling'],['monkey','tigress','rabbit','po'],23,96),duration:191,starTarget:3},
+  description:'Two guests arrive together! Start noodles and dumplings side by side.',
+  orders:waves(['fire','sesame','garden','dumpling'],['monkey','tigress','rabbit','po'],[0,0,50,74],96),duration:191,starTarget:3},
  {id:5,name:'Five-Style Feast',subtitle:'A parade of delicious requests',theme:'festival',
-  description:'Five guests and clever timing. No frantic clicking required.',
-  orders:line(['jade','fire','dumpling','mushroom','fiveSpice'],['rabbit','po','monkey','tigress'],23,93),duration:215,starTarget:4},
+  description:'Open with two orders, then keep your cooking rhythm as guests arrive.',
+  orders:waves(['jade','dumpling','fire','mushroom','fiveSpice'],['rabbit','po','monkey','tigress'],[0,0,51,74,97],93),duration:215,starTarget:4},
  {id:6,name:'The Master’s Table',subtitle:'The masters come for dinner',theme:'temple',
-  description:'Steaming and plating overlap as more orders arrive.',
-  orders:line(['fiveSpice','sesame','fire','jade','dumpling'],['tigress','monkey','rabbit','po','tigress'],22,90),duration:213,starTarget:4},
+  description:'Two masters order together. Use both appliances and both boards.',
+  orders:waves(['fiveSpice','sesame','fire','jade','dumpling'],['tigress','monkey','rabbit','po','tigress'],[0,0,50,72,94],90),duration:213,starTarget:4},
  {id:7,name:'Dragon Lantern Night',subtitle:'A special evening service',theme:'dragon',
-  description:'Six happy guests. Choose which plate to prepare first.',
-  orders:line(['garden','fire','jade','dumpling','sesame','fiveSpice'],['rabbit','tigress','monkey','po'],22,88),duration:232,starTarget:5},
+  description:'Two gentle waves of paired orders, with breathing room between them.',
+  orders:waves(['garden','dumpling','fire','sesame','jade','fiveSpice'],['rabbit','tigress','monkey','po'],[0,0,55,55,112,135],88),duration:232,starTarget:5},
  {id:8,name:'The Dragon Chef',subtitle:'Grand finale · the Valley celebrates',theme:'gold',
-  description:'Six varied orders. Serve the whole Valley to earn Molly’s special kitchen coupon.',
-  orders:line(['fiveSpice','jade','sesame','fire','dumpling','dragon'],['po','tigress','monkey','rabbit'],22,86),duration:230,starTarget:5}
+  description:'A grand feast with two pairs of simultaneous orders—and the Dragon Chef reward.',
+  orders:waves(['fiveSpice','dragon','jade','sesame','fire','dumpling'],['po','tigress','monkey','rabbit'],[0,0,58,58,116,140],86),duration:230,starTarget:5}
 ];
 export function shiftForLevel(level:number):KitchenLevel{
  return KITCHEN_LEVELS[Math.min(7,Math.max(0,Math.floor(level||1)-1))];
@@ -55,7 +62,21 @@ export function validateShiftSchedule(level:KitchenLevel,workloads:Record<Recipe
    errors.push('Insufficient patience for order '+i);
   if(o.arrivesAt+o.patience>level.duration)
    errors.push('Shift ends before individual patience for order '+i);
-  if(i&&o.arrivesAt<=level.orders[i-1].arrivesAt)errors.push('Arrivals not increasing');
+  if(i&&o.arrivesAt<level.orders[i-1].arrivesAt)errors.push('Arrivals not sorted');
+  if(i>=2&&o.arrivesAt===level.orders[i-1].arrivesAt&&o.arrivesAt===level.orders[i-2].arrivesAt)
+   errors.push('More than two orders arrive simultaneously');
+ }
+ // Two tickets at once must still be solvable sequentially with some slack,
+ // even if a player never actually uses both appliances concurrently.
+ for(let i=1;i<level.orders.length;i++){
+  const first=level.orders[i-1],second=level.orders[i];
+  if(first.arrivesAt!==second.arrivesAt)continue;
+  const a=workloads[first.recipeId],b=workloads[second.recipeId];
+  if(a&&b){
+   const sequentialTime=estimateOrderSeconds(a.extras,a.cook)+estimateOrderSeconds(b.extras,b.cook)+12;
+   if(sequentialTime>Math.min(first.patience,second.patience))
+    errors.push('Simultaneous orders need more shared preparation time at index '+i);
+  }
  }
  return errors;
 }
