@@ -243,7 +243,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
      <button className="btn btn-soft" onClick={()=>launch('tutorial')}>Replay tutorial ↗</button>
      <button className="btn btn-soft" onClick={backToMenu}>Return to shop</button>
     </div>
-    {game.mode==='shift'&&game.level===8&&levelWon(game)&&<div className="noodle-winner-coupon"><strong>🏮 Dragon Chef reward unlocked!</strong><p>Two home-cooked treats from Rouhin—Soup Dumplings or Ramen—redeemable within three months.</p><NoodleCouponPanel/></div>}
+    {game.mode==='shift'&&game.level===8&&levelWon(game)&&<div className="noodle-winner-coupon"><strong>🏮 Dragon Chef reward unlocked!</strong><p>Two home-cooked treats from Rouhin—Soup Dumplings or Ramen—redeemable within three months.</p><NoodleCouponPanel key={saved.levelStars['8']??0}/></div>}
    </section>:<>
     <section className="noodle-order-board" aria-label="Customer orders">
      <div className="noodle-order-head"><strong>📜 Incoming orders</strong><span>{game.mode==='tutorial'?'Po will wait as long as you need.':'Use two boards and two appliances together! Tap a ticket to select an order.'}</span></div>
