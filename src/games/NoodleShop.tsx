@@ -1,22 +1,27 @@
 import {useEffect,useRef,useState,type PointerEvent as ReactPointerEvent,type KeyboardEvent} from 'react';
 import {KitchenCharacter,NoodleShopScenery} from './NoodleShopArt';
+import NoodleDishArt from './NoodleDishArt';
+import NoodleCouponPanel from './NoodleCouponPanel';
+import {KITCHEN_LEVELS,shiftForLevel} from '../lib/noodleShopCampaign';
+import {awardNoodleCoupon,readNoodleCoupon,writeNoodleCoupon} from '../lib/noodleCoupon';
+import {startNoodleMusic,type NoodleMusic} from '../lib/noodleMusic';
 import {
- STOCK,RECIPES,SHIFT_DURATION,COOK_SECONDS,BURN_SECONDS,
+ STOCK,RECIPES,COOK_SECONDS,BURN_SECONDS,
  newKitchen,dropInKitchen,tickKitchen,cookingPhase,cookingFraction,
- activeRecipe,remainingPatience,chooseKitchenOrder,nextKitchenInstruction,
+ activeRecipe,remainingPatience,chooseKitchenOrder,nextKitchenInstruction,shiftDuration,boardDish,levelWon,
  toggleKitchenPause,recordKitchenResult,readNoodleSave,writeNoodleSave,recipeComplete,
- type Source,type Target,type KitchenState,type NoodleSave,type Appliance
-} from '../lib/noodleShop';
+ type Source,type Target,type KitchenState,type NoodleSave,type Appliance,type Ingredient
+} from '../lib/noodleShopV2';
 
 type Drag={source:Source;x:number;y:number;pointerId:number;moving:boolean};
 type Ghost={source:Source;x:number;y:number};
 const GUEST_NAMES={po:'Po',rabbit:'Bunny',monkey:'Monkey',tigress:'Tigress'};
 function iconForIngredient(i:string):string{
  return ({bowl:'🥣',plate:'🍽️',noodles:'🍝',dumplings:'🥟',broth:'🍲',greens:'🥬',
- mushrooms:'🍄',sauce:'🥢','cooked-noodles':'🍜','steamed-dumplings':'🥟'} as Record<string,string>)[i]??'🍃';
+ mushrooms:'🍄',sauce:'🥢',tofu:'🟨',chili:'🌶️',scallions:'🌿',sesame:'✨','cooked-noodles':'🍜','steamed-dumplings':'🥟'} as Record<string,string>)[i]??'🍃';
 }
 function sourceName(s:Source):string{
- return s.kind==='dish'?'Prepared dish':s.kind==='cooker'?(s.appliance==='pot'?'Cooked noodles':'Steamed dumplings'):
+ return s.kind==='dish'?'Prepared dish on board '+((s.slot??0)+1):s.kind==='cooker'?(s.appliance==='pot'?'Cooked noodles':'Steamed dumplings'):
  STOCK.find(x=>x.id===s.ingredient)?.name??s.ingredient;
 }
 function sourceIcon(s:Source):string{
@@ -24,28 +29,33 @@ function sourceIcon(s:Source):string{
  iconForIngredient(s.ingredient);
 }
 function clock(seconds:number){return Math.ceil(Math.max(0,seconds))+'s'}
-function KitchenMeal({state}:{state:KitchenState}){
- const {vessel,items}=state.dish;
- if(!vessel)return <div className="noodle-empty-dish"><span>✧</span><strong>Your serving board</strong><small>Drop an empty bowl or plate here</small></div>;
- const main=items.includes('cooked-noodles')?'🍜':items.includes('steamed-dumplings')?'🥟':vessel==='bowl'?'🥣':'🍽️';
+function KitchenMeal({state,slot}:{state:KitchenState;slot:0|1}){
+ const dish=boardDish(state,slot),{vessel,items}=dish;
+ if(!vessel)return <div className="noodle-empty-dish"><span>✧</span><strong>Board {slot+1}</strong><small>Drop a bowl or plate here</small></div>;
+ const customer=state.orders.find(o=>o.id===dish.orderId);
  return <div className="noodle-plated-food">
-   <span className="noodle-dish-shadow"/>
-   <span className="noodle-main-food" aria-hidden="true">{main}</span>
-   {items.filter(x=>x!=='cooked-noodles'&&x!=='steamed-dumplings').map((item,i)=>
-    <span className={'noodle-food-garnish garnish-'+i} key={item} aria-hidden="true">{iconForIngredient(item)}</span>)}
-   <strong>{vessel==='bowl'?'Noodle bowl':'Serving plate'}</strong>
-   <small>{items.length===0?'Empty — waiting for food':
+   <NoodleDishArt dish={dish}/>
+   <strong>{customer?'For '+GUEST_NAMES[customer.guest]:'New dish'} · {vessel==='bowl'?'Noodle bowl':'Dumpling plate'}</strong>
+   <small>{items.length===0?'Empty plate — ready for toppings':
     items.map(x=>x==='cooked-noodles'?'noodles':x==='steamed-dumplings'?'dumplings':x).join(' · ')}</small>
-  </div>;
+ </div>;
 }
 export default function NoodleShop({onHome}:{onHome:()=>void}){
  const [saved,setSaved]=useState<NoodleSave>(readNoodleSave);
+ const [levelChoice,setLevelChoice]=useState(1);
+ const [musicOn,setMusicOn]=useState(()=>localStorage.getItem('molly-noodle-music')!=='off');
+ const player=useRef<NoodleMusic|null>(null);
  const [game,setGame]=useState<KitchenState|null>(null);
  const [selected,setSelected]=useState<Source|null>(null);
  const [ghost,setGhost]=useState<Ghost|null>(null);
  const [feedback,setFeedback]=useState('');
  const drag=useRef<Drag|null>(null);
  const recorded=useRef(false);
+ useEffect(()=>()=>{player.current?.stop();player.current=null},[]);
+ function sound(value:boolean){setMusicOn(value);try{localStorage.setItem('molly-noodle-music',value?'on':'off')}catch{/* optional */}
+  if(!value){player.current?.stop();player.current=null}
+  else if(game?.status==='playing'){player.current=startNoodleMusic(game.level);player.current.setPaused(game.paused)}
+ }
  useEffect(()=>{
   if(!game||game.status!=='playing')return;
   let previous=performance.now();
@@ -59,14 +69,20 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
  useEffect(()=>{
   if(!game||game.status!=='finished'||recorded.current)return;
   recorded.current=true;
+  if(game.mode==='shift'&&levelWon(game)&&game.level===8){
+   const reward=awardNoodleCoupon(readNoodleCoupon());writeNoodleCoupon(reward);
+  }
+  player.current?.celebrate();player.current?.stop();player.current=null;
   setSaved(prev=>{const next=recordKitchenResult(prev,game);writeNoodleSave(next);return next});
  },[game?.status,game?.mode]);
- function launch(mode:'tutorial'|'shift'){
-  if(mode==='shift'&&!saved.tutorialDone)return;
+ function launch(mode:'tutorial'|'shift',level=levelChoice){
+  if(mode==='shift'&&(!saved.tutorialDone||level>saved.unlockedLevel))return;
   recorded.current=false;setSelected(null);setGhost(null);setFeedback('');drag.current=null;
-  setGame(newKitchen(mode));window.scrollTo({top:0,behavior:'smooth'});
+  player.current?.stop();player.current=musicOn?startNoodleMusic(mode==='shift'?level:1):null;
+  setGame(newKitchen(mode,level));window.scrollTo({top:0,behavior:'smooth'});
  }
- function backToMenu(){setSelected(null);setGhost(null);drag.current=null;setGame(null)}
+ function backToMenu(){player.current?.stop();player.current=null;setSelected(null);setGhost(null);drag.current=null;setGame(null)}
+ function pauseGame(){setGame(p=>{if(!p)return p;const next=toggleKitchenPause(p);player.current?.setPaused(next.paused);return next})}
  function dispatch(source:Source,target:Target){
   setGame(p=>p?dropInKitchen(p,source,target):p);
   setSelected(null);setFeedback('');
@@ -118,7 +134,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
   return <div data-kitchen-target={target}
    className={'noodle-dropzone '+className+(selected||ghost?' is-targetable':'')}
    onClick={()=>onZone(target)} role="button" tabIndex={0}
-   aria-label={'Drop selected item on '+({pot:'boiling pot',steamer:'bamboo steamer',board:'preparation board',serve:'serving bell',bin:'discard bin'}[target])}
+   aria-label={'Drop selected item on '+({pot:'boiling pot',steamer:'bamboo steamer',board:'preparation board one',board2:'preparation board two',serve:'serving bell',bin:'discard bin'}[target])}
    onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onZone(target)}}}>
    {children}</div>;
  }
@@ -148,8 +164,9 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
  const hint=game?nextKitchenInstruction(game):'';
  const tutorialStep=game?(game.status==='finished'?7:
   !game.dish.vessel?1:
-  !game.dish.items.includes('cooked-noodles')?
-   !game.pot?2:cookingPhase(game,'pot')==='cooking'?3:4:
+  !game.pot&&!game.dish.items.includes('cooked-noodles')?2:
+  game.pot&&cookingPhase(game,'pot')==='cooking'?3:
+  game.pot&&cookingPhase(game,'pot')==='ready'?4:
   !game.dish.items.includes('broth')?5:
   !game.dish.items.includes('greens')?6:7):0;
  return <main className="noodle-page">
