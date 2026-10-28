@@ -17,7 +17,7 @@ const liveGames:{route:ArcadeRoute;icon:string;name:string;subtitle:string}[]=[
  {route:'nine',icon:'🕵️',name:'The 99 Files',subtitle:'Detective mysteries'},
  {route:'pink',icon:'🩷',name:'Pink Rush!',subtitle:'Musical memories'},
  {route:'brave',icon:'🏹',name:'Brave: The Wisps’ Trail',subtitle:'Six-chapter adventure'},
- {route:'noodles',icon:'🐼',name:'Noodles of Destiny',subtitle:'Kitchen tutorial + Level 1 playtest'}
+ {route:'noodles',icon:'🐼',name:'Noodles of Destiny',subtitle:'Eight cooking shifts + special reward'}
 ];
 export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSoon}:Props){
  const games=useRef<HTMLDetailsElement>(null);
