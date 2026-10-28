@@ -5,9 +5,6 @@ export type UpcomingGame={
  name:string;icon:string;tag:string;teaser:string;theme:string;detail:string;
 };
 export const comingSoonGames:readonly UpcomingGame[]=[
- {name:'Kung Fu Panda',icon:'🐼',tag:'Training & courage',theme:'yellow',
- teaser:'A bamboo-filled journey of balance, timing and the unexpected Dragon Warrior.',
- detail:'A future adventure inspired by Kung Fu Panda’s humour and the idea that greatness can come from unlikely places. We’re exploring training trials, movement and playful wisdom puzzles. No release date has been announced.'},
  {name:'Courage the Cowardly Dog',icon:'🐶',tag:'Spooky mystery',theme:'peach',
  teaser:'Strange happenings in Nowhere—and one very determined, frightened little hero.',
  detail:'A future spooky-comedy mystery with eccentric visitors, clue hunting and nervous bravery. We have not begun building the game yet and no date is confirmed.'},
@@ -42,10 +39,11 @@ export type DeveloperNote={
  id:string;date:string;title:string;message:string;icon:string;
 };
 export const developerNotes:readonly DeveloperNote[]=[
+ {id:'noodle-pilot',date:'28 October 2026',icon:'🐼',title:'Noodle shop playtest is open!',message:'Try the replayable guided lesson and the first interactive lunch shift in Noodles of Destiny. This is a mechanical/art playtest; more levels come after player feedback.'},
  {id:'quest',date:'22 October 2026',icon:'🏹',title:'The full Brave adventure is here',
   message:'All eighteen story scenes across six Highland chapters are playable. Complete the final tapestry to earn your Keeper’s Chronicle.'},
  {id:'music',date:'22 October 2026',icon:'🎻',title:'A note from the workshop',
   message:'The Celtic-inspired synthetic soundtrack is still being refined. A fuller, more natural original score is a future production goal—not a finished feature.'},
  {id:'next',date:'22 October 2026',icon:'✿',title:'More stories are on the shelf',
-  message:'Kung Fu Panda, Courage the Cowardly Dog, Toy Story and The Addams Family are ideas for future games. Their dates have not been announced.'}
+  message:'Courage the Cowardly Dog, Toy Story and The Addams Family remain concepts. Noodles of Destiny has a playable tutorial and one test shift; more levels are not yet built.'}
 ];
