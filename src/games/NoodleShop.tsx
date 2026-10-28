@@ -53,6 +53,11 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
  const drag=useRef<Drag|null>(null);
  const recorded=useRef(false);
  useEffect(()=>()=>{player.current?.stop();player.current=null},[]);
+ useEffect(()=>{
+  function visibility(){if(player.current)player.current.setPaused(document.hidden||!!game?.paused)}
+  document.addEventListener('visibilitychange',visibility);
+  return ()=>document.removeEventListener('visibilitychange',visibility);
+ },[game?.paused]);
  function sound(value:boolean){setMusicOn(value);try{localStorage.setItem('molly-noodle-music',value?'on':'off')}catch{/* optional */}
   if(!value){player.current?.stop();player.current=null}
   else if(game?.status==='playing'){player.current=startNoodleMusic(game.level);player.current.setPaused(game.paused)}
@@ -73,7 +78,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
   if(game.mode==='shift'&&levelWon(game)&&game.level===8){
    const reward=awardNoodleCoupon(readNoodleCoupon());writeNoodleCoupon(reward);
   }
-  player.current?.celebrate();player.current?.stop();player.current=null;
+  player.current?.celebrate();
   setSaved(prev=>{const next=recordKitchenResult(prev,game);writeNoodleSave(next);return next});
  },[game?.status,game?.mode]);
  function launch(mode:'tutorial'|'shift',level=levelChoice){
@@ -83,7 +88,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
   setGame(newKitchen(mode,level));window.scrollTo({top:0,behavior:'smooth'});
  }
  function backToMenu(){player.current?.stop();player.current=null;setSelected(null);setGhost(null);drag.current=null;setGame(null)}
- function pauseGame(){setGame(p=>{if(!p)return p;const next=toggleKitchenPause(p);player.current?.setPaused(next.paused);return next})}
+ function pauseGame(){if(!game)return;const next=toggleKitchenPause(game);player.current?.setPaused(next.paused);setGame(next)}
  function dispatch(source:Source,target:Target){
   setGame(p=>p?dropInKitchen(p,source,target):p);
   setSelected(null);setFeedback('');
