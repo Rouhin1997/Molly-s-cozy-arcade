@@ -108,7 +108,10 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    onPointerUp={onPointerUp}
    onPointerCancel={()=>{drag.current=null;setGhost(null)}}
    onClick={e=>{e.stopPropagation();if(e.detail===0){setSelected(source);setFeedback('')}}}
-   onKeyDown={(e:KeyboardEvent<HTMLButtonElement>)=>{if(e.key==='Escape'){setSelected(null);setFeedback('')}}}
+   onKeyDown={(e:KeyboardEvent<HTMLButtonElement>)=>{
+    if(e.key==='Enter'||e.key===' ')e.stopPropagation();
+    if(e.key==='Escape'){e.stopPropagation();setSelected(null);setFeedback('')}
+   }}
    >{content}</button>;
  }
  function zone(target:Target,children:React.ReactNode,className:string){
@@ -139,7 +142,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
     <span style={{width:percent+'%'}}/>
    </div>
    {cooking&&phase==='ready'&&<small className="noodle-burn-watch">Collect before {clock(BURN_SECONDS[id]-age)}!</small>}
-  </div>,'noodle-appliance-zone');
+  </div>,'noodle-appliance-zone'+(game!.mode==='tutorial'&&tutorialStep===2&&id==='pot'?' noodle-guide-target':''));
  }
  const recipe=game?activeRecipe(game):undefined;
  const hint=game?nextKitchenInstruction(game):'';
@@ -241,7 +244,10 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
         {draggable({kind:'stock',ingredient:i.id},<>
          <span className="noodle-item-emoji" aria-hidden="true">{i.emoji}</span><strong>{i.name}</strong>
          <small>{i.hint}</small>
-        </>)}
+        </>,game.mode==='tutorial'&&(
+         (tutorialStep===1&&i.id==='bowl')||(tutorialStep===2&&i.id==='noodles')||
+         (tutorialStep===5&&i.id==='broth')||(tutorialStep===6&&i.id==='greens'))
+         ?' noodle-guide-glow':'')}
        </div>)}
       </div>
      </div>
@@ -257,11 +263,11 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
       {zone('board',<div className="noodle-assembly-board">
        {game.dish.vessel?draggable({kind:'dish'},<KitchenMeal state={game}/>,'noodle-dish-drag'):
         <KitchenMeal state={game}/>}
-      </div>,'noodle-board-zone')}
+      </div>,'noodle-board-zone'+(game.mode==='tutorial'&&(tutorialStep===1||tutorialStep===4||tutorialStep===5||tutorialStep===6)?' noodle-guide-target':''))}
       <div className="noodle-service-row">
        {zone('serve',<div className={'noodle-bell '+(recipeComplete(game)?'is-ready':'')}>
         <span aria-hidden="true">🔔</span><strong>Serve the meal</strong><small>Drop finished dish here</small>
-       </div>,'noodle-bell-zone')}
+       </div>,'noodle-bell-zone'+(game.mode==='tutorial'&&tutorialStep===7?' noodle-guide-target':''))}
        {zone('bin',<div className="noodle-bin"><span aria-hidden="true">🗑️</span><strong>Discard</strong><small>Clear burnt food / dish</small></div>,'noodle-bin-zone')}
       </div>
      </div>
