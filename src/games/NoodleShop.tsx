@@ -162,6 +162,7 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
  }
  const recipe=game?activeRecipe(game):undefined;
  const hint=game?nextKitchenInstruction(game):'';
+ const currentDish=game?(game.dish.orderId===game.activeOrderId?game.dish:game.secondDish.orderId===game.activeOrderId?game.secondDish:null):null;
  const tutorialStep=game?(game.status==='finished'?7:
   !game.dish.vessel?1:
   !game.pot&&!game.dish.items.includes('cooked-noodles')?2:
@@ -186,13 +187,26 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
     <div className="noodle-letterhead">A NOTE FROM MR. PING ✧</div>
     <h2>Every legendary chef starts with one bowl.</h2>
     <p>Po has eaten all the test dumplings, the lunch crowd is coming, and Mr. Ping has decided that <strong>Molly</strong> is the perfect person to save his kitchen. Drag ingredients, cook them at the right station, assemble each dish, and ring the bell when it's ready.</p>
-    <p>We’ll begin with a calm, untimed cooking lesson. Then the doors open for one real, gently challenging shift.</p>
+    <p>Begin with an untimed lesson, then progress through eight lively martial-arts kitchen shifts. Run the pot and steamer together and dress two plates at once!</p>
     <div className="noodle-welcome-actions">
      <button className="btn btn-primary" onClick={()=>launch('tutorial')}>{saved.tutorialDone?'↶ Replay the tutorial':'🥣 Start the guided tutorial'} ↗</button>
-     <button className="btn btn-soft" disabled={!saved.tutorialDone} onClick={()=>launch('shift')}>🎐 Play Level 1: Lunch Rush ↗</button>
+     <button className="btn btn-soft" disabled={!saved.tutorialDone} onClick={()=>launch('shift',levelChoice)}>🎐 Play Level {levelChoice} ↗</button>
     </div>
     {!saved.tutorialDone&&<small>Complete the tutorial once to unlock Level 1. You can always replay it.</small>}
-    {saved.tutorialDone&&<div className="noodle-keepsake">✧ Training completed · Best shift: {saved.bestServed}/3 guests · High score: {saved.bestScore} · Shifts played: {saved.shifts}</div>}
+    {saved.tutorialDone&&<div className="noodle-keepsake">✧ Training completed · Best service: {saved.bestServed} guests · High score: {saved.bestScore} · Shifts played: {saved.shifts}</div>}
+    <div className="noodle-level-heading"><span>THE EIGHT PATHS TO DRAGON CHEF</span><small>Win each shift to unlock the next</small></div>
+    <div className="noodle-level-grid" role="group" aria-label="Choose a kitchen difficulty">
+     {KITCHEN_LEVELS.map(l=><button type="button" key={l.id}
+       disabled={!saved.tutorialDone||l.id>saved.unlockedLevel}
+       className={'noodle-level-tile '+(l.id===levelChoice?'is-picked':'')+(l.id>saved.unlockedLevel?' is-locked':'')}
+       onClick={()=>setLevelChoice(l.id)}>
+       <span>{l.id>saved.unlockedLevel?'🔒':l.id===8?'🐉':'✦'}</span>
+       <strong>{String(l.id).padStart(2,'0')}. {l.name}</strong>
+       <small>{l.orders.length} guests · {l.duration}s shift</small>
+       <em>{saved.levelStars[String(l.id)]?'★ '+saved.levelStars[String(l.id)]+'/'+l.orders.length+' served':l.id>saved.unlockedLevel?'Locked':'Ready to play'}</em>
+      </button>)}
+    </div>
+    <div className="noodle-chosen-level">{KITCHEN_LEVELS[levelChoice-1].subtitle} · {KITCHEN_LEVELS[levelChoice-1].description}</div>
    </div>
    <div className="noodle-menu-preview">
     <span className="noodle-menu-top">✿ TODAY'S MENU ✿</span>
@@ -201,35 +215,38 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    </div>
   </section>:<>
    <section className="noodle-game-toolbar">
-    <div><span className="noodle-game-kicker">{game.mode==='tutorial'?'TRAINING DAY · TAKE YOUR TIME':'LEVEL 1 · LUNCH RUSH'}</span>
-      <h2>{game.mode==='tutorial'?'A lesson with Mr. Ping':'The lunch crowd is here!'}</h2></div>
+    <div><span className="noodle-game-kicker">{game.mode==='tutorial'?'TRAINING DAY · TAKE YOUR TIME' :'LEVEL '+game.level+' · '+shiftForLevel(game.level).name.toUpperCase()}</span>
+      <h2>{game.mode==='tutorial'?'A lesson with Mr. Ping' :shiftForLevel(game.level).subtitle}</h2></div>
     <div className="noodle-game-stats">
-     {game.mode==='shift'&&<div><small>TIME REMAINING</small><strong>{clock(SHIFT_DURATION-game.elapsed)}</strong></div>}
+     {game.mode==='shift'&&<div><small>TIME REMAINING</small><strong>{clock(shiftDuration(game)-game.elapsed)}</strong></div>}
      <div><small>ORDERS SERVED</small><strong>{game.served} / {game.orders.length}</strong></div>
      {game.mode==='shift'&&<div><small>POINTS</small><strong>{game.score}</strong></div>}
     </div>
     <div className="noodle-toolbar-actions">
-     {game.mode==='shift'&&game.status==='playing'&&<button type="button" onClick={()=>setGame(p=>p?toggleKitchenPause(p):p)}>{game.paused?'▶ Resume':'Ⅱ Pause'}</button>}
+     {game.mode==='shift'&&game.status==='playing'&&<button type="button" onClick={pauseGame}>{game.paused?'▶ Resume':'Ⅱ Pause'}</button>}
+     <button type="button" className="noodle-music-toggle" aria-pressed={musicOn} onClick={()=>sound(!musicOn)}>{musicOn?'♫ Music on':'♪ Music muted'}</button>
      <button type="button" onClick={()=>launch('tutorial')}>↶ Tutorial</button>
      <button type="button" onClick={backToMenu}>⌂ Menu</button>
     </div>
    </section>
    {game.status==='finished'?<section className="noodle-results">
-    <span className="noodle-result-medal">{game.mode==='tutorial'?'🏮':game.served===3?'🏆':game.served>=2?'🥇':game.served===1?'🥟':'🍵'}</span>
+    <span className="noodle-result-medal">{game.mode==='tutorial'?'🏮':levelWon(game)?'🏆':game.served>=2?'🥇':game.served===1?'🥟':'🍵'}</span>
     <span className="noodle-game-kicker">{game.mode==='tutorial'?'TUTORIAL COMPLETE':'SHIFT COMPLETE'}</span>
-    <h2>{game.mode==='tutorial'?'A new chef joins the Valley!':game.served===3?'A perfect lunch rush!':game.served>=2?'Mr. Ping is impressed!':game.served===1?'Every chef starts somewhere!':'The kitchen will be ready tomorrow.'}</h2>
+    <h2>{game.mode==='tutorial'?'A new chef joins the Valley!':levelWon(game)?'The Valley cheers for Chef Molly!':game.served>=2?'A promising kitchen shift!':game.served===1?'Every chef starts somewhere!':'The kitchen will be ready tomorrow.'}</h2>
     <p>{game.mode==='tutorial'?'Po has already requested a second serving. You can replay this lesson whenever you want.':
-      'You served '+game.served+' of 3 hungry customers, scored '+game.score+' points, and made '+game.mistakes+' practice mistakes. The first shift is designed for us to test pacing and feel.'}</p>
+      'You served '+game.served+' of '+game.orders.length+' guests, scored '+game.score+' points and made '+game.mistakes+' little mistakes. '+(levelWon(game)?'A new chapter awaits!':'Serve at least '+shiftForLevel(game.level).starTarget+' guests to pass this chapter; you can retry freely.')}</p>
     <div className="noodle-result-orders">{game.orders.map(o=><div key={o.id}><KitchenCharacter who={o.guest} size={65}/><strong>{GUEST_NAMES[o.guest]}</strong><small>{o.status==='served'?'✓ Served':'○ Missed'}</small></div>)}</div>
     <div className="noodle-welcome-actions">
-     {game.mode==='tutorial'?<button className="btn btn-primary" onClick={()=>launch('shift')}>Open the shop — Level 1 ↗</button>:
-      <button className="btn btn-primary" onClick={()=>launch('shift')}>↶ Play Level 1 again</button>}
+     {game.mode==='tutorial'?<button className="btn btn-primary" onClick={()=>launch('shift',1)}>Open the shop — Level 1 ↗</button>:
+      <button className="btn btn-primary" onClick={()=>launch('shift',game.level)}>↶ Replay Level {game.level}</button>}
+     {game.mode==='shift'&&levelWon(game)&&game.level<8&&<button className="btn btn-primary" onClick={()=>{setLevelChoice(game.level+1);launch('shift',game.level+1)}}>Next chapter: Level {game.level+1} ↗</button>}
      <button className="btn btn-soft" onClick={()=>launch('tutorial')}>Replay tutorial ↗</button>
      <button className="btn btn-soft" onClick={backToMenu}>Return to shop</button>
     </div>
+    {game.mode==='shift'&&game.level===8&&levelWon(game)&&<div className="noodle-winner-coupon"><strong>🏮 Dragon Chef reward unlocked!</strong><p>Two home-cooked treats from Rouhin—Soup Dumplings or Ramen—redeemable within three months.</p><NoodleCouponPanel/></div>}
    </section>:<>
     <section className="noodle-order-board" aria-label="Customer orders">
-     <div className="noodle-order-head"><strong>📜 Incoming orders</strong><span>{game.mode==='tutorial'?'Po will wait as long as you need.':'Choose a waiting order. Guests have limited patience.'}</span></div>
+     <div className="noodle-order-head"><strong>📜 Incoming orders</strong><span>{game.mode==='tutorial'?'Po will wait as long as you need.':'Use two boards and two appliances together! Tap a ticket to select an order.'}</span></div>
      <div className="noodle-order-list">
       {game.orders.map(o=>{
        const r=RECIPES[o.recipeId],waiting=o.status==='waiting',active=o.id===game.activeOrderId;
@@ -277,12 +294,18 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
      </div>
      <div className="noodle-wooden-frame noodle-final-stations">
       <div className="noodle-section-title"><span>03</span><div><strong>Finish & serve</strong><small>Assemble the right order</small></div><span aria-hidden="true">✧</span></div>
-      {zone('board',<div className="noodle-assembly-board">
-       {game.dish.vessel?draggable({kind:'dish'},<KitchenMeal state={game}/>,'noodle-dish-drag'):
-        <KitchenMeal state={game}/>}
-      </div>,'noodle-board-zone'+(game.mode==='tutorial'&&(tutorialStep===1||tutorialStep===4||tutorialStep===5||tutorialStep===6)?' noodle-guide-target':''))}
+      <div className="noodle-two-boards">
+       {([0,1] as const).map(slot=><div className="noodle-board-frame" key={slot}>
+        <div className="noodle-board-label"><strong>BOARD {slot+1}</strong><small>{boardDish(game,slot).orderId?GUEST_NAMES[game.orders.find(o=>o.id===boardDish(game,slot).orderId)?.guest??'po']:'Free for a new order'}</small></div>
+        {zone(slot===0?'board':'board2',<div className="noodle-assembly-board">
+         {boardDish(game,slot).vessel?
+          draggable({kind:'dish',slot},<KitchenMeal state={game} slot={slot}/>,'noodle-dish-drag'):
+          <KitchenMeal state={game} slot={slot}/>}
+        </div>,'noodle-board-zone'+(game.mode==='tutorial'&&slot===0&&(tutorialStep===1||tutorialStep===4||tutorialStep===5||tutorialStep===6)?' noodle-guide-target':''))}
+       </div>)}
+      </div>
       <div className="noodle-service-row">
-       {zone('serve',<div className={'noodle-bell '+(recipeComplete(game)?'is-ready':'')}>
+       {zone('serve',<div className={'noodle-bell '+((recipeComplete(game,0)||recipeComplete(game,1))?'is-ready':'')}>
         <span aria-hidden="true">🔔</span><strong>Serve the meal</strong><small>Drop finished dish here</small>
        </div>,'noodle-bell-zone'+(game.mode==='tutorial'&&tutorialStep===7?' noodle-guide-target':''))}
        {zone('bin',<div className="noodle-bin"><span aria-hidden="true">🗑️</span><strong>Discard</strong><small>Clear burnt food / dish</small></div>,'noodle-bin-zone')}
@@ -293,8 +316,9 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
      <div><span className="noodle-game-kicker">OPEN RECIPE CARD</span><h3>{recipe.emoji} {recipe.name}</h3><p>{recipe.description}</p></div>
      <div className="noodle-recipe-steps">
       {[recipe.vessel,recipe.raw,recipe.cooked,...recipe.extras,'serve'].map((part,i)=>{
-       const checked=part===recipe.vessel?!!game.dish.vessel:part===recipe.raw?
-        !!game[recipe.appliance]||game.dish.items.includes(recipe.cooked):part==='serve'?false:game.dish.items.includes(part);
+       const checked=part===recipe.vessel?!!currentDish?.vessel:part===recipe.raw?
+        (!!game[recipe.appliance]&&game[recipe.appliance]?.orderId===game.activeOrderId)||!!currentDish?.items.includes(recipe.cooked):
+        part==='serve'?false:!!currentDish?.items.includes(part);
        return <span key={part+'-'+i} className={checked?'is-checked':''}>{checked?'✓':'○'} {part==='serve'?'Ring bell':part===recipe.raw?'Cook '+part:part===recipe.cooked?'Collect cooked food':STOCK.find(x=>x.id===part)?.name??part}</span>;
       })}
      </div>
@@ -303,6 +327,6 @@ export default function NoodleShop({onHome}:{onHome:()=>void}){
    </>}
   </>}
   {ghost&&<div className="noodle-drag-ghost" style={{left:ghost.x,top:ghost.y}} aria-hidden="true"><span>{sourceIcon(ghost.source)}</span><small>{sourceName(ghost.source)}</small></div>}
-  <p className="noodle-fan-note">An original, unofficial fan-made cooking mini-adventure for Molly. Illustrated entirely with in-project artwork; no film images or soundtrack assets are used. This is the tutorial and Level 1 playtest, not the full game.</p>
+  <p className="noodle-fan-note">An original, unofficial fan-made cooking mini-adventure for Molly. Illustrated entirely with in-project artwork; no film images or soundtrack assets are used. Eight handcrafted shifts with original fan-art, recipes and music. This is an unofficial personal fan game.</p>
  </main>;
 }
