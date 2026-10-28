@@ -11,7 +11,7 @@ import {
  newKitchen,dropInKitchen,tickKitchen,cookingPhase,cookingFraction,
  activeRecipe,remainingPatience,chooseKitchenOrder,nextKitchenInstruction,shiftDuration,boardDish,levelWon,
  toggleKitchenPause,recordKitchenResult,readNoodleSave,writeNoodleSave,recipeComplete,
- type Source,type Target,type KitchenState,type NoodleSave,type Appliance,type Ingredient
+ type Source,type Target,type KitchenState,type NoodleSave,type Appliance
 } from '../lib/noodleShopV2';
 
 type Drag={source:Source;x:number;y:number;pointerId:number;moving:boolean};
