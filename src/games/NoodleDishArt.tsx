@@ -68,6 +68,6 @@ export default function NoodleDishArt({dish}:{dish:Dish}){
   </g>}
   <path d="M44 155 Q130 231 217 154" stroke="#ac623f" strokeWidth="9" fill="none" opacity=".8"/>
   <path d="M69 179 Q129 203 191 178" stroke="#e7b77b" strokeWidth="5" fill="none"/>
-  <path d="M97 27 Q80 5 97 -13 M127 21 Q113 -5 135 -23 M158 30 Q175 5 163 -9" stroke="#f7e2b2" strokeWidth="6" fill="none" strokeLinecap="round" className="noodle-food-steam" opacity={noodle||dumpling?.7:0}/>
+  <path d="M97 27 Q80 5 97 -13 M127 21 Q113 -5 135 -23 M158 30 Q175 5 163 -9" stroke="#f7e2b2" strokeWidth="6" fill="none" strokeLinecap="round" className="noodle-food-steam" opacity={noodle||dumpling?0.7:0}/>
  </svg>;
 }
