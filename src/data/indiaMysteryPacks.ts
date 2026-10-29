@@ -19,6 +19,7 @@ export function assembleIndiaPack(pack:RawEntry):IndiaMystery[]{
  const raw=pack.rows.split('\n').map(x=>x.trim()).filter(x=>x&&!x.startsWith('#'));
  return raw.map((line,i)=>{
   const fields=line.split('|').map(x=>x.trim());
+  if(fields.length===8)fields.push(''); // trailing empty optional aliases
   if(fields.length!==9)throw new Error('Mystery data field count: '+pack.kind+'/'+i+' '+fields[0]);
   const [answer,topic,region,era,intro,first,second,bonus,aliases]=fields;
   const id='atlas-'+pack.kind+'-'+answer.toLowerCase().normalize('NFKD')
