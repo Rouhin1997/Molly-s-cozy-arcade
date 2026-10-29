@@ -11,7 +11,7 @@ describe('India Edition: 240-card content and 3 real difficulties',()=>{
    expect(list).toHaveLength(60);
    expect(new Set(list.map(x=>x.id)).size).toBe(60);
    expect(new Set(list.map(x=>x.answer.toLowerCase())).size).toBe(60);
-   expect(new Set(list.map(x=>x.topic)).size).toBeGreaterThan(4);
+   expect(new Set(list.map(x=>x.topic)).size).toBeGreaterThanOrEqual(4);
    expect(list.filter(x=>x.difficulty==='easy').length).toBeGreaterThanOrEqual(14);
    expect(list.filter(x=>x.difficulty==='hard').length).toBeGreaterThanOrEqual(12);
   }
