@@ -11,6 +11,7 @@ import {braveCampaignStages} from '../data/braveCampaign';
 import BraveChronicle from './BraveChronicle';
 import {readHalloweenVoucher,normalizeHalloweenVoucher,writeHalloweenVoucher,clearHalloweenVoucher,type HalloweenTestVoucher} from '../lib/halloweenVoucher';
 import {readNoodleSave,normalizeNoodleSave,writeNoodleSave,type NoodleSave} from '../lib/noodleShopV2';
+import {readIndiaSave,normalizeIndiaSave,writeIndiaSave,type IndiaSave} from '../lib/indiaQuest';
 import {readNoodleCoupon,normalizeNoodleCoupon,writeNoodleCoupon,couponRemaining,type NoodleCoupon} from '../lib/noodleCoupon';
 
 type Props = {
@@ -39,15 +40,16 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
   const [noodleSave,setNoodleSave] = useState<NoodleSave>(readNoodleSave);
   const [noodleCoupon,setNoodleCoupon] = useState<NoodleCoupon|null>(readNoodleCoupon);
   const [halloweenVoucher,setHalloweenVoucher] = useState<HalloweenTestVoucher|null>(readHalloweenVoucher);
+  const [indiaSave,setIndiaSave] = useState<IndiaSave>(readIndiaSave);
   const braveCompletedCount=braveSave.completed.length;
   const chronicleUnlocked=braveChronicleUnlocked(braveSave);
 
   function exportBackup() {
     const backup = {
       format: 'mollys-cozy-arcade',
-      version: 7,
+      version: 8,
       brave: braveSave,
-      noodles: noodleSave, noodleCoupon, halloweenVoucher,
+      noodles: noodleSave, noodleCoupon, halloweenVoucher, indiaEdition:indiaSave,
       exportedAt: new Date().toISOString(),
       guess, connections, toon, bazinga, nine, pink,
     };
@@ -72,7 +74,7 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       const parsed: unknown = JSON.parse(await file.text());
       if (!parsed || typeof parsed !== 'object') throw new Error('Invalid backup.');
       const data = parsed as Record<string, unknown>;
-      if (data.format !== 'mollys-cozy-arcade' || (data.version !== 1 && data.version !== 2 && data.version !== 3 && data.version !== 4 && data.version !== 5 && data.version !== 6 && data.version !== 7)) throw new Error('This is not a compatible Molly’s Arcade backup.');
+      if (data.format !== 'mollys-cozy-arcade' || (data.version !== 1 && data.version !== 2 && data.version !== 3 && data.version !== 4 && data.version !== 5 && data.version !== 6 && data.version !== 7 && data.version !== 8)) throw new Error('This is not a compatible Molly’s Arcade backup.');
       const g = data.guess as Progress, c = data.connections as ConnectionProgress, t = data.toon as ToonProgress;
       const b = data.bazinga as BazingaProgress | undefined;
       const n = data.nine as NineProgress | undefined;
@@ -81,15 +83,17 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
         typeof g?.stats?.points !== 'number' || typeof c?.stats?.stars !== 'number' ||
         typeof t?.stats?.stars !== 'number' || !g.daily || !c.daily || !t.daily ||
         (data.version !== 1 && (b?.version !== 1 || typeof b.stats?.stars !== 'number' || !b.daily)) ||
-        ((data.version === 3 || data.version === 4 || data.version === 5 || data.version === 6 || data.version === 7) && (n?.version !== 1 || typeof n.stats?.stars !== 'number' || !n.daily || !n.heist)) ||
-        ((data.version === 4 || data.version === 5 || data.version === 6 || data.version === 7) && (pr?.version !== 1 || typeof pr.stats?.stars !== 'number' || !pr.daily)) ||
-        ((data.version===5 || data.version===6 || data.version===7) && (!data.brave||typeof data.brave!=='object'||(data.brave as Partial<BraveJourneySave>).version!==1
+        ((data.version === 3 || data.version === 4 || data.version === 5 || data.version === 6 || data.version === 7 || data.version === 8) && (n?.version !== 1 || typeof n.stats?.stars !== 'number' || !n.daily || !n.heist)) ||
+        ((data.version === 4 || data.version === 5 || data.version === 6 || data.version === 7 || data.version === 8) && (pr?.version !== 1 || typeof pr.stats?.stars !== 'number' || !pr.daily)) ||
+        ((data.version===5 || data.version===6 || data.version===7 || data.version===8) && (!data.brave||typeof data.brave!=='object'||(data.brave as Partial<BraveJourneySave>).version!==1
           ||!Array.isArray((data.brave as Partial<BraveJourneySave>).completed))) ||
-        ((data.version===6||data.version===7)&&(!data.noodles||typeof data.noodles!=='object'||
+        ((data.version===6||data.version===7||data.version===8)&&(!data.noodles||typeof data.noodles!=='object'||
           ![1,2].includes((data.noodles as NoodleSave).version)||
           (data.noodleCoupon!==null&&!normalizeNoodleCoupon(data.noodleCoupon)))) ||
-        (data.version===7&&(data.halloweenVoucher!==null&&
-         !normalizeHalloweenVoucher(data.halloweenVoucher)))) throw new Error('Some saved game data is missing.');
+        ( (data.version===7||data.version===8)&&(data.halloweenVoucher!==null&&
+         !normalizeHalloweenVoucher(data.halloweenVoucher))) ||
+        (data.version===8&&(!data.indiaEdition||typeof data.indiaEdition!=='object'||
+           (data.indiaEdition as IndiaSave).version!==1))) throw new Error('Some saved game data is missing.');
       if (!window.confirm('Replace this browser’s current arcade progress with the imported backup? This cannot be undone.')) {
         setFeedback('Import cancelled. Your current progress was kept.');
         return;
@@ -100,24 +104,26 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
       if (b) setBazinga(b);
       if (n) setNine(normalizeNineProgress(n));
       if (pr) setPink(previous=>reconcilePinkImport(pr,previous));
-      if (data.version===5||data.version===6||data.version===7){
+      if (data.version===5||data.version===6||data.version===7||data.version===8){
         const importedBrave=normalizeBraveJourney(data.brave);
         setBraveSave(importedBrave);
         writeBraveJourney(importedBrave);
       }
-      if(data.version===6||data.version===7){
+      if(data.version===6||data.version===7||data.version===8){
         const importedNoodles=normalizeNoodleSave(data.noodles);
         setNoodleSave(importedNoodles);writeNoodleSave(importedNoodles);
         if(data.noodleCoupon){const reward=normalizeNoodleCoupon(data.noodleCoupon);
          if(reward){setNoodleCoupon(reward);writeNoodleCoupon(reward)}}
       }
-      if(data.version===7){
+      if(data.version===7||data.version===8){
         const importedHalloween=normalizeHalloweenVoucher(data.halloweenVoucher);
         setHalloweenVoucher(importedHalloween);
         if(importedHalloween)writeHalloweenVoucher(importedHalloween);
         else clearHalloweenVoucher();
       }
-      setFeedback(data.version===7?'All games and the Halloween beta voucher record restored!' : data.version===6?'All arcade games and kitchen rewards restored!' : data.version===5 ? 'Your games and Keeper’s Chronicle progress have been restored!' : pr ? 'Six arcade game records restored; your Brave adventure progress was kept.' : 'Older Passport restored! Games not included in that backup were left unchanged.');
+      if(data.version===8){const importedIndia=normalizeIndiaSave(data.indiaEdition);
+        setIndiaSave(importedIndia);writeIndiaSave(importedIndia);}
+      setFeedback(data.version===8?'India Edition and all arcade records restored!' : data.version===7?'All games and the Halloween beta voucher record restored!' : data.version===6?'All arcade games and kitchen rewards restored!' : data.version===5 ? 'Your games and Keeper’s Chronicle progress have been restored!' : pr ? 'Six arcade game records restored; your Brave adventure progress was kept.' : 'Older Passport restored! Games not included in that backup were left unchanged.');
     } catch (error) {
       setFeedback(error instanceof Error ? error.message : 'Unable to read that backup file.');
     }
@@ -194,6 +200,13 @@ export default function Passport({ guess, connections, toon, bazinga, nine, pink
           <div><strong>{game.stars.toLocaleString()} ✨</strong><small>Stars collected</small></div>
           <div><strong>{game.best}</strong><small>{game.bestLabel}</small></div>
         </div>)}
+        <div className="passport-game-record brave-passport-record">
+          <div className="passport-game-icon" aria-hidden="true">🧭</div>
+          <div className="passport-game-title"><strong>Who? What? Where? When?</strong>
+            <small>India Edition · {indiaSave.expedition?'Stop '+Math.min(12,indiaSave.expedition.index+1)+'/12':'Ready to explore'}</small></div>
+          <div><strong>{indiaSave.solved} solved</strong><small>{indiaSave.runs} expeditions started</small></div>
+          <div><strong>{indiaSave.bestRun} ✦</strong><small>Best-answer points earned</small></div>
+        </div>
         <div className="passport-game-record brave-passport-record">
           <div className="passport-game-icon" aria-hidden="true">🎃</div>
           <div className="passport-game-title"><strong>Halloween Heist · Beta</strong>
