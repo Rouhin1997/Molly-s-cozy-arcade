@@ -15,14 +15,14 @@ import {
  type NineProgress,type NineRound,
 } from '../lib/nineNine';
 
-type Props={today:string;progress:NineProgress;setProgress:Dispatch<SetStateAction<NineProgress>>;onHome:()=>void};
+type Props={today:string;progress:NineProgress;setProgress:Dispatch<SetStateAction<NineProgress>>;onHome:()=>void;initialMode?:'daily'|'heist'};
 type Mode='daily'|'cases'|'heist';
 const tierNames:Record<Difficulty,string>={easy:'Cozy',medium:'Clever',hard:'Expert'};
 const categories:Record<string,string>={scene:'SCENE',record:'RECORD',forensics:'FORENSICS',interview:'INTERVIEW'};
 const coverIcon:Record<string,string>={interrogation:'🗣️',timeline:'⏱️',forensics:'🔬',heist:'🎃'};
 
-export default function NineNine({today,progress,setProgress,onHome}:Props){
- const [mode,setMode]=useState<Mode>('daily');
+export default function NineNine({today,progress,setProgress,onHome,initialMode='daily'}:Props){
+ const [mode,setMode]=useState<Mode>(initialMode);
  const [difficulty,setDifficulty]=useState<Difficulty>(()=>readPreferredDifficulty('99'));
  const [selectedHeist,setSelectedHeist]=useState<string>('heist-one');
  const [activeExhibit,setActiveExhibit]=useState<string|null>(null);
