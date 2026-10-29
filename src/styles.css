@@ -2708,3 +2708,20 @@
  .india-mini-hints{padding:12px;font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.india-victory-stars,.india-victory-medal,.india-finale-fireworks,.india-finale>span{animation:none}}
+
+
+/* Original visual notes: mini archive cards, film tickets and object studies. */
+.india-visual-note{display:flex;align-items:center;gap:18px;max-width:420px;margin:10px 0 4px;padding:13px;
+ border:3px double #bf9972;border-radius:7px;background:linear-gradient(125deg,#f7e5bc,#e5cca0);position:relative;overflow:hidden}
+.india-visual-note:after{content:"";position:absolute;inset:6px;border:1px dashed #bd986e;pointer-events:none}
+.india-visual-note>span{font-size:48px;min-width:75px;text-align:center;filter:drop-shadow(0 5px 5px #71513855)}
+.india-visual-note>div{display:grid;gap:7px}
+.india-visual-note strong{font:900 12px 'DM Sans',sans-serif;letter-spacing:1.5px;color:#7b3d31}
+.india-visual-note small{font:800 9px 'DM Sans',sans-serif;letter-spacing:1px;color:#947053}
+.india-visual-when{background:repeating-linear-gradient(0deg,#f5e6ca 0,#f5e6ca 12px,#e9d7b8 12px,#e9d7b8 13px)}
+.india-visual-who{background:linear-gradient(120deg,#cfdadc,#f5e6c5);border-color:#8199a2}
+.india-visual-what{background:linear-gradient(125deg,#f5e4be,#e2c790);border-color:#b7956b}
+.india-form .answer-assist-help{position:absolute!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;width:1px!important;height:1px!important;padding:0!important;border:0!important}
+.india-finale-difficulty{margin:23px auto;max-width:550px;align-items:center}
+.india-finale-difficulty>div{justify-content:center}
+@media(max-width:650px){.india-visual-note{gap:8px}.india-visual-note>span{font-size:37px;min-width:52px}.india-visual-note strong{font-size:10px}}
