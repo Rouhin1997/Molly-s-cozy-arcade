@@ -11,7 +11,7 @@ const symbols:Record<string,string>={
  history:'📜',science:'🔬',space:'🚀',business:'🏢',literature:'📚',art:'🎨',
  food:'🍽️',fruit:'🥭',animal:'🐾',bird:'🪶',nature:'🌿',festival:'🪔',
  monument:'🏯',city:'🏙️',river:'🌊',geography:'🧭',transport:'🚆',
- technology:'💡',film-title:'🎞️',book:'📖',award:'🏆',craft:'🧵',
+ technology:'💡','film-title':'🎞️',book:'📖',award:'🏆',craft:'🧵',
  naval:'⚓',rocket:'🚀',event:'🗓️',independence:'🇮🇳',
 };
 export const iconForTopic=(topic:string)=>symbols[topic]??'✦';
