@@ -109,6 +109,8 @@ describe('Expedition gameplay and fairness',()=>{
  it('gives factual proximity on known alternatives and never fabricates closeness',()=>{
   const c=indiaMysteryById('red-fort')!;
   expect(proximity(c,'Taj Mahal')).toContain('same topic');
+  expect(proximity(indiaMysteryById('chole-kulche')!,'chole bhature')).toContain('same topic');
+  expect(proximity(indiaMysteryById('red-fort')!,'Jama Masjid')).toContain('same associated region');
   expect(proximity(c,'zzzzxyq')).toMatch(/not in the comparison deck/);
   expect(proximity(c,'Red Fort')).toBe('Correct!');
  });
