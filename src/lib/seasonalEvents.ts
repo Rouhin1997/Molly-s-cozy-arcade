@@ -51,7 +51,7 @@ export function nextAnnualRomeDate(month:number,day:number,now=new Date()):Date{
  return romeDateKey(now)>[local.year,String(month).padStart(2,'0'),String(day).padStart(2,'0')].join('-')
   ?romeMidnightUtc(local.year+1,month,day):thisYear;
 }
-/** Friday 24 – Thursday 30 December in Italy; proposed Christmas event week.
+/** 24–30 December in Italy; proposed Christmas event week.
  * Dates are an editorial roadmap, NOT an implemented Christmas unlock.
  */
 export function christmasWeekStart(now=new Date()):Date{return nextAnnualRomeDate(12,24,now)}
