@@ -73,7 +73,7 @@ export function proximity(card:IndiaMystery,guess:string):string{
  if(known.era===card.era)shared.push('same historical period');
  if(!shared.length)return 'Quite far away: the subject, region and period do not match our reference clues.';
  if(shared.length===1)return 'Getting oriented: '+shared[0]+', but this is a different answer.';
- return 'Warm trail: '+shared.slice(0,2).join(' + ')+'. It is still a different answer.';
+ return 'Warm trail: '+shared.join(' + ')+'. It is still a different answer.';
 }
 export function submitIndiaGuess(r:MysteryRound,card:IndiaMystery,raw:string):MysteryRound{
  if(r.status!=='playing')return r;
