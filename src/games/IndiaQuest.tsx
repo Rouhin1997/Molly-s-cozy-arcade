@@ -75,7 +75,7 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
    if(round.status==='playing'&&next.status!=='playing')update=creditIndiaResult(update,next,'daily',today);
    saveNow(update);
   }else if(expedition){
-   let update={...save,expedition:{...expedition,rounds:{...expedition.rounds,[card.id]:next}}};
+   let update:IndiaSave={...save,expedition:{...expedition,rounds:{...expedition.rounds,[card.id]:next}}};
    if(round.status==='playing'&&next.status!=='playing')update=creditIndiaResult(update,next,'expedition');
    saveNow(update);
   }
