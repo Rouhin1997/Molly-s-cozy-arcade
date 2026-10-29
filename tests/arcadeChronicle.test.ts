@@ -60,14 +60,16 @@ describe('Molly’s Chronicle and arcade directory',()=>{
  });
  it('orders real known occasion dates by proximity, rolling annual dates correctly',()=>{
   const october=upcomingArcadeEvents(new Date(2026,9,22));
-  expect(october.map(e=>e.id)).toEqual(['halloween','birthday']);
+  expect(october.map(e=>e.id)).toEqual(['halloween','birthday','christmas']);
   expect(october[0].date.getFullYear()).toBe(2026);
   expect(october[1].status).toBe('planned');
   const november=upcomingArcadeEvents(new Date(2026,10,1));
-  expect(november.map(e=>e.id)).toEqual(['birthday','halloween']);
-  expect(november[1].date.getFullYear()).toBe(2027);
+  expect(november.map(e=>e.id)).toEqual(['birthday','christmas','halloween']);
+  expect(november[2].date.getFullYear()).toBe(2027);
   const late=upcomingArcadeEvents(new Date(2026,11,1));
-  expect(late.every(e=>e.date.getFullYear()===2027)).toBe(true);
+  expect(late.map(e=>e.id)).toEqual(['christmas','halloween','birthday']);
+  expect(late[0].date.getFullYear()).toBe(2026);
+  expect(late[1].date.getFullYear()).toBe(2027);
  });
  it('exposes dated workshop notes without pretending a two-way mailbox exists',()=>{
   expect(developerNotes.length).toBeGreaterThanOrEqual(2);
