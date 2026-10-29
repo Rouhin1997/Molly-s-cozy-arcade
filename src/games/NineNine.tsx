@@ -311,6 +311,10 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
          <h3>{round.status==='won'?'Case closed, Detective Molly!':'Unsolved, but not forgotten.'}</h3>
          <p>{round.status==='won'?c.finale:'Captain Holt has archived this investigation. You can review the evidence and try a fresh copy.'}</p>
          {round.status==='won'&&<strong>+{round.score} stars · {c.deductions.length} connected deductions</strong>}
+         {mode==='heist'&&round.status==='won'&&<button type="button" className="btn btn-outline"
+          onClick={()=>{if(window.confirm('Replay this Halloween Heist stage? Your previous score and unlocks are preserved.'))retryHeist()}}>
+          ↶ Replay this heist stage
+         </button>}
          <details className="nn-solution-story"><summary>Read the verified case solution</summary>
            <div className="nn-story-chapter"><strong>01 · The incident</strong><p>{presentation?.scene}</p></div>
            <div className="nn-story-chapter"><strong>02 · Why it happened</strong><p>{presentation?.motivation}</p></div>
