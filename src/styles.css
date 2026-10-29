@@ -2440,3 +2440,172 @@
  .halloween-beta-meta{flex-direction:column}
  .halloween-beta-copy .btn{width:100%}
 }
+
+
+/* ━━ WHO? WHAT? WHERE? WHEN? — INDIA EDITION ━━
+   Illustrated indigo field atlas, saffron silk, terracotta, stamp marks.
+   The first arcade game now has its own visual language and clue journey. */
+.india-quest{
+ --ia-ink:#1b3040;--ia-navy:#172b43;--ia-saffron:#dc9057;--ia-cream:#fff0cf;--ia-terracotta:#a84d36;
+ color:#33404a;max-width:1270px;margin:auto;padding:10px 0 45px;
+}
+.india-back{color:#385263!important}
+.india-hero{min-height:315px;position:relative;isolation:isolate;overflow:hidden;border-radius:23px;
+ background:radial-gradient(ellipse at 80% 15%,#e5ad75 0%,#ad684f 40%,#324c58 76%,#1b303e 100%);
+ border:6px double #c99d64;box-shadow:0 16px 35px #29425141;margin:18px 0 22px;
+ display:flex;align-items:center;padding:35px 6%;color:#fff3db}
+.india-hero:before{content:"";position:absolute;right:13%;bottom:0;width:45%;height:56%;
+ background:linear-gradient(90deg,transparent,#192b2e36),repeating-linear-gradient(90deg,transparent 0,transparent 26px,#1b332f 26px,#1b332f 32px);
+ clip-path:polygon(0 100%,0 72%,18% 72%,18% 49%,30% 49%,30% 30%,42% 30%,42% 8%,58% 8%,58% 31%,73% 31%,73% 54%,88% 54%,88% 75%,100% 75%,100% 100%);
+ opacity:.33;z-index:-1}
+.india-hero:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(27deg,transparent 0,transparent 12px,#fff5d004 12px,#fff5d004 13px);pointer-events:none}
+.india-hero-content{position:relative;max-width:680px;z-index:2;text-shadow:0 2px 6px #172f2d6e}
+.india-hero-ornament{position:absolute;top:13px;right:27px;color:#ffe8b69b;letter-spacing:9px;font-size:19px}
+.india-eyebrow{font:900 10px 'DM Sans',sans-serif;letter-spacing:2px;color:#b66c47}
+.india-hero .india-eyebrow{color:#ffdcaa}
+.india-hero h1{font:800 clamp(41px,5.1vw,75px)/1.06 'Fraunces',Georgia,serif;letter-spacing:-2px;margin:13px 0 14px}
+.india-hero h1 em{color:#ffca82;font-style:italic}
+.india-hero p{font:16px/1.7 Georgia,serif;color:#fff1d7;max-width:530px}
+.india-stamps{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.india-stamps span{font:900 10px 'DM Sans',sans-serif;letter-spacing:1px;padding:7px 12px;border:1px solid #f5c18c;border-radius:4px;background:#163b4799;color:#ffefd3}
+.india-hero-seal{position:absolute;right:4%;top:30%;transform:rotate(9deg);width:155px;height:155px;border:5px double #f8e5b6;border-radius:50%;
+ background:#8b3e348c;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff1c7;text-shadow:0 3px 5px #472923}
+.india-hero-seal span{font-size:42px}.india-hero-seal strong{font:800 21px Georgia,serif;letter-spacing:5px}
+.india-hero-seal small{font:800 7px 'DM Sans',sans-serif;letter-spacing:1px}
+.india-menu{display:flex;gap:15px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:18px 0}
+.india-menu>div{display:flex;gap:6px;background:#e9d8b4;padding:5px;border-radius:10px;border:1px solid #c5ab86}
+.india-menu button,.india-session-foot button,.india-footer button{background:transparent;border:0;padding:11px 15px;border-radius:7px;color:#65513e;font-weight:800;font-size:12px;cursor:pointer}
+.india-menu button.active{background:#254659;color:#fff0d5;box-shadow:0 3px 7px #182b3924}
+.india-menu>button{border:1px solid #bba887;background:#f9efd8}
+.india-guide{background:#f5e9d0;border:2px solid #c5a476;padding:23px;border-radius:15px;margin:15px 0 22px;box-shadow:0 8px 19px #35463218}
+.india-guide h2{font:700 24px 'Fraunces',Georgia,serif;margin:0 0 11px;color:#56432f}
+.india-guide p{font:14px/1.7 Georgia,serif;color:#624f39}
+.india-guide button{background:#24495b;color:#fff0c9;border:none;border-radius:7px;padding:12px 17px;font-weight:700}
+.india-primary,.india-secondary,.india-text-button{min-height:46px;border-radius:9px;padding:12px 18px;font:800 12px 'DM Sans',sans-serif;cursor:pointer;transition:transform .14s,background .14s}
+.india-primary{background:#b74d35;color:#fff6db;border:1px solid #8c3d2e;box-shadow:0 4px 0 #6f392b}
+.india-primary:hover:not(:disabled){transform:translateY(-2px);background:#963d2a}
+.india-secondary{background:#f4e6cb;color:#634c39;border:2px solid #b49a76}
+.india-secondary:hover:not(:disabled){background:#ffefd3}
+.india-primary:disabled,.india-secondary:disabled{opacity:.46;cursor:not-allowed}
+.india-text-button{color:#755946;border:0;background:transparent;text-decoration:underline}
+.india-welcome{display:grid;grid-template-columns:minmax(240px,.7fr) 1.3fr;gap:35px;align-items:center;padding:36px;
+ background:linear-gradient(118deg,#f3e4bd,#fff6e1);border:6px double #ba9266;border-radius:17px}
+.india-welcome h2{font:700 clamp(29px,3.4vw,41px)/1.16 'Fraunces',Georgia,serif;color:#61412e;margin:12px 0}
+.india-welcome p{font:15px/1.8 Georgia,serif;color:#715942}
+.india-field-cover{min-height:310px;background:repeating-linear-gradient(28deg,#233e50,#233e50 10px,#254153 10px,#254153 11px);color:#f4d4a6;
+ border:10px double #cca16b;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:13px;box-shadow:11px 12px 0 #9d876646;transform:rotate(-2deg)}
+.india-field-cover>span{font:900 12px 'DM Sans',sans-serif;letter-spacing:3px}
+.india-field-cover strong{font:800 108px/.9 'Fraunces',Georgia,serif}
+.india-field-cover small{font:900 10px 'DM Sans',sans-serif;letter-spacing:2px}
+.india-daily-header{background:#f3e2c0;border:2px solid #c2a378;border-radius:15px;padding:17px 25px;margin:15px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.india-daily-header h2{font:700 26px Georgia,serif;color:#614938;margin:3px 0}.india-daily-header p{margin:3px 0;font:13px Georgia,serif;color:#7b6953}
+.india-daily-header>strong{color:#9b6343;font-size:11px;white-space:nowrap}
+.india-play{background:#f6ebd6;border:5px solid #ba9367;border-radius:17px;overflow:hidden;box-shadow:0 14px 36px #293d3f24}
+.india-round-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;background:#1d4054;color:#fff0cf;padding:15px 20px}
+.india-round-head strong{font:800 12px 'DM Sans',sans-serif;letter-spacing:1.2px}.india-round-head span{font-size:12px;color:#f4cc90}
+.india-progress{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;padding:9px 15px;background:#e7d5b3}
+.india-progress span{height:8px;border-radius:3px;background:#d5be94}.india-progress span.done{background:#739b87}.india-progress span.active{background:#c15f42;box-shadow:0 0 0 2px #fff5db}
+.india-play-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(240px,.68fr);gap:16px;padding:20px}
+.india-main-card{background:#fff9e9;border:1px solid #dac399;border-radius:11px;padding:21px;min-width:0;box-shadow:0 6px 15px #63543913}
+.india-mystery-intro{position:relative;padding-bottom:12px;border-bottom:2px dashed #dfc59c;margin-bottom:17px}
+.india-mystery-intro h2{font:700 clamp(20px,2.6vw,28px)/1.4 'Fraunces',Georgia,serif;color:#533f33;margin:9px 0;max-width:91%}
+.india-mystery-intro>span:last-child{position:absolute;right:0;bottom:10px;font:800 55px Georgia,serif;color:#e2b97666}
+.india-photo-wrap{margin:9px auto 18px;max-width:670px}
+.india-photo-mosaic{width:100%;aspect-ratio:16/10;background:#d8ba83;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);border:9px solid #d1a875;border-radius:12px;overflow:hidden;position:relative}
+.india-photo-piece{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;box-sizing:border-box;border:1px solid #c4a47555;transition:filter .6s,opacity .6s}
+.india-photo-piece.is-revealed{background-size:400% 300%;background-repeat:no-repeat}
+.india-photo-piece.is-covered{background:linear-gradient(140deg,#223d52,#315366);border:2px solid #e7be81;box-shadow:inset 0 0 0 2px #435e62}
+.india-photo-piece.is-covered small{font:800 13px Georgia,serif;color:#b99c6d}
+.india-photo-probe{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.india-photo-fallback{grid-column:1/-1;grid-row:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;color:#5e4637}
+.india-photo-wrap figcaption{font:10px/1.5 Georgia,serif;color:#856f57;margin-top:7px}
+.india-photo-wrap figcaption a{color:#9f593c;text-decoration:underline}
+.india-notes{display:grid;gap:9px;margin:14px 0}
+.india-beat{padding:13px 16px;background:#fcf0d5;border-left:4px solid #b56048;border-radius:6px}
+.india-beat>span{font:900 9px 'DM Sans',sans-serif;color:#a36b4c;letter-spacing:1px}
+.india-beat p{font:14px/1.7 Georgia,serif;color:#554738;margin:7px 0}
+.india-locked-note{display:flex;align-items:center;flex-wrap:wrap;gap:6px;background:#f1e7d3;border:1px dashed #d7c09c;color:#aa9473;border-radius:6px;padding:11px 13px;font:700 11px 'DM Sans',sans-serif;letter-spacing:.6px}
+.india-locked-note small{font-size:10px;flex:1;text-align:right;font-weight:400}
+.india-map-card{display:flex;gap:16px;align-items:center;margin:10px 0 4px;padding:10px;background:linear-gradient(130deg,#e4d6ac,#f8e7bc);border:2px solid #c7ac76;border-radius:8px}
+.india-map-card svg{width:140px;max-width:40%;height:150px;flex-shrink:0}
+.india-map-card div{display:grid;gap:7px}.india-map-card strong{font:800 13px Georgia,serif;color:#745034}
+.india-map-card span{font:700 17px Georgia,serif;color:#b14d33}.india-map-card small{font:italic 10px/1.6 Georgia,serif;color:#978261}
+.india-bonus{margin:14px 0;padding:14px 18px;border:2px solid #aac29f;background:#e7efdd;border-radius:9px}
+.india-bonus strong{font:900 11px 'DM Sans',sans-serif;letter-spacing:.5px;color:#587349}
+.india-bonus p{font:14px/1.55 Georgia,serif;color:#4d6747;margin:8px 0}
+.india-form{border-top:1px solid #e2cfab;margin-top:18px;padding-top:15px}
+.india-form>label{display:block;font:800 12px 'DM Sans',sans-serif;color:#5b5145;margin-bottom:8px}
+.india-form .answer-assist input{background:#fffefd;border:2px solid #cfae81;border-radius:7px;padding:13px 14px;font-size:16px;min-height:47px;max-width:100%}
+.india-form .answer-assist{position:relative}
+.india-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:15px 0 4px}
+.india-result{background:#e5eddd;border:2px solid #90a681;border-radius:11px;padding:19px;margin:12px 0}
+.india-result.missed{background:#f4e5cd;border-color:#d6a378}
+.india-result h3{font:800 31px 'Fraunces',Georgia,serif;color:#446544;margin:9px 0}
+.india-result.missed h3{color:#956047}.india-result p{font:14px/1.7 Georgia,serif;color:#5f654e}
+.india-result>div>span{font:900 10px 'DM Sans',sans-serif;letter-spacing:1px}
+.india-result>div>strong{font-size:14px;color:#3f8250}
+.india-next{margin:17px 0}
+.india-sidebar{display:grid;align-content:start;gap:13px}
+.india-compass{background:#274960;color:#fff1cd;border-radius:9px;border:5px double #d7b17b;padding:18px;box-shadow:0 9px 18px #32475430}
+.india-compass .india-eyebrow{color:#ffce8f}
+.india-compass p{font:15px/1.65 Georgia,serif;color:#fff1ce;min-height:74px}
+.india-tries{display:flex;gap:7px;margin:15px 0}.india-tries i{height:8px;flex:1;background:#7691a0;border-radius:5px}
+.india-tries i.used{background:#dd895b}
+.india-previous{display:grid;gap:6px;border-top:1px dashed #9baab4;padding-top:12px}
+.india-previous span{font:italic 12px Georgia,serif;color:#f1d3a9;overflow-wrap:anywhere}
+.india-hint-bank{background:#f0ddaf;border:2px dashed #b5965f;border-radius:9px;padding:18px}
+.india-hint-bank>span{font-size:38px;display:block;margin-bottom:8px}
+.india-hint-bank strong{font:700 18px Georgia,serif;color:#6c4e31}
+.india-hint-bank p{font:13px/1.7 Georgia,serif;color:#7c5b43}
+.india-hint-bank small{display:block;color:#8a653d;font-size:11px}
+.india-atlas{background:#e7eee6;border:1px solid #b9cbb9;border-radius:9px;padding:18px}
+.india-atlas strong{display:block;font:700 17px Georgia,serif;color:#42675d;margin-top:9px}
+.india-atlas p{font:13px/1.65 Georgia,serif;color:#5c7468}
+.india-finale{text-align:center;padding:38px 26px;margin:18px 0;background:radial-gradient(circle at 50% 0,#f6edcf,#ded2ad);border:7px double #b9925c;border-radius:14px}
+.india-finale>span{font-size:62px;display:block}.india-finale>small{font:900 11px 'DM Sans',sans-serif;letter-spacing:2px;color:#9d6647}
+.india-finale h2{font:700 42px 'Fraunces',Georgia,serif;color:#67452f;margin:12px 0}
+.india-finale p{font:16px/1.7 Georgia,serif;color:#775b45}
+.india-finale-cards{display:flex;justify-content:center;flex-wrap:wrap;gap:7px;margin:18px 0 24px}
+.india-finale-cards span{background:#fff7e2;border:1px solid #d0aa72;padding:10px;border-radius:6px;font-size:12px}
+.india-session-foot{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:15px 20px;color:#766048;font:800 11px 'DM Sans',sans-serif}
+.india-footer{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:9px;margin:23px auto;color:#92816c;font:italic 11px Georgia,serif}
+.india-footer button{color:#6c6652;border:1px solid #d5c2a4;background:#f5eddc;padding:8px 11px}
+@media(max-width:960px){
+ .india-play-grid{grid-template-columns:minmax(0,1fr)}
+ .india-sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .india-atlas{grid-column:1/-1}
+ .india-hero-seal{width:115px;height:115px;top:35%;opacity:.68}
+}
+@media(max-width:650px){
+ .india-quest{padding:0 0 25px}
+ .india-hero{border-radius:13px;min-height:280px;padding:27px 16px;margin:9px 0 14px}
+ .india-hero h1{font-size:clamp(34px,9vw,51px)}
+ .india-hero p{font-size:12px;max-width:85%}
+ .india-hero-seal{width:86px;height:86px;right:4%;top:8%;opacity:.34}
+ .india-hero-seal span{font-size:25px}.india-hero-seal strong{font-size:11px}
+ .india-hero-seal small{font-size:5px}
+ .india-hero-ornament{font-size:12px}
+ .india-eyebrow{font-size:9px;letter-spacing:1.2px}
+ .india-stamps{gap:4px}.india-stamps span{font-size:8px;padding:6px}
+ .india-menu{gap:5px}
+ .india-menu>div{flex:1}.india-menu button{font-size:10px;padding:10px 7px}
+ .india-welcome{grid-template-columns:1fr;padding:20px 14px;gap:27px}
+ .india-field-cover{min-height:185px;transform:none}.india-field-cover strong{font-size:67px}
+ .india-round-head{padding:13px 12px}.india-round-head strong{font-size:10px}
+ .india-round-head span{font-size:10px}
+ .india-play-grid{padding:8px}
+ .india-main-card{padding:13px 11px}
+ .india-mystery-intro h2{font-size:21px}
+ .india-photo-mosaic{border-width:5px;aspect-ratio:4/3}
+ .india-photo-piece.is-covered small{font-size:10px}
+ .india-locked-note{font-size:10px;padding:10px 8px}.india-locked-note small{font-size:9px}
+ .india-map-card svg{width:100px;height:111px}.india-map-card span{font-size:13px}
+ .india-actions .india-primary,.india-actions .india-secondary{flex:1;min-width:140px}
+ .india-sidebar{grid-template-columns:1fr}
+ .india-atlas{grid-column:auto}
+ .india-compass p{min-height:0}
+ .india-daily-header{padding:13px 11px}.india-daily-header h2{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){
+ .india-primary,.india-photo-piece{transition:none}
+}
