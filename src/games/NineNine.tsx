@@ -56,11 +56,14 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
  const choice=nineCases.filter(x=>x.difficulty===level&&x.track==='detective');
  const heistStages=heistCaseIds.map(id=>nineCases.find(x=>x.id===id)!);
  useEffect(()=>{
-  if(!eventOpen||!heistCaseIds.every(id=>
-   progress.heist[id]?.status==='won'||(progress.bestAwards?.['99:'+id]??0)>0))return;
+  const final=progress.heist['heist-three'];
+  if(!eventOpen||!final?.completedAt||
+   !halloweenWindow(new Date(final.completedAt),eventYear).active||
+   !heistCaseIds.every(id=>
+    progress.heist[id]?.status==='won'||(progress.bestAwards?.['99:'+id]??0)>0))return;
   const next=awardHalloweenVoucher(readHalloweenVoucher(),new Date());
   if(next){writeHalloweenVoucher(next);setTestVoucher(next)}
- },[eventOpen,progress.heist,progress.bestAwards]);
+ },[eventOpen,eventYear,progress.heist,progress.bestAwards]);
  const presentation=c?nineCasePresentation(c):null;
  const nextLink=c?.deductions.find(d=>!round?.linked.includes(d.id));
  const cozyAnchor=level==='easy'&&round?.status==='playing'&&nextLink?nextLink.pair[0]:null;
@@ -112,8 +115,11 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
    if(!existing)return prev;
    const story=nineCases.find(c=>c.id===existing.caseId);
    if(!story)return prev;
-   const revised=transform(existing,story);
-   if(revised===existing)return prev;
+   const result=transform(existing,story);
+   if(result===existing)return prev;
+   const revised=mode==='heist'&&selectedHeist==='heist-three'&&
+    existing.status==='playing'&&result.status==='won'
+    ?{...result,completedAt:new Date().toISOString()}:result;
    const updated=mode==='daily'?{...prev,daily:{...prev.daily,[today]:revised}}:
     mode==='cases'?{...prev,practice:revised}:{...prev,heist:{...prev.heist,[selectedHeist]:revised}};
    return existing.status==='playing'&&revised.status!=='playing'?creditNineResult(updated,revised):updated;
