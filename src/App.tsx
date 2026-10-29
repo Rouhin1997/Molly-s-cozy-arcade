@@ -113,12 +113,20 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <button className="btn btn-soft" onClick={() => onNavigate('passport')}>Open Passport ↗</button>
     </section>
     <section className="games-section" id="games">
-      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Seven complete adventures + a new cooking playtest</span></div>
+      <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Eight playable adventures · More in the workshop</span></div>
       <div className="game-grid">
         <article className="game-card featured-card india-home-card">
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 08</span></div>
-          <div className="featured-art" aria-hidden="true"><span>🪷</span><span>🕌</span><span>🧭</span></div>
-          <div className="card-content"><span className="card-category">INDIA · PEOPLE · PLACES · HISTORY</span><h3>Who? What? Where? When?</h3><p>Reconstruct hidden photographs, follow map clues and solve an unfolding 12-stop India expedition.</p>
+          <div className="india-featured-icon" aria-hidden="true">
+           <svg viewBox="0 0 120 120" width="120" height="120">
+            <circle cx="60" cy="60" r="52" fill="#fbe6bd" stroke="#965b42" strokeWidth="4"/>
+            <circle cx="60" cy="60" r="43" fill="none" stroke="#c99a66" strokeWidth="2" strokeDasharray="3 5"/>
+            <path d="M60 17L68 52L102 60L68 68L60 103L52 68L18 60L52 52Z" fill="#284c5c" stroke="#e8b572" strokeWidth="2"/>
+            <circle cx="60" cy="60" r="20" fill="#f8dba7" stroke="#284c5c" strokeWidth="3"/>
+            <text x="60" y="70" fontSize="33" textAnchor="middle" fontFamily="Georgia,serif" fontWeight="bold" fill="#8c4333">?</text>
+           </svg>
+          </div>
+          <div className="card-content"><span className="card-category">INDIA · PEOPLE · PLACES · HISTORY</span><h3>Who? What? Where? When?</h3><p>Explore 240 mysteries through clues, pictures and places. Choose your difficulty and set off across India.</p>
             <button className="card-link" onClick={() => onNavigate('guess', 'practice')}>Let's play <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-mint connection-card">
