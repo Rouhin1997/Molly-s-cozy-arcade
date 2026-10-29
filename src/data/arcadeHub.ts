@@ -18,7 +18,7 @@ export const comingSoonGames:readonly UpcomingGame[]=[
 ];
 export type ArcadeEvent={
  id:'halloween'|'birthday'|'christmas';label:string;icon:string;date:Date;dateText:string;
- summary:string;status:'live'|'scheduled'|'planned';route:'nine'|'vault'|'home';
+ summary:string;status:'live'|'scheduled'|'planned';route:'heist'|'vault'|'home';
 };
 export function upcomingArcadeEvents(now=new Date()):ArcadeEvent[]{
  const halloweenLive=isHalloweenLive(now);
@@ -27,7 +27,7 @@ export function upcomingArcadeEvents(now=new Date()):ArcadeEvent[]{
    date:nextAnnualRomeDate(10,31,now),dateText:'31 October',
    summary:halloweenLive?'The 99 Files heist is live today! Three stages and a dummy test voucher; closes at midnight (Rome time).':
     'A one-day Halloween Heist beta in The 99 Files, opening only on 31 October (Italy time).',
-   status:halloweenLive?'live':'scheduled',route:'nine'},
+   status:halloweenLive?'live':'scheduled',route:'heist'},
   {id:'birthday',label:'Molly’s Birthday',icon:'🎂',
    date:nextAnnualRomeDate(11,13,now),dateText:'13 November',
    summary:'The birthday event is still in development. Nothing to redeem yet.',
