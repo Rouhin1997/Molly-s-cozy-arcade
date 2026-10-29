@@ -1,7 +1,7 @@
 import {useEffect,useMemo,useState,type FormEvent} from 'react';
 import AnswerAssistInput from '../components/AnswerAssistInput';
 import {indiaMysteries,indiaKindLabels,photoFileUrl,photoPage,type IndiaMystery,type CommonsPhoto,type MysteryBeat,type IndiaSpot} from '../data/indiaMysteries';
-import {currentMystery,dailyMystery,mysteryRound,newMysteryRound,openExpedition,advanceExpedition,submitIndiaGuess,spendIndiaHint,readIndiaSave,writeIndiaSave,creditIndiaResult,MAX_ATTEMPTS,HINT_EARNING_STOPS,type IndiaSave} from '../lib/indiaQuest';
+import {currentMystery,dailyMystery,mysteryRound,newMysteryRound,openExpedition,advanceExpedition,submitIndiaGuess,spendIndiaHint,readIndiaSave,writeIndiaSave,creditIndiaResult,HINTS_PER_MYSTERY,attemptsForDifficulty,type IndiaSave,type IndiaDifficulty} from '../lib/indiaQuest';
 
 type Mode='expedition'|'daily';
 type Props={today:string;initialMode:'daily'|'practice';onHome:()=>void;onClassic:()=>void};
@@ -48,11 +48,24 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
  const [mode,setMode]=useState<Mode>(initialMode==='practice'?'expedition':'daily');
  const [save,setSave]=useState<IndiaSave>(readIndiaSave);
  const [entry,setEntry]=useState('');
- const [guide,setGuide]=useState(false);
+ const [guide,setGuide]=useState(()=>{
+  try{return localStorage.getItem('india-wwww-rules-seen-v2')!=='yes'}catch{return true}
+ });
+ const [difficulty,setDifficulty]=useState<IndiaDifficulty>('balanced');
+ const [shareMessage,setShareMessage]=useState('');
+ function dismissGuide(){setGuide(false);try{localStorage.setItem('india-wwww-rules-seen-v2','yes')}catch{/* optional */}}
+ function shareExpedition(){
+  if(!expedition)return;
+  const summary='🧭 India Edition · '+solved+'/12 solved · '+total+' points · '+(expedition.difficulty??'balanced')+' difficulty';
+  if(navigator.clipboard?.writeText)void navigator.clipboard.writeText(summary).then(()=>setShareMessage('Results copied!')).catch(()=>setShareMessage(summary));
+  else setShareMessage(summary);
+ }
  const expedition=save.expedition;
  const card=mode==='daily'?dailyMystery(today):expedition?currentMystery(expedition):undefined;
  const round=mode==='daily'?(save.daily[today]??newMysteryRound(dailyMystery(today).id)):expedition?mysteryRound(expedition):undefined;
- const bank=mode==='daily'?(save.dailyHints[today]??1):expedition?.hintBank??0;
+ const bank=Math.max(0,HINTS_PER_MYSTERY-(round?.extras??0));
+ const activeDifficulty:IndiaDifficulty=mode==='daily'?'balanced':(expedition?.difficulty??difficulty);
+ const attempts=attemptsForDifficulty(activeDifficulty);
  const finished=mode==='expedition'&&!!expedition?.finished;
  const stage=expedition?.index??0;
  const results=expedition?Object.values(expedition.rounds).filter(r=>r.status!=='playing'):[];
@@ -64,11 +77,11 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
  function start(){
   if(expedition&&!expedition.finished&&!window.confirm('Replace this unfinished expedition? Your earned best scores are kept.'))return;
   const seed=(expedition?.seed??0)+1;
-  saveNow({...save,expedition:openExpedition(seed),runs:save.runs+1});setMode('expedition');
+  saveNow({...save,expedition:openExpedition(seed,difficulty),runs:save.runs+1});setMode('expedition');
  }
  function guess(e:FormEvent){
   e.preventDefault();if(!card||!round)return;
-  const next=submitIndiaGuess(round,card,entry);
+  const next=submitIndiaGuess(round,card,entry,activeDifficulty);
   if(next===round)return;
   if(mode==='daily'){
    let update={...save,daily:{...save.daily,[today]:next}};
@@ -84,8 +97,8 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
  function hint(){
   if(!round||!card)return;
   const result=spendIndiaHint(round,bank);if(result.round===round)return;
-  if(mode==='daily')saveNow({...save,daily:{...save.daily,[today]:result.round},dailyHints:{...save.dailyHints,[today]:result.bank}});
-  else if(expedition)saveNow({...save,expedition:{...expedition,hintBank:result.bank,rounds:{...expedition.rounds,[card.id]:result.round}}});
+  if(mode==='daily')saveNow({...save,daily:{...save.daily,[today]:result.round}});
+  else if(expedition)saveNow({...save,expedition:{...expedition,rounds:{...expedition.rounds,[card.id]:result.round}}});
  }
  function skip(){
   if(!round||!card||round.status!=='playing')return;
@@ -111,73 +124,104 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
     <button className={mode==='daily'?'active':''} onClick={()=>setMode('daily')}>☀ Daily dispatch</button>
     <button className={mode==='expedition'?'active':''} onClick={()=>setMode('expedition')}>🧭 India expedition</button>
    </div>
-   <button onClick={()=>setGuide(x=>!x)} aria-expanded={guide}>❔ How to play</button>
+   <button onClick={()=>setGuide(true)} aria-expanded={guide}>❔ Rules</button>
   </div>
-  {guide&&<aside className="india-guide"><h2>How the mystery unfolds</h2>
-   <p>Each wrong guess opens exactly one new field note and repairs pieces of a hidden photo where available. There are four distinct guesses per mystery; repeat guesses are free.</p>
-   <p>A 12-stop expedition grants one new hint credit on each of the first ten stops. Save credits for later; spend up to two per mystery on extra trivia. The final two stops grant no new credits.</p>
-   <p>Our compass compares only known clues such as category, topic and region—it doesn't fabricate a percentage. Alternative spellings such as phuchka, fuchka and golgappa count.</p>
-   <button onClick={onClassic}>📚 Original Guess Who? archive ↗</button>
-  </aside>}
+  {guide&&<div className="india-rule-overlay" role="presentation">
+   <section className="india-rule-modal" role="dialog" aria-modal="true" aria-label="How to play India Edition">
+    <div className="india-rule-header"><span>🧭 HOW TO PLAY</span><button type="button" onClick={dismissGuide} aria-label="Close game rules">✕</button></div>
+    <h2>Every mystery has a story.</h2>
+    <div className="india-rule-grid">
+     <div><strong>① Discover</strong><p>Guess from the opening clue. Wrong answers uncover new details or more of a hidden picture.</p></div>
+     <div><strong>② Choose your challenge</strong><p>Easy gives 5 guesses, Balanced 4 and Challenge 3, with gradually more demanding mysteries.</p></div>
+     <div><strong>③ Use your hints</strong><p>You have <b>two optional hints for every individual mystery</b>. Both reset on the next stop. No hint farming or banking.</p></div>
+     <div><strong>④ Travel further</strong><p>A journey has twelve mysteries. Recognised alternative spellings work, and suggestions help with names without automatically guessing.</p></div>
+    </div>
+    <p className="india-rule-caption">Wrong guesses earn new clues. The compass explains genuine connections when it recognises your guess. There is no time limit.</p>
+    <div className="india-rule-actions">
+     <button type="button" className="india-primary" onClick={dismissGuide}>Let's play →</button>
+     <button type="button" className="india-secondary" onClick={()=>{dismissGuide();onClassic()}}>Play classic game</button>
+    </div>
+   </section>
+  </div>}
   {mode==='expedition'&&!expedition&&<section className="india-welcome">
    <div className="india-field-cover"><span>THE INDIA EXPEDITION</span><strong>12</strong><small>MYSTERIES PER JOURNEY</small><span>🎭　🥭　🕌　⌛</span></div>
    <div><span className="india-eyebrow">OPEN THE FIELD GUIDE</span><h2>Twelve mysteries. Four ways to wonder.</h2>
     <p>Discover Indian people, places, food, wildlife and historical moments through words, maps and broken photographs.</p>
-    <p>Every expedition deals a fresh selection from our curated atlas. No timer, and unused hints carry forward.</p>
+    <p>More than two hundred mysteries across familiar favourites and surprising discoveries. Every journey reshuffles its route.</p>
+    <div className="india-difficulty-picker"><strong>Choose your difficulty</strong><div role="group" aria-label="Expedition difficulty">
+      {(['easy','balanced','challenge'] as const).map(level=><button type="button" key={level} className={difficulty===level?'chosen':''}
+       aria-pressed={difficulty===level} onClick={()=>setDifficulty(level)}>
+       {level==='easy'?'🌿 Easy':level==='balanced'?'🧭 Balanced':'🔥 Challenge'}
+      </button>)}
+     </div><small>{difficulty==='easy'?'Recognisable subjects · 5 guesses · relaxed exploration':difficulty==='balanced'?'Gradually harder subjects · 4 guesses · the recommended journey':'Subtler clues and harder subjects · 3 guesses · for experienced explorers'}</small></div>
     <button className="india-primary" onClick={start}>Begin the expedition →</button></div>
   </section>}
   {mode==='expedition'&&finished&&<section className="india-finale">
-   <span>🏵️</span><small>THE EXPEDITION IS COMPLETE</small><h2>What a journey!</h2>
-   <p>You identified <strong>{solved} of 12 mysteries</strong> and earned <strong>{total} points</strong>.</p>
+   <div className="india-finale-fireworks" aria-hidden="true">✦　✧　★　✦　✧　★　✦</div>
+   <span>🏆</span><small>ALL TWELVE CHAPTERS COMPLETE</small>
+   <h2>{solved===12?'Legend of the Atlas!':solved>=9?'Master Explorer!':solved>=6?'What an adventure!':'The journey continues!'}</h2>
+   <p>You uncovered <strong>{solved} of 12</strong> mysteries and earned <strong>{total} points</strong>. That's a complete journey across India!</p>
+   <div className="india-finale-honours"><div><strong>{solved}/12</strong><small>Solved</small></div>
+    <div><strong>{total.toLocaleString()}</strong><small>Points</small></div>
+    <div><strong>{expedition?.difficulty??'balanced'}</strong><small>Difficulty</small></div></div>
    <div className="india-finale-cards">{expedition?.stops.map((id,i)=>{
     const c=indiaMysteries.find(x=>x.id===id),r=expedition.rounds[id];
     return <span key={id} title={c?.answer}>{indiaKindLabels[c?.kind??'what'].icon} {i+1} {r?.status==='won'?'✓':'○'}</span>;
    })}</div>
-   <button className="india-primary" onClick={start}>Shuffle a new expedition →</button>
+   <div className="india-finale-actions"><button className="india-primary" onClick={start}>Start a new expedition →</button>
+    <button className="india-secondary" type="button" onClick={shareExpedition}>Copy my results</button></div>
+   {shareMessage&&<p role="status" className="india-share-status">{shareMessage}</p>}
   </section>}
   {mode==='daily'&&<div className="india-daily-header"><div><span className="india-eyebrow">A NEW POSTCARD EACH DAY</span><h2>☀ Daily dispatch</h2><p>One India mystery, the same for everyone today.</p></div><strong>{today}</strong></div>}
   {card&&round&&!finished&&<section className="india-play">
    <div className="india-round-head"><strong>{mode==='daily'?'DAILY DISPATCH':'STOP '+String(stage+1).padStart(2,'0')+' / 12'}　 {indiaKindLabels[card.kind].icon} {indiaKindLabels[card.kind].label}</strong>
-    <span>🪙 {bank} banked hints　✎ {MAX_ATTEMPTS-round.guesses.length}/{MAX_ATTEMPTS} guesses</span></div>
+    <span>💡 {bank}/{HINTS_PER_MYSTERY} hints　✎ {Math.max(0,attempts-round.guesses.length)}/{attempts} guesses</span></div>
    {mode==='expedition'&&<div className="india-progress">{expedition?.stops.map((id,i)=><span key={id} className={i===stage?'active':i<stage?'done':''} aria-label={'Stop '+(i+1)}/>)}</div>}
    <div className="india-play-grid">
     <article className="india-main-card">
      <div className="india-mystery-intro"><span className="india-eyebrow">FIELD NOTES / {card.kind.toUpperCase()}</span><h2>{card.intro}</h2><span aria-hidden="true">?</span></div>
+     {!card.photo&&card.visualSymbol&&round.status==='playing'&&<div className="india-artifact" aria-label="Original themed visual clue"><span>{card.visualSymbol}</span><i>{card.kind.toUpperCase()} · {card.topic.toUpperCase()}</i></div>}
      {card.photo&&(card.kind==='where'||card.kind==='who')&&<Mosaic key={card.id} photo={card.photo} reveal={round.reveal} solved={round.status!=='playing'}/>}
      <div className="india-notes">{card.beats.map((beat,i)=>i<round.reveal?
       <Note key={i} beat={beat} card={card} n={i+1}/>:
-      <div key={i} className="india-locked-note">🔒　FIELD NOTE {String(i+1).padStart(2,'0')} <small>Reveals after a wrong guess</small></div>)}</div>
-     {round.extras>0&&<div className="india-bonus"><strong>✦ Explorer's extra field notes</strong>{card.assists.slice(0,round.extras).map((t,i)=><p key={i}>{t}</p>)}</div>}
+      <div key={i} className="india-locked-note">🔒　CLUE {i+2} <small>Unlocks after a guess</small></div>)}</div>
+     {round.extras>0&&<div className="india-bonus"><strong>✦ Extra hints</strong>{card.assists.slice(0,round.extras).map((t,i)=><p key={i}>{t}</p>)}</div>}
      {round.status==='playing'?<form onSubmit={guess} className="india-form">
       <label htmlFor="india-answer">Your answer</label>
       <AnswerAssistInput id="india-answer" value={entry} onChange={setEntry} options={options}
        placeholder={'Guess '+({who:'a person',what:'a thing',where:'a place',when:'an event'}[card.kind])+'…'} minChars={3}/>
       <div className="india-actions">
        <button className="india-primary" type="submit" disabled={!entry.trim()}>Make a guess →</button>
-       <button className="india-secondary" type="button" onClick={hint} disabled={bank<1||round.extras>=2}>🪙 Extra hint ({bank})</button>
+       <button className="india-secondary" type="button" onClick={hint} disabled={bank<1||round.extras>=2}>💡 Hint ({bank} left)</button>
        <button className="india-text-button" type="button" onClick={skip}>Reveal answer</button>
       </div>
-     </form>:<div className={'india-result '+(round.status==='won'?'correct':'missed')}>
-      <div><span>{round.status==='won'?'🏆 CORRECT!':'📖 MYSTERY REVEALED'}</span><h3>{card.answer}</h3><p>{card.fact}</p>
-       {round.status==='won'&&<strong>+{round.score} points</strong>}</div>
+     </form>:<section className={'india-result india-victory-stage '+(round.status==='won'?'correct':'missed')} aria-live="polite">
+      <div className="india-victory-stars" aria-hidden="true">{round.status==='won'?'✦　★　✧　★　✦':'✧　✦　✧'}</div>
+      <div className="india-victory-medal">{round.status==='won'?'🏅':'🗝️'}</div>
+      <div className="india-victory-eyebrow">{round.status==='won'?(round.guesses.length===1?'PERFECT FIRST GUESS!':'MYSTERY SOLVED!'):'MYSTERY UNCOVERED'}</div>
+      <h3>{card.answer}</h3>
+      <p>{card.fact}</p>
+      <div className="india-victory-stats">
+       <div><strong>{round.status==='won'?'+'+round.score:'0'}</strong><small>POINTS</small></div>
+       <div><strong>{round.guesses.length}</strong><small>GUESSES</small></div>
+       <div><strong>{round.extras}</strong><small>HINTS USED</small></div>
+      </div>
+      {round.status==='missed'&&<p className="india-victory-encourage">A new mystery awaits. Every clue teaches you something.</p>}
       {card.photo&&card.kind!=='where'&&card.kind!=='who'&&<Mosaic photo={card.photo} reveal={3} solved/>}
-     </div>}
+     </section>}
      {round.status!=='playing'&&(mode==='expedition'?<button className="india-primary india-next" onClick={next}>{stage===11?'Complete expedition':'Next mystery'} →</button>:
       <button className="india-secondary" onClick={()=>setMode('expedition')}>Explore the expedition →</button>)}
     </article>
     <aside className="india-sidebar">
-     <div className="india-compass"><span className="india-eyebrow">THE COMPASS · GUESS FEEDBACK</span><p role="status">{round.feedback}</p>
-      <div className="india-tries">{Array.from({length:4},(_,i)=><i key={i} className={i<round.guesses.length?'used':''}/>)}</div>
+     <div className="india-compass"><span className="india-eyebrow">🧭 YOUR GUESS</span><p role="status">{round.feedback}</p>
+      <div className="india-tries">{Array.from({length:attempts},(_,i)=><i key={i} className={i<round.guesses.length?'used':''}/>)}</div>
       {round.guesses.length>0&&<div className="india-previous">{round.guesses.map((g,i)=><span key={i}>✎ {g}</span>)}</div>}</div>
-     <div className="india-hint-bank"><span>🪙</span><strong>{bank} field-note credits</strong>
-      <p>{mode==='daily'?'One optional extra note today.':'One new hint on stops 1–'+HINT_EARNING_STOPS+'. Unused hints stack. Final two stops give none.'}</p>
-      <small>🧠 Trivia　📷 Photos　🗺️ Maps</small></div>
-     <div className="india-atlas"><span className="india-eyebrow">THE EVER-GROWING ATLAS</span>
-      <strong>{indiaMysteries.length} hand-curated mysteries</strong><p>The catalogue can grow indefinitely. Each new expedition shuffles a distinct 12-stop route; repeated answers become possible on later trips.</p></div>
+     <div className="india-mini-hints"><strong>💡 {bank} hints available</strong>
+      <span>Resets with the next mystery</span></div>
     </aside>
    </div>
   </section>}
   {mode==='expedition'&&expedition&&!finished&&<div className="india-session-foot"><span>EXPEDITION #{expedition.seed} · {solved} solved · {total} points</span><button onClick={start}>↻ New expedition</button></div>}
-  <footer className="india-footer"><span>India Edition · Licensed photographs credited on display · Progress saved in this browser</span><button onClick={onClassic}>Classic Guess Who? archive ↗</button></footer>
+  <footer className="india-footer"><button onClick={onClassic}>Classic Guess Who? ↗</button></footer>
  </main>;
 }
