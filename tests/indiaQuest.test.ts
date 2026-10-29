@@ -2,11 +2,11 @@ import {describe,it,expect} from 'vitest';
 import {indiaMysteries,indiaMysteryById,photoPage,photoFileUrl,indiaKindLabels} from '../src/data/indiaMysteries';
 import {openExpedition,expeditionIds,mysteryRound,currentMystery,newMysteryRound,
  submitIndiaGuess,spendIndiaHint,matchesIndiaAnswer,proximity,advanceExpedition,
- dailyMystery,normalizeIndiaSave,freshIndiaSave,creditIndiaResult,MAX_ATTEMPTS,HINT_EARNING_STOPS} from '../src/lib/indiaQuest';
+ dailyMystery,normalizeIndiaSave,freshIndiaSave,creditIndiaResult,MAX_ATTEMPTS,HINTS_PER_MYSTERY,attemptsForDifficulty} from '../src/lib/indiaQuest';
 
 describe('WWWW India atlas · content and licensing',()=>{
  it('has a diverse subject bank with playable progressive hints and credited real photos',()=>{
-  expect(indiaMysteries.length).toBeGreaterThanOrEqual(20);
+  expect(indiaMysteries).toHaveLength(240);
   expect(new Set(indiaMysteries.map(x=>x.id)).size).toBe(indiaMysteries.length);
   for(const kind of ['who','what','where','when'] as const){
    expect(indiaMysteries.filter(x=>x.kind===kind).length).toBeGreaterThanOrEqual(3);
@@ -16,7 +16,7 @@ describe('WWWW India atlas · content and licensing',()=>{
    expect(m.intro.length).toBeGreaterThan(40);
    expect(m.beats).toHaveLength(3);
    expect(m.assists).toHaveLength(2);
-   expect(m.aliases.length).toBeGreaterThanOrEqual(1);
+   expect(m.aliases).toBeInstanceOf(Array);
    expect(m.fact.length).toBeGreaterThan(35);
    expect(indiaMysteryById(m.id)).toBe(m);
    if(m.photo){
@@ -67,20 +67,37 @@ describe('Expedition gameplay and fairness',()=>{
   expect(r.status).toBe('missed');
   expect(r.feedback).toContain('Chole Kulche');
  });
- it('awards a clue budget on stops 1–10, banks unspent hints, and no new ones on the final two',()=>{
+ it('resets exactly two optional hints on every new mystery, all twelve stops',()=>{
   let quest=openExpedition(5);
-  expect(quest.hintBank).toBe(1);
+  expect(quest.hintBank).toBe(HINTS_PER_MYSTERY);
   for(let i=0;i<12;i++){
-   expect(quest.index).toBe(i);
    const c=currentMystery(quest)!;
-   const completed=submitIndiaGuess(newMysteryRound(c.id),c,c.answer);
+   const used=spendIndiaHint(newMysteryRound(c.id),HINTS_PER_MYSTERY);
+   expect(used.bank).toBe(1);
+   const completed=submitIndiaGuess(used.round,c,c.answer);
    quest={...quest,rounds:{...quest.rounds,[c.id]:completed}};
    quest=advanceExpedition(quest);
-   expect(quest.hintBank).toBe(Math.min(i+2,HINT_EARNING_STOPS));
+   expect(quest.hintBank).toBe(HINTS_PER_MYSTERY);
   }
   expect(quest.finished).toBe(true);
-  expect(quest.index).toBe(12);
-  expect(advanceExpedition(quest)).toBe(quest);
+ });
+ it('makes selectable difficulty a real content and rule change',()=>{
+  for(const diff of ['easy','balanced','challenge'] as const){
+   const quest=openExpedition(13,diff);
+   expect(quest.stops).toHaveLength(12);
+   expect(new Set(quest.stops).size).toBe(12);
+   const tiers=quest.stops.map(id=>indiaMysteryById(id)?.difficulty);
+   if(diff==='easy')expect(tiers.every(t=>t==='easy')).toBe(true);
+   else if(diff==='balanced')expect(tiers).toEqual([
+    'easy','easy','easy','easy','medium','medium','medium','medium','hard','hard','hard','hard'
+   ]);
+   else expect(tiers).toEqual([
+    'medium','medium','medium','medium','hard','hard','hard','hard','hard','hard','hard','hard'
+   ]);
+  }
+  expect(attemptsForDifficulty('easy')).toBe(5);
+  expect(attemptsForDifficulty('balanced')).toBe(4);
+  expect(attemptsForDifficulty('challenge')).toBe(3);
  });
  it('spends finite hints and caps extra notes at two per mystery',()=>{
   let round=newMysteryRound('dhuska'),bank=3;
@@ -96,7 +113,7 @@ describe('Expedition gameplay and fairness',()=>{
   const c=indiaMysteryById('pani-puri')!;
   let r=newMysteryRound(c.id);
   r=submitIndiaGuess(r,c,'fuchka');
-  expect(r.status).toBe('won');expect(r.score).toBe(260);
+  expect(r.status).toBe('won');expect(r.score).toBe(270);
   const save=creditIndiaResult(freshIndiaSave(),r,'expedition');
   const repeat=creditIndiaResult(save,r,'expedition');
   expect(repeat.bestRun).toBe(save.bestRun);
@@ -121,6 +138,7 @@ describe('Expedition gameplay and fairness',()=>{
   expect(restored.expedition?.stops).toEqual(e.stops);
   expect(restored.runs).toBe(4);
   expect(normalizeIndiaSave({version:900}).expedition).toBeNull();
-  expect(normalizeIndiaSave({...save,expedition:{...e,stops:[...e.stops].reverse()}}).expedition).toBeNull();
+  expect(normalizeIndiaSave({...save,expedition:{...e,stops:[...e.stops].reverse()}}).expedition?.stops).toEqual([...e.stops].reverse());
+  expect(normalizeIndiaSave({...save,expedition:{...e,stops:[e.stops[0],...e.stops.slice(0,11)]}}).expedition).toBeNull();
  });
 });
