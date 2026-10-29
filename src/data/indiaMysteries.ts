@@ -6,7 +6,7 @@
 export type MysteryKind='who'|'what'|'where'|'when';
 export type BeatType='story'|'visual'|'map'|'year'|'detail';
 export type MysteryBeat={type:BeatType;text:string};
-export type CommonsPhoto={file:string;author:string;license:'CC BY-SA 3.0'|'CC BY-SA 4.0'|'CC BY 3.0'};
+export type CommonsPhoto={file:string;author:string;license:'CC BY-SA 3.0'|'CC BY-SA 4.0'|'CC BY 3.0'|'Public domain (NASA)'};
 export type IndiaSpot={x:number;y:number;label:string};
 export type IndiaMystery={
  id:string;kind:MysteryKind;answer:string;aliases:string[];topic:string;
@@ -141,7 +141,7 @@ export const indiaMysteries:readonly IndiaMystery[]=[
    {type:'year',text:'Her first spaceflight was in 1997.'},
    {type:'story',text:'She flew on Space Shuttle Columbia.'}],
   assists:['She became the first woman of Indian origin to travel into space.','Her first name means imagination in Hindi.'],
-  spot:spot(44,22,'Karnal · Haryana'),
+  spot:spot(44,22,'Karnal · Haryana'),photo:{file:'Kalpana Chawla, official portrait.jpg',author:'NASA',license:'Public domain (NASA)'},
   fact:'Kalpana Chawla, born in Karnal, became the first woman of Indian origin in space in 1997.'},
  {id:'kalam',kind:'who',answer:'A. P. J. Abdul Kalam',aliases:['APJ Abdul Kalam','Abdul Kalam','Avul Pakir Jainulabdeen Abdul Kalam','Dr Kalam'],topic:'science',region:'Tamil Nadu',era:'2000s',
   intro:'A scientist whose work helped shape India’s aerospace and missile programmes later took on a very public constitutional role.',
@@ -149,7 +149,7 @@ export const indiaMysteries:readonly IndiaMystery[]=[
    {type:'year',text:'He served as India’s president from 2002 to 2007.'},
    {type:'story',text:'He was widely known as the “Missile Man of India”.'}],
   assists:['He wrote the autobiographical book Wings of Fire.','His surname is Kalam.'],
-  spot:spot(52,86,'Rameswaram · Tamil Nadu'),
+  spot:spot(52,86,'Rameswaram · Tamil Nadu'),photo:{file:'APJ Abdul Kalam.jpg',author:'Pushkarv',license:'CC BY 3.0'},
   fact:'A. P. J. Abdul Kalam was an aerospace scientist and served as the 11th president of India.'},
  {id:'lata',kind:'who',answer:'Lata Mangeshkar',aliases:['Lata Didi','Lata Mangeshkar'],topic:'music',region:'Maharashtra',era:'20th century',
   intro:'A voice became inseparable from decades of Indian cinema, crossing many languages and generations.',
