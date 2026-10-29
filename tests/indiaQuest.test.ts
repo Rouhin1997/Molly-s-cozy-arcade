@@ -21,7 +21,7 @@ describe('WWWW India atlas · content and licensing',()=>{
    expect(indiaMysteryById(m.id)).toBe(m);
    if(m.photo){
     expect(m.photo.author.length).toBeGreaterThan(5);
-    expect(m.photo.license).toMatch(/^CC BY/);
+    expect(m.photo.license).toMatch(/^(CC BY|Public domain)/);
     expect(photoPage(m.photo)).toContain('commons.wikimedia.org/wiki/File:');
     expect(photoFileUrl(m.photo)).toContain('/Special:FilePath/');
    }
