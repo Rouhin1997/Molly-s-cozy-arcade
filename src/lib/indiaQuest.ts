@@ -16,7 +16,6 @@ export type Expedition={seed:number;stops:string[];index:number;rounds:Record<st
 export type IndiaSave={version:1;expedition:Expedition|null;daily:Record<string,MysteryRound>;
  dailyHints:Record<string,number>;runs:number;solved:number;bestRun:number;bestAwards:Record<string,number>};
 export function freshIndiaSave():IndiaSave{return {version:1,expedition:null,daily:{},dailyHints:{},runs:0,solved:0,bestRun:0,bestAwards:{}}}
-const sortedKinds:MysteryKind[]=['what','where','who','when'];
 function hash(s:string):number{let n=2166136261;for(const ch of s){n=Math.imul(n^ch.charCodeAt(0),16777619)}return n>>>0}
 function randomize<T>(items:readonly T[],seed:number):T[]{
  const a=[...items];let x=seed>>>0;
