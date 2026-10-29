@@ -3,13 +3,16 @@ import {normalizeAnswerQuery} from './answerAssist';
 export const INDIA_SAVE_KEY='molly-wwww-india-v1';
 export const EXPEDITION_STOPS=12;
 export const MAX_ATTEMPTS=4;
-export const HINT_EARNING_STOPS=10; // earn one before each of stops 1–10, bank thereafter
+export const HINT_EARNING_STOPS=0; // legacy export; hints now reset for every mystery
+export type IndiaDifficulty='easy'|'balanced'|'challenge';
+export const HINTS_PER_MYSTERY=2;
+export const attemptsForDifficulty=(level:IndiaDifficulty)=>level==='easy'?5:level==='challenge'?3:4;
 export const MAX_BONUS_HINTS_PER_MYSTERY=2;
 export type MysteryRound={
  id:string;guesses:string[];reveal:number;extras:number;
  status:'playing'|'won'|'missed';score:number;feedback:string;
 };
-export type Expedition={seed:number;stops:string[];index:number;rounds:Record<string,MysteryRound>;hintBank:number;finished:boolean};
+export type Expedition={seed:number;stops:string[];index:number;rounds:Record<string,MysteryRound>;hintBank:number;finished:boolean;difficulty?:IndiaDifficulty};
 export type IndiaSave={version:1;expedition:Expedition|null;daily:Record<string,MysteryRound>;
  dailyHints:Record<string,number>;runs:number;solved:number;bestRun:number;bestAwards:Record<string,number>};
 export function freshIndiaSave():IndiaSave{return {version:1,expedition:null,daily:{},dailyHints:{},runs:0,solved:0,bestRun:0,bestAwards:{}}}
@@ -20,14 +23,33 @@ function randomize<T>(items:readonly T[],seed:number):T[]{
  for(let i=a.length-1;i>0;i--){x=(Math.imul(x,1664525)+1013904223)>>>0;const j=x%(i+1);[a[i],a[j]]=[a[j],a[i]]}
  return a;
 }
-export function expeditionIds(seed:number):string[]{
- const byKind=Object.fromEntries(sortedKinds.map(k=>[k,randomize(indiaMysteries.filter(x=>x.kind===k),seed+hash(k)).map(x=>x.id)])) as Record<MysteryKind,string[]>;
- const sequence:MysteryKind[]=['what','where','who','when','who','what','where','when','where','who','what','when'];
- const offsets:Record<MysteryKind,number>={what:0,where:0,who:0,when:0};
- return sequence.map(k=>byKind[k][offsets[k]++]);
+/** Exactly three of each question kind. Each block contains one of each.
+ * Balanced ramps easy → medium → hard; Challenge goes medium → hard → hard,
+ * and Easy stays recognisable throughout without a rushed finale.
+ */
+export function expeditionIds(seed:number,difficulty:IndiaDifficulty='balanced'):string[]{
+ const kinds:MysteryKind[]=['what','where','who','when'];
+ const tiers:('easy'|'medium'|'hard')[]=difficulty==='easy'
+  ?['easy','easy','easy']:difficulty==='challenge'
+   ?['medium','hard','hard']:['easy','medium','hard'];
+ const pools=new Map<string,string[]>();
+ for(const kind of kinds)for(const tier of ['easy','medium','hard'] as const){
+  const items=indiaMysteries.filter(m=>m.kind===kind&&(m.difficulty??'medium')===tier);
+  pools.set(kind+':'+tier,randomize(items,seed+hash(kind+':'+tier)).map(m=>m.id));
+ }
+ const used=new Set<string>(),output:string[]=[];
+ for(let block=0;block<3;block++){
+  for(const kind of randomize(kinds,seed+block*137)){
+   const tier=tiers[block],items=pools.get(kind+':'+tier)??[];
+   const chosen=items.find(id=>!used.has(id));
+   if(!chosen)throw new Error('Not enough unique '+kind+' mysteries for '+difficulty);
+   used.add(chosen);output.push(chosen);
+  }
+ }
+ return output;
 }
-export function openExpedition(seed=1):Expedition{
- return {seed,stops:expeditionIds(seed),index:0,rounds:{},hintBank:1,finished:false};
+export function openExpedition(seed=1,difficulty:IndiaDifficulty='balanced'):Expedition{
+ return {seed,stops:expeditionIds(seed,difficulty),difficulty,index:0,rounds:{},hintBank:HINTS_PER_MYSTERY,finished:false};
 }
 export const currentMystery=(s:Expedition):IndiaMystery|undefined=>indiaMysteryById(s.stops[s.index]);
 export function newMysteryRound(id:string):MysteryRound{
@@ -75,7 +97,7 @@ export function proximity(card:IndiaMystery,guess:string):string{
  if(shared.length===1)return 'Getting oriented: '+shared[0]+', but this is a different answer.';
  return 'Warm trail: '+shared.join(' + ')+'. It is still a different answer.';
 }
-export function submitIndiaGuess(r:MysteryRound,card:IndiaMystery,raw:string):MysteryRound{
+export function submitIndiaGuess(r:MysteryRound,card:IndiaMystery,raw:string,difficulty:IndiaDifficulty='balanced'):MysteryRound{
  if(r.status!=='playing')return r;
  const guess=raw.trim().slice(0,90);
  if(!guess)return {...r,feedback:'Type a guess before submitting.'};
@@ -83,10 +105,12 @@ export function submitIndiaGuess(r:MysteryRound,card:IndiaMystery,raw:string):My
   return {...r,feedback:'You already tried that! Save your attempt for a new idea.'};
  const guesses=[...r.guesses,guess];
  if(matchesIndiaAnswer(card,guess)){
-  const score=Math.max(30,260-45*r.guesses.length-38*r.extras);
+  const level=card.difficulty??'medium';
+  const base=level==='easy'?200:level==='hard'?340:270;
+  const score=Math.max(25,base-48*r.guesses.length-38*r.extras);
   return {...r,guesses,status:'won',score,feedback:'Exactly right! '+card.fact};
  }
- const done=guesses.length>=MAX_ATTEMPTS;
+ const done=guesses.length>=attemptsForDifficulty(difficulty);
  return {...r,guesses,reveal:Math.min(3,r.reveal+1),status:done?'missed':'playing',
   feedback:done?'The answer was '+card.answer+'. '+card.fact:proximity(card,guess)};
 }
@@ -109,7 +133,7 @@ export function advanceExpedition(s:Expedition):Expedition{
  if(!r||r.status==='playing')return s;
  const next=s.index+1;
  if(next>=s.stops.length)return {...s,finished:true,index:next};
- return {...s,index:next,hintBank:s.hintBank+(next<HINT_EARNING_STOPS?1:0)};
+ return {...s,index:next,hintBank:HINTS_PER_MYSTERY};
 }
 export function readIndiaSave():IndiaSave{
  try{return normalizeIndiaSave(JSON.parse(localStorage.getItem(INDIA_SAVE_KEY)??'null'))}
@@ -125,15 +149,18 @@ export function normalizeIndiaSave(raw:unknown):IndiaSave{
  const e=p.expedition;
  if(e&&typeof e==='object'&&Number.isInteger(e.seed)&&Array.isArray(e.stops)&&
    e.stops.length===EXPEDITION_STOPS&&e.stops.every(id=>!!indiaMysteryById(id))&&
-   e.stops.join(',')===expeditionIds(e.seed).join(',')&&e.rounds&&typeof e.rounds==='object'){
+   new Set(e.stops).size===EXPEDITION_STOPS&&
+   ['who','what','where','when'].every(k=>e.stops.filter(id=>indiaMysteryById(id)?.kind===k).length===3)&&
+   e.rounds&&typeof e.rounds==='object'){
   const index=Math.max(0,Math.min(12,nat(e.index))),rounds:Record<string,MysteryRound>={};
   for(const id of e.stops){const r=e.rounds[id];if(!r||typeof r!=='object')continue;
    if(!['playing','won','missed'].includes(r.status)||!Array.isArray(r.guesses))continue;
    rounds[id]={id,guesses:r.guesses.filter(x=>typeof x==='string').slice(0,4),
     reveal:Math.min(3,nat(r.reveal)),extras:Math.min(2,nat(r.extras)),
-    status:r.status,score:Math.min(260,nat(r.score)),feedback:typeof r.feedback==='string'?r.feedback.slice(0,700):''};
+    status:r.status,score:Math.min(340,nat(r.score)),feedback:typeof r.feedback==='string'?r.feedback.slice(0,700):''};
   }
-  expedition={seed:e.seed,stops:[...e.stops],index,rounds,hintBank:Math.min(10,nat(e.hintBank)),finished:!!e.finished};
+  expedition={seed:e.seed,stops:[...e.stops],index,rounds,hintBank:HINTS_PER_MYSTERY,finished:!!e.finished,
+   difficulty:['easy','balanced','challenge'].includes(e.difficulty??'balanced')?e.difficulty:'balanced'};
  }
  const daily:Record<string,MysteryRound>={};
  for(const [day,r] of Object.entries(p.daily??{}).slice(-90)){
@@ -141,10 +168,10 @@ export function normalizeIndiaSave(raw:unknown):IndiaSave{
   if(!['playing','won','missed'].includes(r.status)||!Array.isArray(r.guesses))continue;
   daily[day]={id:r.id,guesses:r.guesses.filter(x=>typeof x==='string').slice(0,4),
    reveal:Math.min(3,nat(r.reveal)),extras:Math.min(2,nat(r.extras)),status:r.status,
-   score:Math.min(260,nat(r.score)),feedback:typeof r.feedback==='string'?r.feedback.slice(0,700):''};
+   score:Math.min(340,nat(r.score)),feedback:typeof r.feedback==='string'?r.feedback.slice(0,700):''};
  }
  const bestAwards:Record<string,number>={};
- for(const [k,v] of Object.entries(p.bestAwards??{}).slice(-200))if(k.length<100)bestAwards[k]=Math.min(260,nat(v));
+ for(const [k,v] of Object.entries(p.bestAwards??{}).slice(-200))if(k.length<100)bestAwards[k]=Math.min(340,nat(v));
  const dailyHints:Record<string,number>={};
  for(const [k,v] of Object.entries(p.dailyHints??{}).slice(-90))if(/^\d{4}-\d{2}-\d{2}$/.test(k))dailyHints[k]=Math.min(1,nat(v));
  return {version:1,expedition,daily,dailyHints,runs:nat(p.runs),solved:nat(p.solved),
