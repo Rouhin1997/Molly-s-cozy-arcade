@@ -2618,3 +2618,93 @@
 .india-home-card .featured-art:before{content:"";position:absolute;inset:7px;border:2px dashed #f5d3a487;border-radius:9px;pointer-events:none}
 .india-home-card .featured-art span{filter:drop-shadow(0 6px 4px #183a3b66);transform:rotate(-7deg)}
 .india-home-card .featured-art span:nth-child(2){transform:rotate(7deg) scale(1.2)}
+
+
+/* INDIA EDITION v2 · cleaner gameplay surfaces, first-load rules and celebrations */
+.india-home-card .india-featured-icon{height:135px;display:grid;place-items:center;margin:8px 0 15px;position:relative;z-index:2}
+.india-home-card .india-featured-icon svg{width:120px;height:120px;filter:drop-shadow(0 9px 12px #243b4345)}
+.india-home-card .card-content{position:relative;z-index:3}
+.india-home-card .card-content h3{font-size:clamp(24px,2.5vw,34px);line-height:1.15;overflow-wrap:anywhere}
+.india-home-card .card-category{position:relative;z-index:3;letter-spacing:1px}
+.india-home-card .card-content p{font-size:13px;line-height:1.6}
+.india-mini-hints{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;background:#eee4cc;border:1px solid #ccb993;border-radius:10px;color:#634d3a}
+.india-mini-hints strong{font:700 15px Georgia,serif;color:#805434}
+.india-mini-hints span{font:italic 11px Georgia,serif;color:#816d54}
+.india-rule-overlay{position:fixed;inset:0;z-index:5000;background:#0d2330cf;display:grid;place-items:center;padding:14px;overflow-y:auto;backdrop-filter:blur(8px)}
+.india-rule-modal{width:min(760px,100%);max-height:calc(100vh - 30px);overflow-y:auto;background:
+ radial-gradient(circle at 100% 0,#fce5b6 0%,transparent 49%),#fff2d5;color:#514132;
+ border:8px double #af7850;box-shadow:0 30px 90px #071a25bf;border-radius:22px;padding:clamp(17px,4vw,34px)}
+.india-rule-header{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#ac5839;font:900 11px 'DM Sans',sans-serif;letter-spacing:2px}
+.india-rule-header button{border:1px solid #d3a87c;background:#fff8e6;border-radius:50%;width:37px;height:37px;cursor:pointer;color:#6c4931;font-size:16px}
+.india-rule-modal h2{font:750 clamp(29px,4.1vw,45px)/1.12 'Fraunces',Georgia,serif;letter-spacing:-.7px;color:#65402c;margin:13px 0 22px}
+.india-rule-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.india-rule-grid>div{background:#fff8e8;border:1px solid #d9bd93;border-radius:11px;padding:16px}
+.india-rule-grid strong{font:700 17px Georgia,serif;color:#9e5739}
+.india-rule-grid p{font:13px/1.65 Georgia,serif;color:#76634c;margin:9px 0 0}
+.india-rule-caption{font:italic 12px/1.7 Georgia,serif;color:#806c54;margin:19px 0}
+.india-rule-actions{display:flex;gap:9px;flex-wrap:wrap}
+.india-rule-actions button{min-width:150px}
+.india-difficulty-picker{margin:17px 0 23px;display:grid;gap:10px}
+.india-difficulty-picker>strong{font:800 12px 'DM Sans',sans-serif;letter-spacing:.7px;color:#754d33}
+.india-difficulty-picker>div{display:flex;flex-wrap:wrap;gap:8px}
+.india-difficulty-picker button{border:2px solid #c0a078;border-radius:9px;background:#fff7df;color:#714e36;padding:13px 14px;min-height:45px;font:800 12px 'DM Sans',sans-serif;cursor:pointer}
+.india-difficulty-picker button.chosen{background:#294e5b;border-color:#e2af6a;color:#fff0d3;box-shadow:0 3px 0 #182f35}
+.india-difficulty-picker small{font:italic 12px Georgia,serif;color:#917456}
+.india-artifact{position:relative;min-height:150px;margin:16px auto 18px;border-radius:12px;border:5px double #c5a276;
+ display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;overflow:hidden;
+ background:repeating-linear-gradient(46deg,#e8dabb 0,#e8dabb 16px,#f6e9cb 16px,#f6e9cb 18px)}
+.india-artifact:before{content:"";position:absolute;width:170px;height:170px;border:1px dashed #b89d7c;transform:rotate(25deg);border-radius:50%}
+.india-artifact:after{content:"✦";position:absolute;right:18px;top:8px;color:#b78057;font-size:21px}
+.india-artifact>span{font-size:66px;filter:drop-shadow(0 7px 7px #7c5c4352);transform:rotate(-7deg)}
+.india-artifact>i{font:900 10px 'DM Sans',sans-serif;font-style:normal;letter-spacing:3px;color:#906a50}
+.india-victory-stage{position:relative;overflow:hidden;text-align:center;border-radius:15px;padding:30px 22px;box-shadow:0 13px 23px #4c654b29}
+.india-victory-stage.correct{border:6px double #9c8d48;background:radial-gradient(ellipse at 50% 0,#fff7c9,#dfedcf 72%,#cde0c0)}
+.india-victory-stage.missed{border:6px double #b68c64;background:radial-gradient(ellipse at 50% 0,#fdf1d6,#ebdac0)}
+.india-victory-stars{font-size:25px;letter-spacing:15px;color:#b68a40;animation:india-star-float 2.2s ease-in-out infinite alternate}
+@keyframes india-star-float{from{transform:translateY(-3px)}to{transform:translateY(4px)}}
+.india-victory-medal{font-size:65px;line-height:1.3;filter:drop-shadow(0 8px 8px #7c6f5447);animation:india-medal-pop .55s ease-out both}
+@keyframes india-medal-pop{from{transform:scale(.4) rotate(-17deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.india-victory-eyebrow{color:#7c663e;font:900 11px 'DM Sans',sans-serif;letter-spacing:2px;margin-top:14px}
+.india-victory-stage h3{font:750 clamp(31px,4vw,48px)/1.2 'Fraunces',Georgia,serif;margin:13px 0;color:#3b6a48}
+.india-victory-stage.missed h3{color:#8c5e44}
+.india-victory-stage p{max-width:580px;margin:10px auto 21px;font:15px/1.75 Georgia,serif;color:#576048}
+.india-victory-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
+.india-victory-stats>div{min-width:94px;border:1px solid #c3b696;border-radius:10px;background:#fff9e7a6;padding:11px}
+.india-victory-stats strong{display:block;font:750 24px 'Fraunces',Georgia,serif;color:#4a7050}
+.india-victory-stats small{font:900 9px 'DM Sans',sans-serif;letter-spacing:.8px;color:#87765b}
+.india-victory-encourage{font-style:italic!important;font-size:13px!important;margin-top:17px!important}
+.india-finale{position:relative;overflow:hidden;border:10px double #ad834d;background:
+ radial-gradient(ellipse at 50% 0,#ffecb7 0%,#efddab 47%,#d5e4cf 100%);box-shadow:0 20px 50px #233f463d}
+.india-finale:before,.india-finale:after{content:"✦";font-size:130px;position:absolute;top:10%;color:#d6a45b29;left:-20px;pointer-events:none}
+.india-finale:after{left:auto;right:-10px;top:34%}
+.india-finale-fireworks{font-size:26px;letter-spacing:12px;color:#b9854e;animation:india-star-float 2.3s infinite alternate}
+.india-finale>span{font-size:96px;filter:drop-shadow(0 10px 8px #7963465b);animation:india-medal-pop .75s ease-out both}
+.india-finale h2{font-size:clamp(35px,5vw,57px);line-height:1.15}
+.india-finale-honours{display:flex;justify-content:center;gap:15px;flex-wrap:wrap;margin:24px 0}
+.india-finale-honours>div{min-width:145px;border:2px solid #c29d67;background:#fff9e4aa;border-radius:10px;padding:17px}
+.india-finale-honours strong{font:750 27px 'Fraunces',Georgia,serif;display:block;color:#814731;text-transform:capitalize}
+.india-finale-honours small{font:800 10px 'DM Sans',sans-serif;letter-spacing:1px;color:#917659}
+.india-finale-cards{max-width:770px;margin:25px auto;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.india-finale-cards span{padding:14px 4px;font-weight:800;font-size:14px;border:2px solid #d8b685;background:#fff9e7}
+.india-finale-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.india-share-status{font-size:12px!important;color:#6c7856!important}
+.india-footer{margin:15px 0 10px;justify-content:flex-end}
+.india-footer button{color:#6a614e}
+.india-sidebar{grid-template-columns:1fr}
+@media(max-width:780px){.india-finale-cards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){
+ .india-rule-grid{grid-template-columns:1fr}
+ .india-rule-modal{max-height:94dvh;padding:18px}
+ .india-rule-modal h2{font-size:27px}
+ .india-difficulty-picker>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .india-difficulty-picker button{font-size:10px;padding:10px 4px}
+ .india-artifact{min-height:120px}.india-artifact>span{font-size:50px}
+ .india-victory-stars,.india-finale-fireworks{font-size:14px;letter-spacing:8px}
+ .india-victory-stage{padding:23px 11px}
+ .india-finale-honours{gap:6px}.india-finale-honours>div{min-width:90px;padding:10px}
+ .india-finale-honours strong{font-size:20px}
+ .india-finale-cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ .india-finale-cards span{font-size:11px}
+ .india-mini-hints{padding:12px;font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.india-victory-stars,.india-victory-medal,.india-finale-fireworks,.india-finale>span{animation:none}}
