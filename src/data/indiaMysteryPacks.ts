@@ -20,7 +20,7 @@ const anchors:Record<string,[number,number]>={
  Delhi:[47,23],Mumbai:[42,57],Maharashtra:[42,57],Kolkata:[66,52],
  'West Bengal':[66,52],Telangana:[50,65],Hyderabad:[51,64],
  Rajasthan:[35,32],Jaipur:[36,32],Gujarat:[24,50],Punjab:[39,16],
- Haryana:[44,22],Karnataka:[44,74],Kerala:[42,90],Tamil Nadu:[53,88],
+ Haryana:[44,22],Karnataka:[44,74],Kerala:[42,90],'Tamil Nadu':[53,88],
  Odisha:[64,55],Assam:[80,40],Manipur:[93,51],
  Bihar:[62,43],Jharkhand:[61,49],Uttarakhand:[52,20],
  'Uttar Pradesh':[52,34],Himachal:[45,13],Kashmir:[40,10],
