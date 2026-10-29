@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {comingSoonGames,developerNotes,upcomingArcadeEvents} from '../data/arcadeHub';
 
 export type ArcadeRoute='home'|'guess'|'connections'|'toon'|'bazinga'|'nine'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
@@ -20,6 +20,15 @@ const liveGames:{route:ArcadeRoute;icon:string;name:string;subtitle:string}[]=[
  {route:'noodles',icon:'🐼',name:'Noodles of Destiny',subtitle:'Eight cooking shifts + special reward'}
 ];
 export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSoon}:Props){
+ const [eventClock,setEventClock]=useState(()=>new Date());
+ useEffect(()=>{
+  const refresh=()=>setEventClock(new Date());
+  const timer=window.setInterval(refresh,15_000);
+  window.addEventListener('focus',refresh);
+  document.addEventListener('visibilitychange',refresh);
+  return ()=>{window.clearInterval(timer);window.removeEventListener('focus',refresh);
+   document.removeEventListener('visibilitychange',refresh)};
+ },[]);
  const games=useRef<HTMLDetailsElement>(null);
  const future=useRef<HTMLDetailsElement>(null);
  const events=useRef<HTMLDetailsElement>(null);
@@ -31,7 +40,7 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
  function nav(route:ArcadeRoute){closeMenus();onNavigate(route)}
  function peek(name:string){closeMenus();onPreview(name)}
  function jump(){closeMenus();onComingSoon()}
- const calendar=upcomingArcadeEvents();
+ const calendar=upcomingArcadeEvents(eventClock);
  return <nav className="hub-nav" aria-label="Molly's Cozy Arcade navigation">
   <details className="hub-menu" ref={games} onToggle={e=>{
    if(e.currentTarget.open)for(const m of [future,events,notes])if(m.current)m.current.open=false;
@@ -80,8 +89,8 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
    <div className="hub-popover hub-popover-events">
     <div className="hub-popover-heading"><strong>On the calendar</strong><small>Closest first · annual occasions</small></div>
     {calendar.map(event=><button className="hub-event-item" key={event.id} onClick={()=>nav(event.route)}>
-     <div className="hub-event-date"><strong>{event.date.toLocaleDateString(undefined,{day:'numeric'})}</strong><small>{event.date.toLocaleDateString(undefined,{month:'short',year:'numeric'})}</small></div>
-     <div><strong>{event.icon} {event.label}</strong><p>{event.summary}</p><span>{event.status==='playing'?'Game available now':'Birthday preview · not live'}</span></div>
+     <div className="hub-event-date"><strong>{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',day:'numeric'})}</strong><small>{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',month:'short',year:'numeric'})}</small></div>
+     <div><strong>{event.icon} {event.label}</strong><p>{event.summary}</p><span>{event.status==='live'?'LIVE · ends at midnight (Rome)':event.id==='halloween'?'Locked until Halloween · Rome time':event.id==='christmas'?'Planning milestone · not playable':'Birthday preview · not live'}</span></div>
     </button>)}
    </div>
   </details>
