@@ -2609,3 +2609,12 @@
 @media(prefers-reduced-motion:reduce){
  .india-primary,.india-photo-piece{transition:none}
 }
+
+
+/* WWWW India featured-card thumbnail: a deep-blue travel atlas rather than food emojis. */
+.india-home-card{background:linear-gradient(145deg,#d6e2dd 0%,#f2dfb7 55%,#e2b47c 100%)}
+.india-home-card .featured-art{position:relative;background:linear-gradient(120deg,#244455,#345f68 47%,#bd7b58);
+ border:2px solid #c2a072;border-radius:15px;overflow:hidden}
+.india-home-card .featured-art:before{content:"";position:absolute;inset:7px;border:2px dashed #f5d3a487;border-radius:9px;pointer-events:none}
+.india-home-card .featured-art span{filter:drop-shadow(0 6px 4px #183a3b66);transform:rotate(-7deg)}
+.india-home-card .featured-art span:nth-child(2){transform:rotate(7deg) scale(1.2)}
