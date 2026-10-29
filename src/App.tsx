@@ -115,9 +115,9 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
     <section className="games-section" id="games">
       <div className="section-heading"><div><span className="overline">PICK YOUR ADVENTURE</span><h2>The game shelf <span aria-hidden="true">✦</span></h2></div><span className="section-note">Seven complete adventures + a new cooking playtest</span></div>
       <div className="game-grid">
-        <article className="game-card featured-card">
+        <article className="game-card featured-card india-home-card">
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 08</span></div>
-          <div className="featured-art" aria-hidden="true"><span>🥑</span><span>🍓</span><span>🍜</span></div>
+          <div className="featured-art" aria-hidden="true"><span>🪷</span><span>🕌</span><span>🧭</span></div>
           <div className="card-content"><span className="card-category">INDIA · PEOPLE · PLACES · HISTORY</span><h3>Who? What? Where? When?</h3><p>Reconstruct hidden photographs, follow map clues and solve an unfolding 12-stop India expedition.</p>
             <button className="card-link" onClick={() => onNavigate('guess', 'practice')}>Let's play <span aria-hidden="true">↗</span></button></div>
         </article>
