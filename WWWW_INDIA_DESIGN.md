@@ -29,6 +29,8 @@ The following photos are retrieved from Wikimedia Commons on demand and attribut
 | India Gate | [The india gate.jpg](https://commons.wikimedia.org/wiki/File:The_india_gate.jpg) | Nihalkonan | CC BY-SA 4.0 |
 | Chole Kulche clue: a tandoor | [Tandoor.jpg](https://commons.wikimedia.org/wiki/File:Tandoor.jpg) | Alina AlamgiR | CC BY-SA 4.0 |
 | Pani Puri clue | [PaaniPuri.jpg](https://commons.wikimedia.org/wiki/File:PaaniPuri.jpg) | Foody1989 | CC BY-SA 4.0 |
+| Kalpana Chawla portrait | [Kalpana Chawla, official portrait.jpg](https://commons.wikimedia.org/wiki/File:Kalpana_Chawla,_official_portrait.jpg) | NASA | Public domain (NASA US federal government) |
+| A. P. J. Abdul Kalam portrait | [APJ Abdul Kalam.jpg](https://commons.wikimedia.org/wiki/File:APJ_Abdul_Kalam.jpg) | Pushkarv | CC BY 3.0 |
 
 Image URL model: Wikimedia Commons `Special:FilePath/<filename>` resolution-free redirect; no scraped social-media photos, film stills or proprietary celebrity portraits. **Important:** photos are hosted externally, so Wikimedia accessibility/CORS/network conditions may affect rendering. On-image fallback is automatic; real-device visual testing is still required.
 
