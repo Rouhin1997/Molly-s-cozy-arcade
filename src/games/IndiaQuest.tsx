@@ -42,6 +42,12 @@ function Note({beat,card,n}:{beat:MysteryBeat;card:IndiaMystery;n:number}){
   <p>{beat.text}</p>
   {beat.type==='map'&&card.spot&&<RegionMap spot={card.spot}/>}
   {beat.type==='visual'&&card.photo&&card.kind!=='where'&&card.kind!=='who'&&<Mosaic photo={card.photo} reveal={3} solved/>}
+  {beat.type==='visual'&&!card.photo&&<div className={'india-visual-note india-visual-'+card.kind}
+   aria-label="Original illustrated clue">
+    <span aria-hidden="true">{card.visualSymbol??'✦'}</span>
+    <div><strong>{card.kind==='when'?'ARCHIVE CLIPPING':card.kind==='who'?'PORTRAIT FILE':card.kind==='where'?'TRAVEL POSTCARD':'OBJECT STUDY'}</strong>
+      <small>{card.topic.toUpperCase()} · INDIA</small></div>
+   </div>}
  </article>;
 }
 export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
@@ -51,7 +57,7 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
  const [guide,setGuide]=useState(()=>{
   try{return localStorage.getItem('india-wwww-rules-seen-v2')!=='yes'}catch{return true}
  });
- const [difficulty,setDifficulty]=useState<IndiaDifficulty>('balanced');
+ const [difficulty,setDifficulty]=useState<IndiaDifficulty>(()=>readIndiaSave().expedition?.difficulty??'balanced');
  const [shareMessage,setShareMessage]=useState('');
  function dismissGuide(){setGuide(false);try{localStorage.setItem('india-wwww-rules-seen-v2','yes')}catch{/* optional */}}
  function shareExpedition(){
@@ -168,6 +174,11 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
     const c=indiaMysteries.find(x=>x.id===id),r=expedition.rounds[id];
     return <span key={id} title={c?.answer}>{indiaKindLabels[c?.kind??'what'].icon} {i+1} {r?.status==='won'?'✓':'○'}</span>;
    })}</div>
+   <div className="india-difficulty-picker india-finale-difficulty"><strong>Choose your next adventure</strong><div role="group" aria-label="Difficulty of next expedition">
+     {(['easy','balanced','challenge'] as const).map(level=><button key={level} type="button"
+      className={difficulty===level?'chosen':''} aria-pressed={difficulty===level}
+      onClick={()=>setDifficulty(level)}>{level==='easy'?'🌿 Easy':level==='balanced'?'🧭 Balanced':'🔥 Challenge'}</button>)}
+    </div></div>
    <div className="india-finale-actions"><button className="india-primary" onClick={start}>Start a new expedition →</button>
     <button className="india-secondary" type="button" onClick={shareExpedition}>Copy my results</button></div>
    {shareMessage&&<p role="status" className="india-share-status">{shareMessage}</p>}
