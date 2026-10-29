@@ -189,9 +189,12 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
       <div className="arcade-event-cards">
         {upcomingArcadeEvents().map(event=><article className="arcade-event-card" key={event.id}>
           <span className="arcade-event-emoji" aria-hidden="true">{event.icon}</span>
-          <div><span className="overline">{event.date.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'})}</span>
+          <div><span className="overline">{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',day:'numeric',month:'long',year:'numeric'})}</span>
           <h3>{event.label}</h3><p>{event.summary}</p></div>
-          <button className="btn btn-soft" onClick={()=>onNavigate(event.route)}>{event.status==='playing'?'Explore the game':'See the preview'} ↗</button>
+          {event.id==='christmas'?<span className="arcade-event-plan-label">🎄 In planning</span>:
+            <button className="btn btn-soft" onClick={()=>onNavigate(event.route)}>
+             {event.status==='live'?'Play Halloween Heist':event.id==='halloween'?'View Halloween dates':'See the preview'} ↗
+            </button>}
         </article>)}
       </div>
     </section>
