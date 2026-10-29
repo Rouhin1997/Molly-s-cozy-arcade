@@ -1,5 +1,14 @@
 # Molly's Cozy Arcade — Development Handoff
 
+## Phase 6 — Seasonal-event beta: 2026 Halloween gating and Christmas Week roadmap (29 October 2026)
+
+The owner moved the major seasonal production milestone to **Christmas Week (24–30 December)** and asked to retain the Halloween Heist in The 99 Files as a **one-day beta rehearsal** for birthday/Christmas special events. The Halloween campaign already existed as three linked cases; it was previously playable year-round. Now it opens only **31 October 00:00:00 through 23:59:59 Europe/Rome**, with the lock returning at **1 November 00:00 CET**. For 2026 that means **open 30 Oct 23:00 UTC; close 31 Oct 23:00 UTC**. The gate uses DST-aware Rome calendar functions, not browser locale, and refuses heist actions once closed even on an old tab. All prior progress, daily/practice cases, awards and stamps remain intact.
+
+Players receive an explicitly **fictional, one-use Halloween Beta Voucher** after winning all three heist stages, with the final heist win timestamped **during** Halloween; historical victories alone do not grant the ticket. A previously solved heist stage can be replayed without losing awards, so existing players can test the feature. Voucher can be **simulated-redeemed once** in the Wallet before midnight or otherwise expires then, while redeemed/expired records remain viewable. No actual food/gift/reward; separate storage from real Pink Rush and Dragon Chef coupons. Passport backup moves to **v7** to include beta voucher and retains v1–v6 compatibility. The calendar and Postbox now show Halloween beta, birthday, and **Christmas Week planned only**; no Christmas game is shipped.
+
+See [SPECIAL_EVENTS_BETA.md](SPECIAL_EVENTS_BETA.md) for full live schedule, event lifecycle, developer test matrix, limitations and Christmas planning scope. [tests/seasonalEvents.test.ts](tests/seasonalEvents.test.ts) validates exact Halloween boundary, the 2027 DST corner case, annual event rollover, one-use expiry and chronological dates. The original 99 Files gameplay and all permanent rewards are unchanged except the time gate.
+
+
 ## Phase 5C — Concise noodle-shop story and deliberate two-order rushes (28 October 2026)
 
 The owner requested tighter in-game copy and no long disclaimer or Molly-specific language in ordinary game descriptions. The in-game footer now simply says **"An unofficial fan-made cooking adventure."** Mr. Ping's introduction and the homepage game card are shorter and focus on Po, customers, cooking and the bell.

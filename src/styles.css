@@ -2401,3 +2401,42 @@
 @media(prefers-reduced-motion:reduce){
  .noodle-steam-lines,.noodle-food-steam{animation:none}
 }
+
+
+/* 2026 SEASONAL EVENTS BETA — Halloween time gate and dummy reward */
+.nn-heist-gated{background:linear-gradient(140deg,#322842,#49304b 52%,#31273a);border:3px solid #cb945d;box-shadow:0 12px 28px #251b3861;color:#f9e2c4;border-radius:20px;padding:25px;margin:16px 0}
+.nn-heist-gated .overline{color:#f3bf79}
+.nn-heist-gated h2{font:700 clamp(25px,4vw,36px) Georgia,serif;color:#ffdeb0;margin:9px 0 12px}
+.nn-heist-gated p{font:14px/1.75 Georgia,serif;color:#ead9cf;max-width:750px}
+.nn-heist-gated strong{color:#ffe1a7}
+.nn-heist-gated .nn-heist-marquee{opacity:.9;margin-bottom:16px}
+.nn-heist-gated>.btn{margin-top:14px}
+.nn-heist-lock-preview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:19px 0}
+.nn-heist-lock-preview>div{min-width:0;display:grid;justify-items:center;text-align:center;gap:7px;background:#1d2036bb;border:1px solid #ae8453;padding:16px 10px;border-radius:12px}
+.nn-heist-lock-preview>div>span{font-size:30px}
+.nn-heist-lock-preview strong{font:700 14px Georgia,serif}
+.nn-heist-lock-preview small{font:11px/1.5 'DM Sans',sans-serif;color:#c5b8b8}
+.halloween-beta-voucher{margin:22px auto;padding:22px;display:flex;gap:18px;border:5px double #e4b573;border-radius:16px;background:radial-gradient(circle at 85% 0,#47324f,#29273b 75%);box-shadow:0 8px 30px #28233847;color:#fff1d2}
+.halloween-beta-icon{font-size:40px;min-width:88px;align-self:center;text-align:center;filter:drop-shadow(0 4px 4px #120c18)}
+.halloween-beta-copy{min-width:0;flex:1}
+.halloween-beta-copy .overline{color:#ebba78;font-size:10px;letter-spacing:1.2px}
+.halloween-beta-copy h3{font:700 clamp(22px,3vw,30px)/1.3 'Fraunces',Georgia,serif;margin:8px 0;color:#ffe4af}
+.halloween-beta-copy p{font:14px/1.65 Georgia,serif;color:#f0dfce;margin:9px 0 14px}
+.halloween-beta-copy>small{display:block;margin-top:12px;font:italic 11px/1.6 Georgia,serif;color:#ccbfbb}
+.halloween-beta-copy .btn{background:#df9b52;color:#2d2539;border:1px solid #f2cf8c;min-height:45px;margin-top:10px}
+.halloween-beta-meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.halloween-beta-meta>span{border:1px solid #a18777;border-radius:7px;padding:8px 10px;background:#342a43;color:#fce8cd;font-size:11px}
+.halloween-beta-redeemed{border-color:#a5bc84}
+.halloween-beta-expired{border-color:#7b7785;filter:saturate(.68)}
+.halloween-beta-not-earned{border-color:#a07d83}
+.arcade-event-plan-label{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;background:#ecf2e2;color:#60784e;border:1px solid #b9d3aa;padding:12px 16px;border-radius:27px;font:700 12px 'DM Sans',sans-serif}
+@media(max-width:640px){
+ .nn-heist-gated{padding:14px}
+ .nn-heist-lock-preview{grid-template-columns:1fr}
+ .nn-heist-lock-preview>div{display:flex;justify-content:flex-start;text-align:left;gap:12px}
+ .nn-heist-lock-preview>div>span{font-size:24px}
+ .halloween-beta-voucher{padding:15px 12px;display:block}
+ .halloween-beta-icon{font-size:36px;text-align:left;margin-bottom:9px}
+ .halloween-beta-meta{flex-direction:column}
+ .halloween-beta-copy .btn{width:100%}
+}

@@ -10,6 +10,8 @@ export type NineRound={
   wrongPairs:number;hints:number;attempts:number;
   suspect:string;method:string;proof:string;
   status:'playing'|'won'|'lost';score:number;feedback:string;
+  /** Halloween event beta: date of final stage win, required before issuing test voucher. */
+  completedAt?:string;
 };
 export type NineStats={played:number;solved:number;stars:number;bestScore:number;perfect:number};
 export type NineProgress={

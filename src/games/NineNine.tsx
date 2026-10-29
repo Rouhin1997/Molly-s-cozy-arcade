@@ -1,4 +1,7 @@
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useEffect,useState, type Dispatch, type SetStateAction } from 'react';
+import {halloweenWindow,isHalloweenLive,nextAnnualRomeDate,ARCADE_TIME_ZONE} from '../lib/seasonalEvents';
+import {awardHalloweenVoucher,readHalloweenVoucher,writeHalloweenVoucher} from '../lib/halloweenVoucher';
+import HalloweenTestVoucherPanel from './HalloweenTestVoucherPanel';
 import DifficultyPicker from '../components/DifficultyPicker';
 import { NineNinePortrait } from '../components/NineNinePortrait';
 import { nineCasePresentation,nineDeductionImpact } from '../data/nineNinePresentation';
@@ -12,21 +15,36 @@ import {
  type NineProgress,type NineRound,
 } from '../lib/nineNine';
 
-type Props={today:string;progress:NineProgress;setProgress:Dispatch<SetStateAction<NineProgress>>;onHome:()=>void};
+type Props={today:string;progress:NineProgress;setProgress:Dispatch<SetStateAction<NineProgress>>;onHome:()=>void;initialMode?:'daily'|'heist'};
 type Mode='daily'|'cases'|'heist';
 const tierNames:Record<Difficulty,string>={easy:'Cozy',medium:'Clever',hard:'Expert'};
 const categories:Record<string,string>={scene:'SCENE',record:'RECORD',forensics:'FORENSICS',interview:'INTERVIEW'};
 const coverIcon:Record<string,string>={interrogation:'🗣️',timeline:'⏱️',forensics:'🔬',heist:'🎃'};
 
-export default function NineNine({today,progress,setProgress,onHome}:Props){
- const [mode,setMode]=useState<Mode>('daily');
+export default function NineNine({today,progress,setProgress,onHome,initialMode='daily'}:Props){
+ const [mode,setMode]=useState<Mode>(initialMode);
  const [difficulty,setDifficulty]=useState<Difficulty>(()=>readPreferredDifficulty('99'));
  const [selectedHeist,setSelectedHeist]=useState<string>('heist-one');
  const [activeExhibit,setActiveExhibit]=useState<string|null>(null);
  const [browse,setBrowse]=useState(false);
+ const [clock,setClock]=useState(()=>new Date());
+ const [testVoucher,setTestVoucher]=useState(readHalloweenVoucher);
+ useEffect(()=>{
+  const refresh=()=>setClock(new Date());
+  const timer=window.setInterval(refresh,1000);
+  window.addEventListener('focus',refresh);
+  document.addEventListener('visibilitychange',refresh);
+  return ()=>{window.clearInterval(timer);window.removeEventListener('focus',refresh);document.removeEventListener('visibilitychange',refresh)};
+ },[]);
+ const eventOpen=isHalloweenLive(clock);
+ const eventYear=Number(nextAnnualRomeDate(10,31,clock).toLocaleDateString('en-GB',{year:'numeric',timeZone:ARCADE_TIME_ZONE}));
+ const eventWindow=halloweenWindow(clock,eventYear);
+ const remainingMs=Math.max(0,(eventOpen?eventWindow.end:eventWindow.start).getTime()-clock.getTime());
+ const countdown=remainingMs>=86_400_000?Math.ceil(remainingMs/86_400_000)+' days':
+  Math.floor(remainingMs/3_600_000)+'h '+Math.floor(remainingMs%3_600_000/60_000)+'m '+Math.floor(remainingMs%60_000/1000)+'s';
  const heistUnlocked=unlockedHeistCount(progress);
  const daily=getNineDaily(progress,today,difficulty);
- const round=mode==='daily'?daily:mode==='cases'?progress.practice:progress.heist[selectedHeist]??newNineRound(nineCases.find(c=>c.id===selectedHeist)!);
+ const round=mode==='daily'?daily:mode==='cases'?progress.practice:eventOpen?(progress.heist[selectedHeist]??newNineRound(nineCases.find(c=>c.id===selectedHeist)!)):null;
  const c=round?nineCases.find(x=>x.id===round.caseId):undefined;
  const level=round?.difficulty??difficulty;
  const locked=!!round&&!pristineNineRound(round)&&(mode==='daily'||round.status==='playing');
@@ -37,6 +55,15 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
  const solvedCids=Object.keys(progress.bestAwards??{}).filter(k=>k.startsWith('99:')&&(progress.bestAwards[k]??0)>0);
  const choice=nineCases.filter(x=>x.difficulty===level&&x.track==='detective');
  const heistStages=heistCaseIds.map(id=>nineCases.find(x=>x.id===id)!);
+ useEffect(()=>{
+  const final=progress.heist['heist-three'];
+  if(!eventOpen||!final?.completedAt||
+   !halloweenWindow(new Date(final.completedAt),eventYear).active||
+   !heistCaseIds.every(id=>
+    progress.heist[id]?.status==='won'||(progress.bestAwards?.['99:'+id]??0)>0))return;
+  const next=awardHalloweenVoucher(readHalloweenVoucher(),new Date());
+  if(next){writeHalloweenVoucher(next);setTestVoucher(next)}
+ },[eventOpen,eventYear,progress.heist,progress.bestAwards]);
  const presentation=c?nineCasePresentation(c):null;
  const nextLink=c?.deductions.find(d=>!round?.linked.includes(d.id));
  const cozyAnchor=level==='easy'&&round?.status==='playing'&&nextLink?nextLink.pair[0]:null;
@@ -68,6 +95,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
   setMode('cases');setBrowse(false);setActiveExhibit(null);
  }
  function selectHeist(id:string){
+  if(!isHalloweenLive())return;
   const index=heistCaseIds.indexOf(id as typeof heistCaseIds[number]);
   if(index<0||index>heistUnlocked)return;
   // The stage card also reopens a failed investigation without losing awards.
@@ -75,17 +103,23 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
   setSelectedHeist(id);setActiveExhibit(null);setMode('heist');
  }
  function retryHeist(){
+  if(!isHalloweenLive())return;
   setProgress(prev=>retryNineHeist(prev,selectedHeist));
   setActiveExhibit(null);
  }
  function changeRound(transform:(r:NineRound,c:NineCase)=>NineRound){
+  if(mode==='heist'&&!isHalloweenLive())return;
   setProgress(prev=>{
+   if(mode==='heist'&&!isHalloweenLive())return prev;
    const existing=mode==='daily'?getNineDaily(prev,today,difficulty):mode==='cases'?prev.practice:prev.heist[selectedHeist]??newNineRound(nineCases.find(c=>c.id===selectedHeist)!);
    if(!existing)return prev;
    const story=nineCases.find(c=>c.id===existing.caseId);
    if(!story)return prev;
-   const revised=transform(existing,story);
-   if(revised===existing)return prev;
+   const result=transform(existing,story);
+   if(result===existing)return prev;
+   const revised=mode==='heist'&&selectedHeist==='heist-three'&&
+    existing.status==='playing'&&result.status==='won'
+    ?{...result,completedAt:new Date().toISOString()}:result;
    const updated=mode==='daily'?{...prev,daily:{...prev.daily,[today]:revised}}:
     mode==='cases'?{...prev,practice:revised}:{...prev,heist:{...prev.heist,[selectedHeist]:revised}};
    return existing.status==='playing'&&revised.status!=='playing'?creditNineResult(updated,revised):updated;
@@ -107,12 +141,12 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
    <div className="nn-mode-tabs" role="group" aria-label="Nine Nine game mode">
      <button className={mode==='daily'?'active':''} aria-pressed={mode==='daily'} onClick={()=>{setMode('daily');setBrowse(false);setActiveExhibit(null)}}>☀ Daily case</button>
      <button className={mode==='cases'?'active':''} aria-pressed={mode==='cases'} onClick={()=>{setMode('cases');setBrowse(false);setActiveExhibit(null)}}>📁 Open case files</button>
-     <button className={mode==='heist'?'active':''} aria-pressed={mode==='heist'} onClick={()=>{setMode('heist');setActiveExhibit(null)}}>🎃 Halloween Heist</button>
+     <button className={mode==='heist'?'active':''} aria-pressed={mode==='heist'} onClick={()=>{setMode('heist');setActiveExhibit(null)}}>🎃 Halloween Heist {eventOpen?'· LIVE':'· LOCKED'}</button>
    </div>
    {mode!=='heist'?<DifficultyPicker value={level} onChange={chooseDifficulty} disabled={locked}
      lockedMessage="This case is underway or closed. Select a new difficulty for your next practice investigation."/>:
      <div className="nn-heist-difficulty"><span>🔐</span><p>The heist grows harder as the squad advances: <strong>Cozy → Clever → Expert.</strong> Finish a stage to unlock the next one.</p></div>}
-   <div className="mode-intro"><span>🔎</span><p><strong>Detective Molly, you're on the case.</strong> Read the exhibits, pair two documents to establish a deduction, and submit the culprit, method and decisive proof. {mode==='heist'?'Tonight the usual precinct rules come with a Halloween twist.':level==='easy'?'Cozy offers a suggested first document, two hints and generous retries.':level==='medium'?'Clever gives you the questions but lets you find the evidence pairs.':'Expert keeps the full questions visible but requires deeper cross-checks, four independent links and no hints.'}</p></div>
+   <div className="mode-intro"><span>🔎</span><p><strong>Detective Molly, you're on the case.</strong> Read the exhibits, pair two documents to establish a deduction, and submit the culprit, method and decisive proof. {mode==='heist'?'During the one-day Halloween beta, the precinct has three special case files.':level==='easy'?'Cozy offers a suggested first document, two hints and generous retries.':level==='medium'?'Clever gives you the questions but lets you find the evidence pairs.':'Expert keeps the full questions visible but requires deeper cross-checks, four independent links and no hints.'}</p></div>
 
    {mode==='cases'&&<section className="nn-files-shelf">
      <div className="nn-shelf-title"><div><span className="overline">DETECTIVE CASE ARCHIVE</span><h2>The open files</h2>
@@ -129,10 +163,21 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
      {!round&&<button className="btn btn-primary" onClick={()=>surprise()}>Surprise case ↗</button>}
    </section>}
 
-   {mode==='heist'&&<section className="nn-heist-shelf">
+   {mode==='heist'&&!eventOpen&&<section className="nn-heist-shelf nn-heist-gated" aria-labelledby="heist-lock-title">
+     <div className="nn-heist-marquee" aria-hidden="true"><span>🎃</span><span>🔒</span><span>✦ 99 ✦</span><span>🕸️</span><span>🍬</span></div>
+     <span className="overline">A ONE-DAY SPECIAL EVENT · BETA TEST</span>
+     <h2 id="heist-lock-title">🎃 Halloween Heist — locked</h2>
+     <p>The squad's three special heist cases open for <strong>31 October only</strong>, from 00:00 until 23:59:59 in <strong>Europe/Rome</strong> time.</p>
+     <p><strong>Opens in {countdown}.</strong> Completing all three stages that day earns a dummy test voucher. At midnight, the cases lock again—but saved progress remains untouched.</p>
+     <div className="nn-heist-lock-preview">
+       {heistStages.map((stage,i)=><div key={stage.id}><span>🔒</span><strong>Stage {i+1} · {tierNames[stage.difficulty]}</strong><small>Available on Halloween</small></div>)}
+     </div>
+     <button type="button" className="btn btn-outline" onClick={()=>setMode('cases')}>Investigate regular cases ↗</button>
+    </section>}
+   {mode==='heist'&&eventOpen&&<section className="nn-heist-shelf">
      <div className="nn-heist-marquee" aria-hidden="true"><span>🦇</span><span>🎃</span><span>✦ 99 ✦</span><span>🕸️</span><span>🍬</span></div>
-     <div><span className="overline">THE SPECIAL THREE-STAGE CAMPAIGN</span><h2>🎃 The Halloween Heist</h2>
-       <p>Three interconnected original heist investigations. Every solved stage unlocks a harder one, ending with an ultimate precinct-wide deception.</p></div>
+     <div><span className="overline">31 OCTOBER · LIVE BETA · EUROPE/ROME</span><h2>🎃 The Halloween Heist</h2>
+       <p>Three interconnected investigations, one Halloween night. Solve all three to earn a <strong>dummy test voucher</strong>. The cases relock at midnight in <strong>{countdown}</strong>; completed progress remains saved.</p></div>
      <div className="nn-heist-stages">
        {heistStages.map((stage,i)=>{
          const unlocked=i<=heistUnlocked,won=progress.heist[stage.id]?.status==='won'||solvedCids.includes('99:'+stage.id);
@@ -146,6 +191,7 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
      </div>
    </section>}
 
+   {mode==='heist'&&eventOpen&&testVoucher&&<HalloweenTestVoucherPanel key={testVoucher.awardedAt}/>}
    {c&&round&&<section className="nn-dossier">
      <div className="nn-case-head">
        <div><span className="overline">FILE {c.id.toUpperCase().replace(/-/g,'-')} · {mode==='daily'?'DAILY BRIEF':mode==='heist'?'HEIST OPERATIONS':'CASE ARCHIVE'}</span>
@@ -265,6 +311,10 @@ export default function NineNine({today,progress,setProgress,onHome}:Props){
          <h3>{round.status==='won'?'Case closed, Detective Molly!':'Unsolved, but not forgotten.'}</h3>
          <p>{round.status==='won'?c.finale:'Captain Holt has archived this investigation. You can review the evidence and try a fresh copy.'}</p>
          {round.status==='won'&&<strong>+{round.score} stars · {c.deductions.length} connected deductions</strong>}
+         {mode==='heist'&&round.status==='won'&&<button type="button" className="btn btn-outline"
+          onClick={()=>{if(window.confirm('Replay this Halloween Heist stage? Your previous score and unlocks are preserved.'))retryHeist()}}>
+          ↶ Replay this heist stage
+         </button>}
          <details className="nn-solution-story"><summary>Read the verified case solution</summary>
            <div className="nn-story-chapter"><strong>01 · The incident</strong><p>{presentation?.scene}</p></div>
            <div className="nn-story-chapter"><strong>02 · Why it happened</strong><p>{presentation?.motivation}</p></div>

@@ -1,4 +1,5 @@
 import NoodleCouponPanel from './NoodleCouponPanel';
+import HalloweenTestVoucherPanel from './HalloweenTestVoucherPanel';
 import {useState,type Dispatch,type SetStateAction} from 'react';
 import {choosePinkCoupon,couponGifts,pinkMysteryCards,pinkNextPractice,pinkReplaceCoupon,redeemPinkCoupon,type PinkProgress} from '../lib/pinkRush';
 
@@ -74,6 +75,7 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
    <button className="btn btn-primary" onClick={replace}>🎤 Play Pink Rush! ↗</button>
   </section>}
   <NoodleCouponPanel/>
+  <HalloweenTestVoucherPanel/>
   {message&&<p className="pink-wallet-status" role="status">{message}</p>}
   <p className="pink-wallet-fine">One active Pink Rush coupon at a time. Before redemption, you may surrender it and complete another concert for a fresh choice. After redemption, the gift is permanently marked redeemed in this browser’s Passport and cannot be earned again. Save a Passport backup; fully tamper-proof and cross-device enforcement would require a private account/server.</p>
  </main>;
