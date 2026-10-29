@@ -7,6 +7,7 @@ import PinkRush from './games/PinkRush';
 import PinkWallet from './games/PinkWallet';
 import BraveTrail from './games/BraveTrail';
 import NoodleShop from './games/NoodleShop';
+import IndiaQuest from './games/IndiaQuest';
 import ArcadeNavigation from './components/ArcadeNavigation';
 import AnswerAssistInput from './components/AnswerAssistInput';
 import {comingSoonGames,upcomingArcadeEvents} from './data/arcadeHub';
@@ -31,7 +32,7 @@ const guessAnswerCatalogue=riddles.map(riddle=>({
  value:riddle.answer,label:riddle.answer,aliases:riddle.accepted
 }));
 
-type View = 'home' | 'guess' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'heist' | 'pink' | 'wallet' | 'brave' | 'noodles' | 'passport' | 'vault';
+type View = 'home' | 'guess' | 'classic' | 'connections' | 'toon' | 'bazinga' | 'nine' | 'heist' | 'pink' | 'wallet' | 'brave' | 'noodles' | 'passport' | 'vault';
 type Mode = 'daily' | 'practice';
 
 const upcoming = comingSoonGames;
@@ -77,7 +78,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
           <button className="btn btn-primary" onClick={() => onNavigate('guess', 'daily')}>
             {daily?.status === 'playing' || !daily ? 'Play today’s puzzle' : 'See today’s puzzle'} <span aria-hidden="true">↗</span>
           </button>
-          <button className="btn btn-soft" onClick={() => onNavigate('guess', 'practice')}>Explore Guess Who? <span aria-hidden="true">→</span></button>
+          <button className="btn btn-soft" onClick={() => onNavigate('guess', 'practice')}>Explore India Edition <span aria-hidden="true">→</span></button>
         </div>
         <div className="hero-foot"><span>✿</span> Little games, big smiles, no rush.</div>
       </div>
@@ -117,7 +118,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
         <article className="game-card featured-card">
           <div className="card-topline"><span className="live-pill"><span/> PLAY NOW</span><span className="card-number">01 / 08</span></div>
           <div className="featured-art" aria-hidden="true"><span>🥑</span><span>🍓</span><span>🍜</span></div>
-          <div className="card-content"><span className="card-category">FOOD & DEDUCTION</span><h3>Guess Who?</h3><p>Four clever clues. One mystery ingredient. How soon can you guess it?</p>
+          <div className="card-content"><span className="card-category">INDIA · PEOPLE · PLACES · HISTORY</span><h3>Who? What? Where? When?</h3><p>Reconstruct hidden photographs, follow map clues and solve an unfolding 12-stop India expedition.</p>
             <button className="card-link" onClick={() => onNavigate('guess', 'practice')}>Let's play <span aria-hidden="true">↗</span></button></div>
         </article>
         <article className="game-card game-card-mint connection-card">
@@ -404,7 +405,7 @@ function App() {
     <ArcadeNavigation active={view} onNavigate={(route)=>navigate(route)} onPreview={setSneakPeek} onComingSoon={comingSoonShelf}/>
     <button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button>
    </div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('home')}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : (view === 'nine' || view === 'heist') ? <NineNine key={view} initialMode={view==='heist'?'heist':'daily'} today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onWallet={() => navigate('wallet')}/> : view === 'wallet' ? <PinkWallet progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onPlay={() => navigate('pink')} onPassport={() => navigate('passport')}/> : view === 'brave' ? <BraveTrail onHome={() => navigate('home')} onPassport={() => navigate('passport')}/> : view === 'noodles' ? <NoodleShop onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onWallet={() => navigate('wallet')} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <IndiaQuest key={mode} today={today} initialMode={mode} onHome={() => navigate('home')} onClassic={() => navigate('classic',mode)}/> : view === 'classic' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('guess',mode)}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : (view === 'nine' || view === 'heist') ? <NineNine key={view} initialMode={view==='heist'?'heist':'daily'} today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onWallet={() => navigate('wallet')}/> : view === 'wallet' ? <PinkWallet progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onPlay={() => navigate('pink')} onPassport={() => navigate('passport')}/> : view === 'brave' ? <BraveTrail onHome={() => navigate('home')} onPassport={() => navigate('passport')}/> : view === 'noodles' ? <NoodleShop onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onWallet={() => navigate('wallet')} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;
