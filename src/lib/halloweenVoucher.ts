@@ -28,6 +28,9 @@ export function readHalloweenVoucher():HalloweenTestVoucher|null{
 export function writeHalloweenVoucher(v:HalloweenTestVoucher):void{
  try{localStorage.setItem(HALLOWEEN_TEST_VOUCHER_KEY,JSON.stringify(v))}catch{/* local storage optional */}
 }
+export function clearHalloweenVoucher():void{
+ try{localStorage.removeItem(HALLOWEEN_TEST_VOUCHER_KEY)}catch{/* local storage optional */}
+}
 export function awardHalloweenVoucher(existing:HalloweenTestVoucher|null,now=new Date()):HalloweenTestVoucher|null{
  if(!isHalloweenLive(now))return null;
  const year=romeParts(now).year;
