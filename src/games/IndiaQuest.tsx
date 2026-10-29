@@ -41,7 +41,7 @@ function Note({beat,card,n}:{beat:MysteryBeat;card:IndiaMystery;n:number}){
   <span>FIELD NOTE {String(n).padStart(2,'0')} · {beat.type.toUpperCase()}</span>
   <p>{beat.text}</p>
   {beat.type==='map'&&card.spot&&<RegionMap spot={card.spot}/>}
-  {beat.type==='visual'&&card.photo&&card.kind!=='where'&&<Mosaic photo={card.photo} reveal={3} solved/>}
+  {beat.type==='visual'&&card.photo&&card.kind!=='where'&&card.kind!=='who'&&<Mosaic photo={card.photo} reveal={3} solved/>}
  </article>;
 }
 export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
@@ -143,7 +143,7 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
    <div className="india-play-grid">
     <article className="india-main-card">
      <div className="india-mystery-intro"><span className="india-eyebrow">FIELD NOTES / {card.kind.toUpperCase()}</span><h2>{card.intro}</h2><span aria-hidden="true">?</span></div>
-     {card.photo&&card.kind==='where'&&<Mosaic key={card.id} photo={card.photo} reveal={round.reveal} solved={round.status!=='playing'}/>}
+     {card.photo&&(card.kind==='where'||card.kind==='who')&&<Mosaic key={card.id} photo={card.photo} reveal={round.reveal} solved={round.status!=='playing'}/>}
      <div className="india-notes">{card.beats.map((beat,i)=>i<round.reveal?
       <Note key={i} beat={beat} card={card} n={i+1}/>:
       <div key={i} className="india-locked-note">🔒　FIELD NOTE {String(i+1).padStart(2,'0')} <small>Reveals after a wrong guess</small></div>)}</div>
@@ -160,7 +160,7 @@ export default function IndiaQuest({today,initialMode,onHome,onClassic}:Props){
      </form>:<div className={'india-result '+(round.status==='won'?'correct':'missed')}>
       <div><span>{round.status==='won'?'🏆 CORRECT!':'📖 MYSTERY REVEALED'}</span><h3>{card.answer}</h3><p>{card.fact}</p>
        {round.status==='won'&&<strong>+{round.score} points</strong>}</div>
-      {card.photo&&card.kind!=='where'&&<Mosaic photo={card.photo} reveal={3} solved/>}
+      {card.photo&&card.kind!=='where'&&card.kind!=='who'&&<Mosaic photo={card.photo} reveal={3} solved/>}
      </div>}
      {round.status!=='playing'&&(mode==='expedition'?<button className="india-primary india-next" onClick={next}>{stage===11?'Complete expedition':'Next mystery'} →</button>:
       <button className="india-secondary" onClick={()=>setMode('expedition')}>Explore the expedition →</button>)}
