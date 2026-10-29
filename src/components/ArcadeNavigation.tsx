@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {comingSoonGames,developerNotes,upcomingArcadeEvents} from '../data/arcadeHub';
 
-export type ArcadeRoute='home'|'guess'|'connections'|'toon'|'bazinga'|'nine'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
+export type ArcadeRoute='home'|'guess'|'connections'|'toon'|'bazinga'|'nine'|'heist'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
 
 type Props={
  active:ArcadeRoute;
@@ -45,7 +45,7 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
   <details className="hub-menu" ref={games} onToggle={e=>{
    if(e.currentTarget.open)for(const m of [future,events,notes])if(m.current)m.current.open=false;
   }}>
-   <summary className={'hub-nav-trigger '+(['guess','connections','toon','bazinga','nine','pink','brave','noodles'].includes(active)?'is-active':'')}>
+   <summary className={'hub-nav-trigger '+(['guess','connections','toon','bazinga','nine','heist','pink','brave','noodles'].includes(active)?'is-active':'')}>
     <span className="hub-nav-icon" aria-hidden="true">🎮</span> Games <span className="hub-chevron" aria-hidden="true">⌄</span>
    </summary>
    <div className="hub-popover hub-popover-games">
