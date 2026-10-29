@@ -43,6 +43,7 @@ export type DeveloperNote={
  id:string;date:string;title:string;message:string;icon:string;
 };
 export const developerNotes:readonly DeveloperNote[]=[
+ {id:'india-edition',date:'29 October 2026',icon:'🧭',title:'Game 01 reborn: Who? What? Where? When?',message:'A new India expedition is playable! Explore twelve shuffled mysteries in Who, What, Where and When, reveal Commons photo mosaics and region notes, and save limited hint credits for harder stops. Classic Guess Who? is still accessible from inside the new game.'},
  {id:'holiday-beta',date:'29 October 2026',icon:'🎃',title:'Halloween is our special-events rehearsal',message:'The 99 Files Halloween Heist now opens for 31 October only (Europe/Rome), with an explicitly dummy one-use voucher. Progress is kept after the midnight relock. Christmas Week, 24–30 December, is our next planned creative milestone—not a live event yet.'},
  {id:'noodle-duo',date:'28 October 2026',icon:'🥟',title:'Two orders at once — from Level 4!',message:'Levels 4–8 now open with a noodle order and a dumpling order together. The final two shifts add a second paired rush. Mr. Ping has also trimmed the introduction and footer.'},
  {id:'noodle-pilot',date:'28 October 2026',icon:'🐼',title:'Dragon Chef kitchen — eight levels!',message:'The noodle shop now has eight balanced shifts, two preparation boards, original pacy music, new illustrations and a two-use homemade Ramen or Soup Dumplings reward.'},

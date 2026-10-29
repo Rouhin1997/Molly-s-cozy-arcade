@@ -75,7 +75,7 @@ export function passportSummary(p: ArcadeProgress) {
     completion: stamps.filter(s => s.earned).length,
     stamps,
     games: [
-      { id: 'guess', icon: '🍓', name: 'Guess Who?', solved: p.guess.stats.solved, played: p.guess.stats.played, stars: p.guess.stats.points, best: p.guess.stats.bestStreak, bestLabel: 'Best daily streak' },
+      { id: 'guess', icon: '🍓', name: 'Guess Who? (Classic)', solved: p.guess.stats.solved, played: p.guess.stats.played, stars: p.guess.stats.points, best: p.guess.stats.bestStreak, bestLabel: 'Best daily streak' },
       { id: 'connections', icon: '🧩', name: 'Little Connections', solved: p.connections.stats.solved, played: p.connections.stats.played, stars: p.connections.stats.stars, best: p.connections.stats.bestScore, bestLabel: 'Best board' },
       { id: 'toon', icon: '📺', name: 'Toon Rewind', solved: p.toon.stats.solved, played: p.toon.stats.played, stars: p.toon.stats.stars, best: p.toon.stats.bestSignal, bestLabel: 'Best signal' },
       { id: 'bazinga', icon: '⚛️', name: 'Bazinga! Lab', solved: bazinga?.solved??0, played: bazinga?.played??0, stars: bazinga?.stars??0, best: bazinga?.bestScore??0, bestLabel: 'Best theorem' },

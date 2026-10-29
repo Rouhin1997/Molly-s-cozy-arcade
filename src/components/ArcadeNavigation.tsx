@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {comingSoonGames,developerNotes,upcomingArcadeEvents} from '../data/arcadeHub';
 
-export type ArcadeRoute='home'|'guess'|'connections'|'toon'|'bazinga'|'nine'|'heist'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
+export type ArcadeRoute='home'|'guess'|'classic'|'connections'|'toon'|'bazinga'|'nine'|'heist'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
 
 type Props={
  active:ArcadeRoute;
@@ -10,7 +10,7 @@ type Props={
  onComingSoon:()=>void;
 };
 const liveGames:{route:ArcadeRoute;icon:string;name:string;subtitle:string}[]=[
- {route:'guess',icon:'🍓',name:'Guess Who?',subtitle:'Daily & practice riddles'},
+ {route:'guess',icon:'🧭',name:'Who? What? Where? When?',subtitle:'India Edition · atlas expedition'},
  {route:'connections',icon:'🧩',name:'Little Connections',subtitle:'Hidden word groups'},
  {route:'toon',icon:'📺',name:'Toon Rewind',subtitle:'Cartoon nostalgia'},
  {route:'bazinga',icon:'⚛️',name:'Bazinga! Lab',subtitle:'Logic and seating'},
