@@ -53,7 +53,7 @@ export const indiaMysteries:readonly IndiaMystery[]=[
    {type:'detail',text:'This monument honours soldiers who died in the First World War and related campaigns.'},
    {type:'map',text:'It stands on Kartavya Path in New Delhi.'}],
   assists:['Edwin Lutyens designed this memorial.','Its shape resembles a triumphal arch.'],
-  spot:spot(47,23,'New Delhi'),photo:{file:'The india gate.jpg',author:'Wikimedia contributor',license:'CC BY-SA 4.0'},
+  spot:spot(47,23,'New Delhi'),photo:{file:'The india gate.jpg',author:'Nihalkonan',license:'CC BY-SA 4.0'},
   fact:'India Gate in New Delhi was designed by Edwin Lutyens as a war memorial.'},
  {id:'chole-kulche',kind:'what',answer:'Chole Kulche',aliases:['Chhole Kulche','Chole Kulcha','Chana Kulcha','Chhole Kulcha'],topic:'food',region:'North India',era:'Contemporary',
   intro:'Two contrasting partners make a popular northern street-food meal: a spiced chickpea preparation and soft bread.',
