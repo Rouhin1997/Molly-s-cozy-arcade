@@ -3,6 +3,7 @@
  * CC license and source page remain on-screen whenever a photo appears.
  * Regions are associations/prominence, not claims of a unique point of origin.
  */
+import {indiaAtlasExpansion} from './indiaAtlasExpansion';
 export type MysteryKind='who'|'what'|'where'|'when';
 export type BeatType='story'|'visual'|'map'|'year'|'detail';
 export type MysteryBeat={type:BeatType;text:string};
@@ -10,6 +11,7 @@ export type CommonsPhoto={file:string;author:string;license:'CC BY-SA 3.0'|'CC B
 export type IndiaSpot={x:number;y:number;label:string};
 export type IndiaMystery={
  id:string;kind:MysteryKind;answer:string;aliases:string[];topic:string;
+ difficulty?:'easy'|'medium'|'hard';visualSymbol?:string;
  region:string;era:string;intro:string;beats:[MysteryBeat,MysteryBeat,MysteryBeat];
  assists:[string,string];fact:string;spot?:IndiaSpot;photo?:CommonsPhoto;
 };
@@ -192,7 +194,8 @@ export const indiaMysteries:readonly IndiaMystery[]=[
    {type:'year',text:'After 1947 she became governor of the United Provinces.'},
    {type:'story',text:'She has been called the Nightingale of India.'}],
   assists:['Her maiden name was Chattopadhyay.','Her first name was Sarojini.'],
-  spot:spot(51,38,'United Provinces'),fact:'Sarojini Naidu was a poet, freedom fighter and one of India’s first women governors.'}
+  spot:spot(51,38,'United Provinces'),fact:'Sarojini Naidu was a poet, freedom fighter and one of India’s first women governors.'},
+ ...indiaAtlasExpansion
 ];
 export const indiaMysteryById=(id:string):IndiaMystery|undefined=>indiaMysteries.find(x=>x.id===id);
 export const photoPage=(p:CommonsPhoto):string=>'https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(p.file.replaceAll(' ','_'));
