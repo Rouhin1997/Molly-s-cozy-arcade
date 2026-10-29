@@ -8,25 +8,38 @@ export function normalizeAnswerQuery(input:string):string{
  return input.toLocaleLowerCase('en').normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
   .replace(/[^a-z0-9]+/g,' ').trim().replace(/\s+/g,' ');
 }
-function typoDistanceAtMostOne(a:string,b:string):boolean{
- if(Math.abs(a.length-b.length)>1)return false;
- let i=0,j=0,errors=0;
- while(i<a.length&&j<b.length){
-  if(a[i]===b[j]){i++;j++;continue}
-  if(++errors>1)return false;
-  if(a.length>b.length)i++;
-  else if(a.length<b.length)j++;
-  else{i++;j++}
+/** Bounded Levenshtein distance with early rejection; only tiny query/token
+ * pairs are evaluated. Covers inserted letters, swapped words, common typos.
+ */
+function editDistance(a:string,b:string,max=2):number{
+ if(Math.abs(a.length-b.length)>max)return max+1;
+ let previous=Array.from({length:b.length+1},(_,j)=>j);
+ for(let i=1;i<=a.length;i++){
+  const row=[i];let min=i;
+  for(let j=1;j<=b.length;j++){
+   row[j]=Math.min(previous[j]+1,row[j-1]+1,previous[j-1]+(a[i-1]===b[j-1]?0:1));
+   min=Math.min(min,row[j]);
+  }
+  if(min>max)return max+1;
+  previous=row;
  }
- return errors+(a.length-i)+(b.length-j)<=1;
+ return previous[b.length];
 }
 function rankMatch(term:string,query:string):number{
  if(term===query)return 0;
- if(term.startsWith(query))return 1;
- if(term.split(' ').some(word=>word.startsWith(query)))return 2;
- if(term.includes(query))return 3;
- // Only tolerate a single genuine typo with enough typed context.
- if(query.length>=4&&term.split(' ').some(word=>typoDistanceAtMostOne(word,query)))return 4;
+ const unspacedTerm=term.replaceAll(' ','');
+ const unspacedQuery=query.replaceAll(' ','');
+ if(unspacedTerm===unspacedQuery)return .3; // shahrukh vs shah rukh
+ if(term.startsWith(query)||unspacedTerm.startsWith(unspacedQuery))return 1;
+ const words=term.split(' '),parts=query.split(' ');
+ if(words.some(w=>w.startsWith(query)))return 2;
+ // "Chopra Priyanka" and "Priyanka Chopra" should lead to the same person.
+ if(parts.length>1&&parts.every(p=>words.some(w=>w.startsWith(p))))return 2.3;
+ if(term.includes(query)||unspacedTerm.includes(unspacedQuery))return 3;
+ if(query.length>=4&&words.some(w=>editDistance(w,query,1)<=1))return 4;
+ if(query.length>=5&&editDistance(unspacedTerm,unspacedQuery,1)<=1)return 4.5;
+ if(query.length>=6&&words.some(w=>editDistance(w,query,2)<=2))return 5;
+ if(query.length>=7&&editDistance(unspacedTerm,unspacedQuery,2)<=2)return 5.5;
  return Infinity;
 }
 /** Canonical deduplication prevents alias-heavy answers from dominating results. */
