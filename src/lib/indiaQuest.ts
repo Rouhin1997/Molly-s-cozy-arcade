@@ -42,11 +42,30 @@ export function matchesIndiaAnswer(card:IndiaMystery,guess:string):boolean{
  const q=normalizeAnswerQuery(guess);
  return q.length>0&&[card.answer,...card.aliases].some(a=>normalizeAnswerQuery(a)===q);
 }
+/** Manually tagged near-misses: comparisons must never be generated from
+ * spelling distance or presented as a fake probability. Add only verified
+ * broad category/region relationships to this small reference deck. */
+const comparableNearMisses={
+ 'chole bhature':{kind:'what',topic:'food',region:'North India',era:'Contemporary'},
+ 'chhole bhature':{kind:'what',topic:'food',region:'North India',era:'Contemporary'},
+ 'naan':{kind:'what',topic:'food',region:'North India',era:'Contemporary'},
+ 'samosa':{kind:'what',topic:'food',region:'Pan-Indian',era:'Contemporary'},
+ 'biryani':{kind:'what',topic:'food',region:'Pan-Indian',era:'Contemporary'},
+ 'qutub minar':{kind:'where',topic:'monument',region:'Delhi',era:'Delhi Sultanate'},
+ 'qutb minar':{kind:'where',topic:'monument',region:'Delhi',era:'Delhi Sultanate'},
+ 'jama masjid':{kind:'where',topic:'monument',region:'Delhi',era:'Mughal era'},
+ 'charminar':{kind:'where',topic:'monument',region:'Telangana',era:'16th century'},
+ 'asha bhosle':{kind:'who',topic:'music',region:'Maharashtra',era:'20th century'},
+ 'virat kohli':{kind:'who',topic:'cricket',region:'Delhi',era:'2000s–2010s'},
+ 'rohit sharma':{kind:'who',topic:'cricket',region:'Maharashtra',era:'2000s–2010s'},
+ '1947 partition':{kind:'when',topic:'independence',region:'India',era:'1947'}
+} as const;
 export function proximity(card:IndiaMystery,guess:string):string{
  const q=normalizeAnswerQuery(guess);
- const known=indiaMysteries.find(x=>matchesIndiaAnswer(x,q));
+ const known=indiaMysteries.find(x=>matchesIndiaAnswer(x,q)) ??
+  comparableNearMisses[q as keyof typeof comparableNearMisses];
  if(!known)return 'That answer is not in the comparison deck. Try using the next revealed clue.';
- if(known.id===card.id)return 'Correct!';
+ if('id' in known&&known.id===card.id)return 'Correct!';
  const shared:string[]=[];
  if(known.kind===card.kind)shared.push('right question type');
  if(known.topic===card.topic)shared.push('same topic');
