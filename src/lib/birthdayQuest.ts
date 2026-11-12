@@ -1,7 +1,8 @@
 import {romeMidnightUtc,romeParts} from './seasonalEvents';
 
-/** The public birthday release must stay CLOSED until the real gift is supplied and approved. */
-export const BIRTHDAY_EVENT_PUBLISHED=false;
+/** 2026 birthday special officially published; opens at midnight Rome time on 13 November. */
+export const BIRTHDAY_EVENT_PUBLISHED=true;
+export const BIRTHDAY_EVENT_YEAR=2026;
 
 /** Birthday live gate is evaluated in Rome time. Beta access is an explicit preview URL
  * and uses a separate save so the creator's rehearsal cannot spoil Molly's actual run. */
@@ -39,17 +40,17 @@ export const birthdayEvidence=[
  {id:'sticky',icon:'🗒️',label:'Jake’s sticky note',type:'RECORD',
   body:'“Holt must NOT spot it. Filed as #99-B. Somewhere boring, controlled, and cool. I am a genius.”'},
  {id:'register',icon:'📋',label:'Storage register',type:'RECORD',
-  body:'17:48 · #99-B · temporary transfer into the evidence room’s temperature-controlled cabinet. Signed: J. Peralta.'},
+  body:'17:48 · #99-B · sealed cold storage, bay E-3. Authorised by J. Peralta.'},
 ] as const;
 export const BIRTHDAY_PAIRS=[
  {id:'receipt-camera',items:['receipt','camera'] as const,label:'The same cake box passed through the service corridor.'},
- {id:'sticky-register',items:['sticky','register'] as const,label:'Jake’s code matches the temperature-controlled storage log.'},
+ {id:'sticky-register',items:['sticky','register'] as const,label:'Case #99-B was transferred to a cold-storage bay.'},
 ] as const;
 export const cakeLocations=[
- {id:'kitchen',label:'Break-room fridge',icon:'🧁',detail:'Scully says there might be leftover yogurt.'},
- {id:'office',label:'Holt’s office',icon:'🗃️',detail:'A suspiciously tidy filing cabinet.'},
- {id:'evidence',label:'Evidence-room cold cabinet',icon:'🧊',detail:'Usually reserved for very serious things.'},
- {id:'rooftop',label:'Precinct rooftop',icon:'🌆',detail:'The party decorations were delivered up here.'},
+ {id:'kitchen',label:'Break-room fridge',icon:'🧁',detail:'Food storage, near the briefing room.'},
+ {id:'office',label:'Holt’s office',icon:'🗃️',detail:'Locked filing cabinets.'},
+ {id:'evidence',label:'Evidence-room cold cabinet',icon:'🧊',detail:'Storage bay E-3.'},
+ {id:'rooftop',label:'Precinct rooftop',icon:'🌆',detail:'Party decorations were delivered here.'},
 ] as const;
 export const seatRules=[
  "Leonard sits immediately to Sheldon's left.",
@@ -61,17 +62,17 @@ export const seatRules=[
 ] as const;
 export const birthdayQuestions=[
  {id:'who' as const,category:'WHO?',icon:'👤',
-  question:'Whose elaborately labelled present is behind this security system?',
+  question:'Who demanded the birthday seating protocol?',
   choices:['Howard','Sheldon','Stuart','Jake'],correct:'Sheldon',
-  note:'Correct. He calls it “responsible gift distribution.” Everyone else calls it a lock.'},
+  note:'The physicist. Naturally.'},
  {id:'what' as const,category:'WHAT?',icon:'🎁',
-  question:'What is safely sealed inside the birthday vault?',
-  choices:['A secret surprise gift','The precinct’s missing case files','A broken elevator','A physics exam'],correct:'A secret surprise gift',
-  note:'Exactly. Even Leonard does not know what Sheldon has done to the wrapping.'},
+  question:'What brought the 99 squad into this birthday mystery?',
+  choices:['A missing birthday cake','A lost trophy','A broken elevator','A physics exam'],correct:'A missing birthday cake',
+  note:'Recovered and ready to serve.'},
  {id:'when' as const,category:'WHEN?',icon:'📅',
   question:'Which date is written on the birthday invitation?',
   choices:['31 October','13 November','24 December','1 January'],correct:'13 November',
-  note:'The day the whole arcade puts on its party hat.'},
+  note:'Birthday confirmed.'},
 ] as const;
 /** WHERE finale: optional, cumulative hints ordered from subtle to revealing.
  * Present the next hint only when the player actively requests it. */
@@ -131,7 +132,7 @@ export function submitCakeLocation(save:BirthdaySave,id:string):{save:BirthdaySa
  if(id!=='evidence')return {save:{...save,cakeTries:save.cakeTries+1},correct:false,
   message:'Nothing there! Use both deductions: follow the box and the storage code.'};
  return {save:{...save,step:1},correct:true,
-  message:'Case closed! Jake really did book a cake into evidence. Holt is going to have questions.'};
+  message:'Case closed! The cake was booked into evidence.'};
 }
 export function seatingIsValid(seating:readonly string[]):boolean{
  if(seating.length!==6||seating[2]!=='Molly')return false;
@@ -163,7 +164,7 @@ export function submitBirthdaySeating(save:BirthdaySave):{save:BirthdaySave;corr
  if(save.seating.some(seat=>!seat))return{save,correct:false,message:'Give each guest a chair before asking Sheldon to inspect.'};
  if(!seatingIsValid(save.seating))return{save:{...save,seatingTries:save.seatingTries+1},
   correct:false,message:'Sheldon has a correction. At least one condition is not met. Recheck adjacency, the end chairs and the entrance.'};
- return{save:{...save,step:2},correct:true,message:'All six conditions hold. Sheldon approves the arrangement—and finally accepts his cake.'};
+ return{save:{...save,step:2},correct:true,message:'All six conditions hold. Sheldon finally accepts his cake.'};
 }
 export function answerBirthdayQuestion(save:BirthdaySave,id:QuestionId,answer:string):{save:BirthdaySave;correct:boolean;message:string}{
  if(save.step!==2)return{save,correct:false,message:'The final dossier is not unlocked yet.'};
