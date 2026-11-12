@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {
- birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR,initialBirthdaySave,birthdayStorageKey,
+ birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR,initialBirthdaySave,birthdayStorageKey,
  BIRTHDAY_PAIRS,pairForEvidence,submitEvidencePair,submitCakeLocation,
  birthdayGuests,allValidBirthdaySeatings,seatingIsValid,submitBirthdaySeating,
  birthdayQuestions,birthdayWhereHints,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
@@ -17,6 +17,19 @@ describe('Molly’s birthday clock and preview isolation',()=>{
   expect(birthdayWindow(closing).active).toBe(false);
   expect(birthdayWindow(opening).start.toISOString()).toBe(opening.toISOString());
   expect(birthdayWindow(opening).end.toISOString()).toBe(closing.toISOString());
+ });
+ it('gates the real 2026 event and allows an in-progress story to finish',()=>{
+  const fresh=initialBirthdaySave();
+  const started={...fresh,step:1 as const};
+  const before=new Date('2026-11-12T22:59:59Z');
+  const live=new Date('2026-11-13T12:00:00Z');
+  const after=new Date('2026-11-13T23:00:00Z');
+  expect(birthdayCanPlay(false,fresh,before)).toBe(false);
+  expect(birthdayCanPlay(false,fresh,live)).toBe(true);
+  expect(birthdayCanPlay(false,fresh,after)).toBe(false);
+  expect(birthdayCanPlay(false,started,after)).toBe(true);
+  expect(birthdayCanPlay(true,fresh,before)).toBe(true);
+  expect(birthdayCanPlay(false,started,new Date('2027-11-13T12:00:00Z'))).toBe(false);
  });
  it('only accepts the explicit rehearsal flag and keeps preview saves apart',()=>{
   expect(BIRTHDAY_EVENT_PUBLISHED).toBe(true); // official event is configured for the 2026 birthday
