@@ -1,5 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {comingSoonGames,developerNotes,upcomingArcadeEvents} from '../data/arcadeHub';
+import {birthdayEventIsLive} from '../lib/birthdayQuest';
 
 export type ArcadeRoute='home'|'guess'|'classic'|'connections'|'toon'|'bazinga'|'nine'|'heist'|'pink'|'wallet'|'brave'|'noodles'|'passport'|'vault';
 
@@ -41,17 +42,18 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
  function peek(name:string){closeMenus();onPreview(name)}
  function jump(){closeMenus();onComingSoon()}
  const calendar=upcomingArcadeEvents(eventClock);
+ const availableGames:typeof liveGames=birthdayEventIsLive(eventClock)?[...liveGames,{route:'vault',icon:'🎂',name:'The Great Birthday Caper',subtitle:'13 November · special adventure'}]:liveGames;
  return <nav className="hub-nav" aria-label="Molly's Cozy Arcade navigation">
   <details className="hub-menu" ref={games} onToggle={e=>{
    if(e.currentTarget.open)for(const m of [future,events,notes])if(m.current)m.current.open=false;
   }}>
-   <summary className={'hub-nav-trigger '+(['guess','connections','toon','bazinga','nine','heist','pink','brave','noodles'].includes(active)?'is-active':'')}>
+   <summary className={'hub-nav-trigger '+(['guess','connections','toon','bazinga','nine','heist','pink','brave','noodles','vault'].includes(active)?'is-active':'')}>
     <span className="hub-nav-icon" aria-hidden="true">🎮</span> Games <span className="hub-chevron" aria-hidden="true">⌄</span>
    </summary>
    <div className="hub-popover hub-popover-games">
-    <div className="hub-popover-heading"><strong>Ready to play</strong><small>Eight playable titles</small></div>
+    <div className="hub-popover-heading"><strong>Ready to play</strong><small>{availableGames.length} playable titles</small></div>
     <div className="hub-popover-list">
-     {liveGames.map(game=><button key={game.route} className={'hub-popover-item '+(active===game.route?'is-current':'')}
+     {availableGames.map(game=><button key={game.route} className={'hub-popover-item '+(active===game.route?'is-current':'')}
       onClick={()=>nav(game.route)}>
       <span className="hub-popover-emoji" aria-hidden="true">{game.icon}</span>
       <span><strong>{game.name}</strong><small>{game.subtitle}</small></span><span className="hub-item-arrow">↗</span>
@@ -88,7 +90,7 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
    </summary>
    <div className="hub-popover hub-popover-events">
     <div className="hub-popover-heading"><strong>On the calendar</strong><small>Closest first · annual occasions</small></div>
-    {calendar.map(event=><button className="hub-event-item" key={event.id} onClick={()=>nav(event.route)}>
+    {calendar.map(event=><button className="hub-event-item" key={event.id} disabled={event.id==='birthday'&&event.status!=='live'} onClick={()=>nav(event.route)}>
      <div className="hub-event-date"><strong>{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',day:'numeric'})}</strong><small>{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',month:'short',year:'numeric'})}</small></div>
      <div><strong>{event.icon} {event.label}</strong><p>{event.summary}</p><span>{event.status==='live'?(event.id==='birthday'?'BIRTHDAY QUEST · LIVE TODAY':'LIVE · ends at midnight (Rome)'):event.id==='halloween'?'Locked until Halloween · Rome time':event.id==='christmas'?'Planning milestone · not playable':'Opens 13 November · Rome time'}</span></div>
     </button>)}
