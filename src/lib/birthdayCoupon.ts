@@ -50,3 +50,7 @@ export function redeemBirthdayCoupon(coupon:BirthdayCoupon,at=new Date()):Birthd
  if(coupon.redeemedAt||at.getTime()<Date.parse(coupon.issuedAt))return coupon;
  return {...coupon,redeemedAt:at.toISOString()};
 }
+
+export function clearPreviewBirthdayCoupon(year=BIRTHDAY_GIFT_YEAR):void{
+ try{localStorage.removeItem(birthdayCouponKey(true,year))}catch{/* no storage */}
+}
