@@ -1,4 +1,5 @@
 import {christmasWeekStart,isHalloweenLive,nextAnnualRomeDate} from '../lib/seasonalEvents';
+import {birthdayWindow} from '../lib/birthdayQuest';
 /** The arcade's public-facing editorial directory.
  * No future release promises, unverified launch dates or invented messages.
  */
@@ -28,10 +29,11 @@ export function upcomingArcadeEvents(now=new Date()):ArcadeEvent[]{
    summary:halloweenLive?'The 99 Files heist is live today! Three stages and a dummy test voucher; closes at midnight (Rome time).':
     'A one-day Halloween Heist beta in The 99 Files, opening only on 31 October (Italy time).',
    status:halloweenLive?'live':'scheduled',route:'heist'},
-  {id:'birthday',label:'Molly’s Birthday',icon:'🎂',
+  {id:'birthday',label:'Molly’s Birthday · The Great Birthday Caper',icon:'🎂',
    date:nextAnnualRomeDate(11,13,now),dateText:'13 November',
-   summary:'The birthday event is still in development. Nothing to redeem yet.',
-   status:'planned',route:'vault'},
+   summary:birthdayWindow(now).active?'The birthday adventure is live! Find the 99 cake, solve Sheldon’s seating arrangement and unlock the hometown vault.':
+    'A three-act birthday adventure arrives on 13 November: The 99 Files, Bazinga! and Who? What? Where? When?',
+   status:birthdayWindow(now).active?'live':'scheduled',route:'vault'},
   {id:'christmas',label:'Christmas Week · Planned',icon:'🎄',
    date:christmasWeekStart(now),dateText:'24–30 December',
    summary:'Our next seasonal milestone: possible Christmas-only puzzles and special levels. Ideas are being developed; nothing is playable yet.',
