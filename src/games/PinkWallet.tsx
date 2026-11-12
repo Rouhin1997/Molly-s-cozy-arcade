@@ -1,3 +1,4 @@
+import BirthdayCouponPanel from './BirthdayCouponPanel';
 import NoodleCouponPanel from './NoodleCouponPanel';
 import HalloweenTestVoucherPanel from './HalloweenTestVoucherPanel';
 import {useState,type Dispatch,type SetStateAction} from 'react';
@@ -36,7 +37,7 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
   <button className="back-link" onClick={onHome}>← Return to the arcade</button>
   <div className="pink-wallet-heading"><span className="overline">MOLLY’S BLACKPINK VIP REWARDS</span>
    <h1>🎟️ Molly’s Special Coupon Wallet</h1>
-   <p>A little collection of promises made for Molly—concert surprises and now a homemade Dragon Chef treat.</p>
+   <p>All your earned surprises, safe in one place.</p>
   </div>
   {coupon.status==='ready'&&<section className="pink-wallet-draw">
    <h2>Choose one secret backstage gift</h2>
@@ -74,6 +75,7 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
      'Finish your first full Pink Rush show to unlock three hidden reward cards and choose one to keep.'}</p>
    <button className="btn btn-primary" onClick={replace}>🎤 Play Pink Rush! ↗</button>
   </section>}
+  <BirthdayCouponPanel/>
   <NoodleCouponPanel/>
   <HalloweenTestVoucherPanel/>
   {message&&<p className="pink-wallet-status" role="status">{message}</p>}
