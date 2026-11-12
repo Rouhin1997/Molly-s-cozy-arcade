@@ -1,5 +1,5 @@
 import {christmasWeekStart,isHalloweenLive,nextAnnualRomeDate} from '../lib/seasonalEvents';
-import {birthdayWindow,BIRTHDAY_EVENT_PUBLISHED} from '../lib/birthdayQuest';
+import {birthdayWindow,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR} from '../lib/birthdayQuest';
 /** The arcade's public-facing editorial directory.
  * No future release promises, unverified launch dates or invented messages.
  */
@@ -23,6 +23,7 @@ export type ArcadeEvent={
 };
 export function upcomingArcadeEvents(now=new Date()):ArcadeEvent[]{
  const halloweenLive=isHalloweenLive(now);
+ const birthdayLive=BIRTHDAY_EVENT_PUBLISHED&&birthdayWindow(now).year===BIRTHDAY_EVENT_YEAR&&birthdayWindow(now).active;
  const events:ArcadeEvent[]=[
   {id:'halloween',label:'Halloween Heist · Beta',icon:'🎃',
    date:nextAnnualRomeDate(10,31,now),dateText:'31 October',
@@ -31,9 +32,9 @@ export function upcomingArcadeEvents(now=new Date()):ArcadeEvent[]{
    status:halloweenLive?'live':'scheduled',route:'heist'},
   {id:'birthday',label:'Molly’s Birthday · The Great Birthday Caper',icon:'🎂',
    date:nextAnnualRomeDate(11,13,now),dateText:'13 November',
-   summary:BIRTHDAY_EVENT_PUBLISHED&&birthdayWindow(now).active?'The birthday adventure is live! Find the 99 cake, solve Sheldon’s seating arrangement and unlock the hometown vault.':
-    'A three-act birthday adventure arrives on 13 November: The 99 Files, Bazinga! and Who? What? Where? When?',
-   status:BIRTHDAY_EVENT_PUBLISHED&&birthdayWindow(now).active?'live':'scheduled',route:'vault'},
+   summary:birthdayLive?'The birthday adventure is live! Solve three chapters, choose one birthday coupon and keep it in your Wallet.':
+    'The birthday adventure opens on 13 November: solve three chapters and choose your special reward.',
+   status:birthdayLive?'live':'scheduled',route:'vault'},
   {id:'christmas',label:'Christmas Week · Planned',icon:'🎄',
    date:christmasWeekStart(now),dateText:'24–30 December',
    summary:'Our next seasonal milestone: possible Christmas-only puzzles and special levels. Ideas are being developed; nothing is playable yet.',

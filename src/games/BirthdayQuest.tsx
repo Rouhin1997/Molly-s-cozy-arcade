@@ -1,13 +1,14 @@
 import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
+import {birthdayGiftOptions,BIRTHDAY_GIFT_YEAR,clearPreviewBirthdayCoupon,issueBirthdayCoupon,readBirthdayCoupon,writeBirthdayCoupon,type BirthdayGiftId,type BirthdayCoupon} from '../lib/birthdayCoupon';
 import {
- birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
+ birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
  birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayWhereHints,birthdayGuests,chairs,
  submitEvidencePair,submitCakeLocation,submitBirthdaySeating,answerBirthdayQuestion,unlockBirthdayVault,
  type BirthdaySave,type QuestionId
 } from '../lib/birthdayQuest';
 
-type Props={onHome:()=>void};
+type Props={onHome:()=>void;onWallet:()=>void};
 type SceneTransition={icon:string;eyebrow:string;title:string;message:string;next:string};
 const intro=[
  {number:'01',icon:'🎂',name:'The cake caper',caption:'The 99 Files'},
@@ -16,7 +17,7 @@ const intro=[
 ];
 const fireworks=['✦','✧','★','✦','✧','★','✦','✧','★','✦','★','✧'];
 
-export default function BirthdayQuest({onHome}:Props){
+export default function BirthdayQuest({onHome,onWallet}:Props){
  const beta=birthdayBetaFromSearch(window.location.search);
  const [clock,setClock]=useState(()=>new Date());
  const year=birthdayWindow(clock).year;
@@ -27,8 +28,10 @@ export default function BirthdayQuest({onHome}:Props){
  const [transition,setTransition]=useState<SceneTransition|null>(null);
  const [password,setPassword]=useState('');
  const [revealedPlaceHints,setRevealedPlaceHints]=useState(0);
- const gate=birthdayWindow(clock);
- const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&(gate.active||save.step===3));
+ const [coupon,setCoupon]=useState<BirthdayCoupon|null>(()=>readBirthdayCoupon(beta,BIRTHDAY_GIFT_YEAR));
+ const [pendingGift,setPendingGift]=useState<BirthdayGiftId|null>(null);
+ const [giftError,setGiftError]=useState('');
+ const available=birthdayCanPlay(beta,save,clock);
  const allLinked=save.connected.length===BIRTHDAY_PAIRS.length;
  const questionsDone=save.answers.length===birthdayQuestions.length;
  const activeQuestion=birthdayQuestions.find(q=>!save.answers.includes(q.id));
@@ -53,7 +56,7 @@ export default function BirthdayQuest({onHome}:Props){
   update(result.save);setFeedback(result.message);
   if(result.correct)setTransition({
    icon:'🎂',eyebrow:'CASE 99-B · CLOSED',title:'The cake is saved!',
-   message:'Jake had filed the birthday cake as evidence. Amy secures it, Boyle wants a photo, and Holt has several administrative concerns.',
+   message:'Jake filed Molly’s cake as evidence. Case closed. On to the party!',
    next:'Take the cake to the party'
   });
  }
@@ -70,7 +73,7 @@ export default function BirthdayQuest({onHome}:Props){
   update(result.save);setFeedback(result.message);
   if(result.correct)setTransition({
    icon:'🍰',eyebrow:'SEATING AGREEMENT · APPROVED',title:'Sheldon will eat cake!',
-   message:'The birthday table has passed his six-point inspection. Penny rolls her eyes, Leonard exhales, and everyone gets a slice.',
+   message:'Six conditions satisfied. Sheldon finally lets everyone eat cake.',
    next:'Open the mysterious present'
   });
  }
@@ -84,30 +87,44 @@ export default function BirthdayQuest({onHome}:Props){
   update(result.save);setFeedback(result.message);
   if(result.correct)setPassword('');
  }
+ function confirmGift(){
+  if(save.step!==3||!pendingGift||coupon)return;
+  const existing=readBirthdayCoupon(beta,BIRTHDAY_GIFT_YEAR);
+  const next=issueBirthdayCoupon(existing,pendingGift,new Date(),BIRTHDAY_GIFT_YEAR);
+  if(!writeBirthdayCoupon(next,beta)){
+   setGiftError('Your coupon could not be saved in this browser. Please enable site storage and try again.');
+   return;
+  }
+  setCoupon(next);setPendingGift(null);setGiftError('');
+ }
  function resetBeta(){
-  if(!beta||!window.confirm('Restart just this birthday beta rehearsal? The real birthday game is stored separately.'))return;
+  if(!beta||!window.confirm('Restart the creator preview, including its test coupon? The real birthday wallet will not change.'))return;
   const fresh=initialBirthdaySave();
-  update(fresh);setSelected([]);setPicked('Sheldon');setFeedback('Beta rehearsal reset. Ready to begin again!');setTransition(null);setPassword('');setRevealedPlaceHints(0);
+  clearPreviewBirthdayCoupon();
+  update(fresh);setCoupon(null);setPendingGift(null);setGiftError('');
+  setSelected([]);setPicked('Sheldon');setFeedback('Preview restarted.');setTransition(null);setPassword('');setRevealedPlaceHints(0);
  }
  return <main className="birthday-quest">
   <button className="back-link birthday-back" onClick={onHome}>← Return to Molly's Arcade</button>
   <header className="birthday-quest-hero">
+   <div className="birthday-bunting" aria-hidden="true">{Array.from({length:18},(_,i)=><span key={i}/>)}</div>
+   <div className="birthday-hero-balloons" aria-hidden="true"><span>🎈</span><span>🎈</span><span>🎊</span></div>
    <div className="birthday-hero-sparkles" aria-hidden="true">{fireworks.map((s,i)=><span key={i}>{s}</span>)}</div>
-   <span className="birthday-hero-overline">MOLLY'S COZY ARCADE PRESENTS</span>
+   <span className="birthday-hero-overline">A ONE-DAY BIRTHDAY SPECIAL · 13 NOVEMBER</span>
    <div className="birthday-hero-emblem" aria-hidden="true">🎂</div>
    <h1>The Great <em>Birthday Caper</em></h1>
    <p>One missing cake. One very particular physicist. One present with an unreasonable security system.</p>
    <div className="birthday-hero-subline"><span>13 NOVEMBER</span><span>✦</span><span>THREE LITTLE ADVENTURES</span><span>✦</span><span>MADE FOR MOLLY</span></div>
   </header>
   {beta&&<aside className="birthday-beta-band" role="note">
-   <div><strong>🧪 Creator's beta rehearsal</strong><span>Preview access is enabled. This run has its own save and cannot open a real birthday gift.</span></div>
+   <div><strong>🧪 Creator preview</strong><span>Test runs and coupons are separate from Molly’s real birthday Wallet.</span></div>
    <button className="btn btn-outline" onClick={resetBeta}>Restart beta ↺</button>
   </aside>}
   {!available?<section className="birthday-gate">
    <div className="birthday-gate-art" aria-hidden="true">🎀　🔒　🎁</div>
    <span className="overline">THE PARTY INVITATION</span>
    <h2>Shhh… the guests are almost here.</h2>
-   <p>The birthday caper is having its final rehearsal. The adventure is planned for <strong>13 November</strong>, using the arcade's Rome-time calendar. The gift vault will open only when the surprise is ready.</p>
+   <p>The adventure unlocks on <strong>13 November</strong>, Rome time. Three chapters, one birthday surprise.</p>
    <div className="birthday-gate-date"><strong>13 NOV</strong><span>Opening day ✦</span></div>
    <button className="btn btn-primary" onClick={onHome}>Back to the arcade</button>
   </section>:<>
@@ -120,9 +137,9 @@ export default function BirthdayQuest({onHome}:Props){
     </div>)}
    </nav>
    {save.step===0&&<section className="birthday-stage birthday-cake-stage" aria-labelledby="birthday-stage-title">
-    <div className="birthday-chapter-heading"><span>ACT ONE · THE 99 FILES</span><h2 id="birthday-stage-title">Jake lost the birthday cake.</h2><p>“Okay, slight situation. I definitely picked it up. I may have subsequently hidden it too well.” — Jake, probably</p></div>
+    <div className="birthday-chapter-heading"><span>ACT ONE · THE 99 FILES</span><h2 id="birthday-stage-title">Jake lost the birthday cake.</h2><p>“I picked it up. I just can't remember where I hid it.” — Jake</p></div>
     <div className="birthday-story-scenery" aria-hidden="true"><span>🚔</span><div><strong>99</strong><small>PRECINCT</small></div><span>🕵️</span><span>🎈</span><span>📦</span></div>
-    <div className="birthday-case-intro"><strong>CAPTAIN HOLT'S BRIEFING</strong><p>Four exhibits survived Jake's “flawless plan.” Pair related evidence to establish <strong>two deductions</strong>, then decide where the squad should look.</p></div>
+    <div className="birthday-case-intro"><strong>HOLT'S CASE FILE</strong><p>Match the four exhibits into <strong>two evidence pairs</strong>. Then find the cake.</p></div>
     <h3 className="birthday-subheading">Evidence board <small>{save.connected.length}/2 connections</small></h3>
     <div className="birthday-evidence-grid">
      {birthdayEvidence.map(item=><button key={item.id} type="button" aria-pressed={selected.includes(item.id)} className={'birthday-evidence '+(selected.includes(item.id)?'is-selected ':'')+(save.connected.some(id=>BIRTHDAY_PAIRS.find(p=>p.id===id)?.items.some(x=>x===item.id))?'is-linked':'')} onClick={()=>{
@@ -140,7 +157,7 @@ export default function BirthdayQuest({onHome}:Props){
     </div>
     {save.connected.length>0&&<div className="birthday-deductions">{save.connected.map(id=><p key={id}>✦ {BIRTHDAY_PAIRS.find(pair=>pair.id===id)?.label}</p>)}</div>}
     {allLinked&&<div className="birthday-location-board">
-     <h3>Where is the cake?</h3><p>You've followed the trail. Pick the most defensible location.</p>
+     <h3>Where is the cake?</h3><p>Use the evidence to choose a location.</p>
      <div className="birthday-locations">{cakeLocations.map(place=><button key={place.id} onClick={()=>locate(place.id)}>
       <span aria-hidden="true">{place.icon}</span><strong>{place.label}</strong><small>{place.detail}</small>
      </button>)}</div>
@@ -150,8 +167,8 @@ export default function BirthdayQuest({onHome}:Props){
    </section>}
    {save.step===1&&<section className="birthday-stage birthday-seating-stage" aria-labelledby="birthday-stage-title">
     <div className="birthday-chapter-heading"><span>ACT TWO · BAZINGA! LAB</span><h2 id="birthday-stage-title">Six chairs. One very stubborn Sheldon.</h2><p>The cake has arrived, but Sheldon refuses a bite until the seating arrangement satisfies his personal protocol.</p></div>
-    <div className="birthday-sheldon-callout"><span aria-hidden="true">⚛️</span><div><strong>Sheldon's Party Seating Protocol</strong><p>Six conditions. Six guests. No exceptions, especially not on cake day.</p></div></div>
-    <h3 className="birthday-subheading">The rules <small>Read carefully</small></h3>
+    <div className="birthday-sheldon-callout"><span aria-hidden="true">⚛️</span><div><strong>Sheldon's seating protocol</strong><p>Arrange the guests to satisfy all six rules.</p></div></div>
+    <h3 className="birthday-subheading">The six rules</h3>
     <ol className="birthday-rules">{seatRules.map(rule=><li key={rule}>{rule}</li>)}</ol>
     <div className="birthday-table-caption"><span>🚪 ENTRANCE · CHAIR B</span><span>🎂 BIRTHDAY TABLE</span><span>🪟 WINDOW END · CHAIR F</span></div>
     <div className="birthday-seating-scene">
@@ -169,9 +186,9 @@ export default function BirthdayQuest({onHome}:Props){
     {save.seatingTries>=2&&<p className="birthday-gentle-hint">💡 Amy can only sit in one remaining chair beside Molly if she avoids B. Start there, then work through the neighbours.</p>}
    </section>}
    {save.step===2&&<section className="birthday-stage birthday-cipher-stage" aria-labelledby="birthday-stage-title">
-    <div className="birthday-chapter-heading"><span>ACT THREE · WHO? WHAT? WHERE? WHEN?</span><h2 id="birthday-stage-title">The birthday vault has a password.</h2><p>Sheldon has gift-wrapped a security problem. Crack three field notes and discover the place that makes this gift Molly's.</p></div>
+    <div className="birthday-chapter-heading"><span>ACT THREE · WHO? WHAT? WHERE? WHEN?</span><h2 id="birthday-stage-title">The birthday vault is locked.</h2><p>Solve three quick notes, then find the hometown password.</p></div>
     <div className="birthday-vault-visual" aria-hidden="true"><span>🎁</span><span className="birthday-vault-lock">🔒</span></div>
-    <h3 className="birthday-subheading">The four W's <small>{save.answers.length}/3 notes decoded</small></h3>
+    <h3 className="birthday-subheading">The field notes <small>{save.answers.length}/3 solved</small></h3>
     <div className="birthday-fieldnotes">{birthdayQuestions.map(q=>{
      const done=save.answers.includes(q.id);
      const active=activeQuestion?.id===q.id;
@@ -185,7 +202,7 @@ export default function BirthdayQuest({onHome}:Props){
     {questionsDone&&<div className="birthday-where-dossier">
      <div className="birthday-where-title"><span aria-hidden="true">📍</span><div><span className="overline">FINAL FIELD NOTE · WHERE?</span><h3>Where did Molly's story begin?</h3></div></div>
      <blockquote className="birthday-where-riddle">“The password is geographically specific, historically significant to the recipient, and emotionally meaningful. I find the third criterion scientifically questionable, but Amy insisted.” <span>— Sheldon</span></blockquote>
-     <p>One location. Four optional clues. You can try the password now, or reveal the hints one at a time.</p>
+     <p>Know the answer? Try it. Otherwise, reveal one hint at a time.</p>
      <div className="birthday-hint-trail" aria-live="polite">
       {birthdayWhereHints.slice(0,revealedPlaceHints).map(hint=><div className="birthday-where-hint" key={hint.id}>
        <span aria-hidden="true">{hint.icon}</span><div><strong>{hint.label}</strong><p>{hint.text}</p></div>
@@ -201,17 +218,39 @@ export default function BirthdayQuest({onHome}:Props){
     {feedback&&<p className="birthday-feedback" role="status">{feedback}</p>}
    </section>}
    {save.step===3&&<section className="birthday-finale" aria-labelledby="birthday-finale-title">
-    <div className="birthday-finale-stars" aria-hidden="true">✦　☆　✧　★　✦</div>
-    <span className="overline">ALL THREE CHAPTERS COMPLETE</span>
-    <div className="birthday-finale-gift" aria-hidden="true"><span>🎁</span><b>✧</b></div>
-    <h2 id="birthday-finale-title">Happy Birthday, Molly! ♡</h2>
-    <p className="birthday-finale-lead">The 99 rescued your cake. Sheldon approved the seats. And you remembered exactly where your story began.</p>
-    <div className="birthday-finale-ceremony">
-     <span aria-hidden="true">🎂</span><div><strong>YOUR BIRTHDAY VAULT</strong><small>🔓 UNLOCKED</small><p>The surprise gift has not been placed inside yet. This is the beta's celebratory placeholder—not a coupon or redeemable reward.</p></div><span aria-hidden="true">🎀</span>
+   <div className="birthday-finale-stars" aria-hidden="true">✦　☆　✧　★　✦</div>
+   <span className="overline">THREE CHAPTERS COMPLETE · VAULT UNLOCKED</span>
+   <div className="birthday-finale-gift" aria-hidden="true">{coupon?'💝':'🎁'}</div>
+   <h2 id="birthday-finale-title">Happy Birthday, Molly! ♡</h2>
+   {coupon?<>
+    <p className="birthday-finale-lead">Your birthday gift is yours to keep.</p>
+    <div className="birthday-chosen-gift">
+     <span aria-hidden="true">{birthdayGiftOptions.find(g=>g.id===coupon.giftId)?.icon}</span>
+     <small>{beta?'CREATOR PREVIEW · TEST COUPON':coupon.redeemedAt?'GIFT RECEIVED':'SAVED TO YOUR WALLET'}</small>
+     <h3>{birthdayGiftOptions.find(g=>g.id===coupon.giftId)?.title}</h3>
+     <p>{birthdayGiftOptions.find(g=>g.id===coupon.giftId)?.description}</p>
     </div>
-    <p className="birthday-finale-note">From a little place called home to every lovely adventure still ahead. May there always be cake, laughter and people who are delighted you exist.</p>
-    <button className="btn btn-primary" onClick={onHome}>Back to your cozy arcade ♡</button>
-   </section>}
+    <button className="btn btn-primary birthday-wallet-link" onClick={onWallet}>Open my Wallet 🎟️</button>
+   </>:<>
+    <p className="birthday-finale-lead">You rescued the cake, saved the party and cracked the code. Now choose your birthday gift!</p>
+    <h3 className="birthday-gift-heading">Pick one birthday coupon</h3>
+    <div className="birthday-gift-grid">
+     {birthdayGiftOptions.map(gift=><article key={gift.id} className={'birthday-gift-card '+(pendingGift===gift.id?'is-chosen':'')}>
+      <span className="birthday-gift-card-icon" aria-hidden="true">{gift.icon}</span>
+      <small>{gift.eyebrow}</small><h4>{gift.title}</h4><p>{gift.description}</p>
+      <button className={pendingGift===gift.id?'btn btn-primary':'btn btn-outline'} type="button" onClick={()=>{setPendingGift(gift.id);setGiftError('')}} aria-pressed={pendingGift===gift.id}>
+       {pendingGift===gift.id?'✓ Selected':'Choose this coupon'}
+      </button>
+     </article>)}
+    </div>
+    {pendingGift&&<div className="birthday-gift-confirm" aria-live="polite">
+     <p><strong>{birthdayGiftOptions.find(g=>g.id===pendingGift)?.title}</strong> — is this your final choice?</p>
+     <div><button className="btn btn-primary" onClick={confirmGift}>Yes, add to my Wallet ♡</button><button className="btn btn-outline" onClick={()=>setPendingGift(null)}>Choose another</button></div>
+    </div>}
+    {giftError&&<p className="birthday-wallet-error" role="alert">{giftError}</p>}
+    <p className="birthday-coupon-fine">One choice, kept in your Wallet. {beta?'This creator preview only saves a test coupon.':'The gift can be marked received when you enjoy it.'}</p>
+   </>}
+  </section>}
   </>}
   {transition&&<div className="birthday-overlay" role="presentation"><section className="birthday-transition" role="dialog" aria-modal="true" aria-labelledby="birthday-transition-title">
    <div className="birthday-transition-stars" aria-hidden="true">✦ ✧ ✦ ✧ ✦</div><span className="birthday-transition-icon" aria-hidden="true">{transition.icon}</span>

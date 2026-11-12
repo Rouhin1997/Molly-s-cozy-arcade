@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {
- birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,birthdayStorageKey,
+ birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR,initialBirthdaySave,birthdayStorageKey,
  BIRTHDAY_PAIRS,pairForEvidence,submitEvidencePair,submitCakeLocation,
  birthdayGuests,allValidBirthdaySeatings,seatingIsValid,submitBirthdaySeating,
  birthdayQuestions,birthdayWhereHints,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
@@ -18,8 +18,24 @@ describe('Molly’s birthday clock and preview isolation',()=>{
   expect(birthdayWindow(opening).start.toISOString()).toBe(opening.toISOString());
   expect(birthdayWindow(opening).end.toISOString()).toBe(closing.toISOString());
  });
+ it('gates the real 2026 event and allows an in-progress story to finish',()=>{
+  const fresh=initialBirthdaySave();
+  const started={...fresh,step:1 as const};
+  const before=new Date('2026-11-12T22:59:59Z');
+  const live=new Date('2026-11-13T12:00:00Z');
+  const after=new Date('2026-11-13T23:00:00Z');
+  expect(birthdayCanPlay(false,fresh,before)).toBe(false);
+  expect(birthdayCanPlay(false,fresh,live)).toBe(true);
+  expect(birthdayCanPlay(false,fresh,after)).toBe(false);
+  expect(birthdayCanPlay(false,started,after)).toBe(true);
+  expect(birthdayCanPlay(false,{...fresh,connected:['receipt-camera']},after)).toBe(true);
+  expect(birthdayCanPlay(false,{...fresh,evidenceTries:1},after)).toBe(true);
+  expect(birthdayCanPlay(true,fresh,before)).toBe(true);
+  expect(birthdayCanPlay(false,started,new Date('2027-11-13T12:00:00Z'))).toBe(false);
+ });
  it('only accepts the explicit rehearsal flag and keeps preview saves apart',()=>{
-  expect(BIRTHDAY_EVENT_PUBLISHED).toBe(false); // no empty gift may launch publicly
+  expect(BIRTHDAY_EVENT_PUBLISHED).toBe(true); // official event is configured for the 2026 birthday
+  expect(BIRTHDAY_EVENT_YEAR).toBe(2026);
   expect(birthdayBetaFromSearch('?birthday-beta=1')).toBe(true);
   expect(birthdayBetaFromSearch('?birthday-beta=true')).toBe(false);
   expect(birthdayBetaFromSearch('?other=1')).toBe(false);
@@ -70,7 +86,7 @@ describe('Act two: Sheldon’s birthday seating inspection',()=>{
   expect(passed.save.step).toBe(2);
  });
 });
-describe('Act three: WWWW hometown cipher and placeholder gift vault',()=>{
+describe('Act three: WWWW hometown cipher and gift vault',()=>{
  it('offers four optional clues, starting with geography before letter count and saving the strong hint for last',()=>{
   expect(birthdayWhereHints).toHaveLength(4);
   expect(birthdayWhereHints.map(h=>h.id)).toEqual(['landscape','eight-letters','kolhan','chai']);
