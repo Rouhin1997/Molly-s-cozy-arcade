@@ -49,7 +49,7 @@ export const cakeLocations=[
  {id:'rooftop',label:'Precinct rooftop',icon:'🌆',detail:'The party decorations were delivered up here.'},
 ] as const;
 export const seatRules=[
- 'Leonard sits immediately to Sheldon's left.',
+ "Leonard sits immediately to Sheldon's left.",
  'Amy must be directly beside the birthday girl, Molly.',
  'Penny refuses to sit directly beside Sheldon during his cake lecture.',
  'Raj has claimed one of the two end chairs.',
