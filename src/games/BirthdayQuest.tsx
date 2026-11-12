@@ -2,7 +2,7 @@ import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
 import {birthdayGiftOptions,BIRTHDAY_GIFT_YEAR,clearPreviewBirthdayCoupon,issueBirthdayCoupon,readBirthdayCoupon,writeBirthdayCoupon,type BirthdayGiftId,type BirthdayCoupon} from '../lib/birthdayCoupon';
 import {
- birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
+ birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
  birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayWhereHints,birthdayGuests,chairs,
  submitEvidencePair,submitCakeLocation,submitBirthdaySeating,answerBirthdayQuestion,unlockBirthdayVault,
  type BirthdaySave,type QuestionId
@@ -31,8 +31,7 @@ export default function BirthdayQuest({onHome,onWallet}:Props){
  const [coupon,setCoupon]=useState<BirthdayCoupon|null>(()=>readBirthdayCoupon(beta,BIRTHDAY_GIFT_YEAR));
  const [pendingGift,setPendingGift]=useState<BirthdayGiftId|null>(null);
  const [giftError,setGiftError]=useState('');
- const gate=birthdayWindow(clock);
- const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&gate.year===BIRTHDAY_GIFT_YEAR&&(gate.active||save.step>0));
+ const available=birthdayCanPlay(beta,save,clock);
  const allLinked=save.connected.length===BIRTHDAY_PAIRS.length;
  const questionsDone=save.answers.length===birthdayQuestions.length;
  const activeQuestion=birthdayQuestions.find(q=>!save.answers.includes(q.id));
