@@ -1,3 +1,4 @@
+import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
 import {
  birthdayWindow,birthdayBetaFromSearch,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
