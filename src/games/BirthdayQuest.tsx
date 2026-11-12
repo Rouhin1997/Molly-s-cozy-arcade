@@ -1,7 +1,7 @@
 import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
 import {
- birthdayWindow,birthdayBetaFromSearch,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
+ birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
  birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayGuests,chairs,
  submitEvidencePair,submitCakeLocation,submitBirthdaySeating,answerBirthdayQuestion,unlockBirthdayVault,
  type BirthdaySave,type QuestionId
@@ -28,7 +28,7 @@ export default function BirthdayQuest({onHome}:Props){
  const [password,setPassword]=useState('');
  const [showPlaceHint,setShowPlaceHint]=useState(false);
  const gate=birthdayWindow(clock);
- const available=beta||gate.active||save.step===3;
+ const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&(gate.active||save.step===3));
  const allLinked=save.connected.length===BIRTHDAY_PAIRS.length;
  const questionsDone=save.answers.length===birthdayQuestions.length;
  const activeQuestion=birthdayQuestions.find(q=>!save.answers.includes(q.id));
@@ -107,7 +107,7 @@ export default function BirthdayQuest({onHome}:Props){
    <div className="birthday-gate-art" aria-hidden="true">🎀　🔒　🎁</div>
    <span className="overline">THE PARTY INVITATION</span>
    <h2>Shhh… the guests are almost here.</h2>
-   <p>The birthday caper starts on <strong>13 November</strong>, using the arcade's Rome-time calendar. Come back to collect the cake and rescue the party!</p>
+   <p>The birthday caper is having its final rehearsal. The adventure is planned for <strong>13 November</strong>, using the arcade's Rome-time calendar. The gift vault will open only when the surprise is ready.</p>
    <div className="birthday-gate-date"><strong>13 NOV</strong><span>Opening day ✦</span></div>
    <button className="btn btn-primary" onClick={onHome}>Back to the arcade</button>
   </section>:<>
