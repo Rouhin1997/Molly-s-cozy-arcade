@@ -12,8 +12,6 @@
 .birthday-quest-hero h1 em{font-weight:500;color:#ffd6c0}
 .birthday-quest-hero>p{position:relative;max-width:620px;margin:0 auto 23px;font:15px/1.7 Georgia,serif;color:#f7e9d3}
 .birthday-hero-subline{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:10px;letter-spacing:1.4px}
-.birthday-beta-band{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:17px 0;padding:12px 18px;background:#d4e9e1;border:1px dashed #8baaa2;border-radius:13px;color:#245651}
-.birthday-beta-band>div{display:grid;gap:4px}.birthday-beta-band strong{font-size:13px}.birthday-beta-band span{font-size:12px;line-height:1.5}
 .birthday-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}
 .birthday-step{display:flex;align-items:center;gap:10px;position:relative;background:#f9ead0;padding:16px 11px;border-radius:13px;border:2px solid #d8c09a;min-height:94px}
 .birthday-step.is-active{background:#fceecb;border-color:#bb824d;box-shadow:0 8px 20px #ae7e4b29}.birthday-step.is-cleared{background:#e5efe2;border-color:#8aab8a}

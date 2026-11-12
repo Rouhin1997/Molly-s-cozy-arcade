@@ -1,8 +1,8 @@
 import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
-import {birthdayGiftOptions,BIRTHDAY_GIFT_YEAR,clearPreviewBirthdayCoupon,issueBirthdayCoupon,readBirthdayCoupon,writeBirthdayCoupon,type BirthdayGiftId,type BirthdayCoupon} from '../lib/birthdayCoupon';
+import {birthdayGiftOptions,BIRTHDAY_GIFT_YEAR,issueBirthdayCoupon,readBirthdayCoupon,writeBirthdayCoupon,type BirthdayGiftId,type BirthdayCoupon} from '../lib/birthdayCoupon';
 import {
- birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
+ birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,readBirthdaySave,writeBirthdaySave,
  birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayWhereHints,birthdayGuests,chairs,
  submitEvidencePair,submitCakeLocation,submitBirthdaySeating,answerBirthdayQuestion,unlockBirthdayVault,
  type BirthdaySave,type QuestionId
@@ -97,13 +97,6 @@ export default function BirthdayQuest({onHome,onWallet}:Props){
   }
   setCoupon(next);setPendingGift(null);setGiftError('');
  }
- function resetBeta(){
-  if(!beta||!window.confirm('Restart the creator preview, including its test coupon? The real birthday wallet will not change.'))return;
-  const fresh=initialBirthdaySave();
-  clearPreviewBirthdayCoupon();
-  update(fresh);setCoupon(null);setPendingGift(null);setGiftError('');
-  setSelected([]);setPicked('Sheldon');setFeedback('Preview restarted.');setTransition(null);setPassword('');setRevealedPlaceHints(0);
- }
  return <main className="birthday-quest">
   <button className="back-link birthday-back" onClick={onHome}>← Return to Molly's Arcade</button>
   <header className="birthday-quest-hero">
@@ -116,10 +109,6 @@ export default function BirthdayQuest({onHome,onWallet}:Props){
    <p>One missing cake. One very particular physicist. One present with an unreasonable security system.</p>
    <div className="birthday-hero-subline"><span>13 NOVEMBER</span><span>✦</span><span>THREE LITTLE ADVENTURES</span><span>✦</span><span>MADE FOR MOLLY</span></div>
   </header>
-  {beta&&<aside className="birthday-beta-band" role="note">
-   <div><strong>🧪 Creator preview</strong><span>Test runs and coupons are separate from Molly’s real birthday Wallet.</span></div>
-   <button className="btn btn-outline" onClick={resetBeta}>Restart beta ↺</button>
-  </aside>}
   {!available?<section className="birthday-gate">
    <div className="birthday-gate-art" aria-hidden="true">🎀　🔒　🎁</div>
    <span className="overline">THE PARTY INVITATION</span>

@@ -71,6 +71,17 @@ describe('Molly’s Chronicle and arcade directory',()=>{
   expect(late[0].date.getFullYear()).toBe(2026);
   expect(late[1].date.getFullYear()).toBe(2027);
  });
+ it('announces the birthday as live only on 13 November 2026 Rome time',()=>{
+  const before=upcomingArcadeEvents(new Date('2026-11-12T22:59:59Z')).find(e=>e.id==='birthday');
+  const opening=upcomingArcadeEvents(new Date('2026-11-12T23:00:00Z')).find(e=>e.id==='birthday');
+  const midday=upcomingArcadeEvents(new Date('2026-11-13T12:00:00Z')).find(e=>e.id==='birthday');
+  const closing=upcomingArcadeEvents(new Date('2026-11-13T23:00:00Z')).find(e=>e.id==='birthday');
+  expect(before?.status).toBe('scheduled');
+  expect(opening?.status).toBe('live');
+  expect(midday?.status).toBe('live');
+  expect(midday?.summary).toMatch(/Wallet/);
+  expect(closing?.status).toBe('scheduled');
+ });
  it('exposes dated workshop notes without pretending a two-way mailbox exists',()=>{
   expect(developerNotes.length).toBeGreaterThanOrEqual(2);
   expect(developerNotes.every(n=>n.date&&n.title&&n.message)).toBe(true);

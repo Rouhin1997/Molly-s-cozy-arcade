@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {
- birthdayWindow,birthdayBetaFromSearch,birthdayCanPlay,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR,initialBirthdaySave,birthdayStorageKey,
+ birthdayWindow,birthdayBetaFromSearch,birthdayEventIsLive,birthdayCanPlay,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR,initialBirthdaySave,birthdayStorageKey,
  BIRTHDAY_PAIRS,pairForEvidence,submitEvidencePair,submitCakeLocation,
  birthdayGuests,allValidBirthdaySeatings,seatingIsValid,submitBirthdaySeating,
  birthdayQuestions,birthdayWhereHints,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
@@ -17,6 +17,14 @@ describe('Molly’s birthday clock and preview isolation',()=>{
   expect(birthdayWindow(closing).active).toBe(false);
   expect(birthdayWindow(opening).start.toISOString()).toBe(opening.toISOString());
   expect(birthdayWindow(opening).end.toISOString()).toBe(closing.toISOString());
+ });
+ it('activates the welcome invitation at midnight Rome time and closes it after the birthday',()=>{
+  expect(birthdayEventIsLive(new Date('2026-11-12T22:59:59Z'))).toBe(false);
+  expect(birthdayEventIsLive(new Date('2026-11-12T23:00:00Z'))).toBe(true);
+  expect(birthdayEventIsLive(new Date('2026-11-13T12:00:00Z'))).toBe(true);
+  expect(birthdayEventIsLive(new Date('2026-11-13T22:59:59Z'))).toBe(true);
+  expect(birthdayEventIsLive(new Date('2026-11-13T23:00:00Z'))).toBe(false);
+  expect(birthdayEventIsLive(new Date('2027-11-13T12:00:00Z'))).toBe(false);
  });
  it('gates the real 2026 event and allows an in-progress story to finish',()=>{
   const fresh=initialBirthdaySave();

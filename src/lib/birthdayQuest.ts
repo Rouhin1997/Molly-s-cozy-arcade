@@ -12,6 +12,11 @@ export function birthdayWindow(now=new Date()){
   const end=romeMidnightUtc(year,11,14);
   return {year,start,end,active:now>=start&&now<end};
 }
+/** True only on the official 2026 birthday in Europe/Rome, including both midnight boundaries. */
+export function birthdayEventIsLive(now=new Date()):boolean{
+ const gate=birthdayWindow(now);
+ return BIRTHDAY_EVENT_PUBLISHED&&gate.year===BIRTHDAY_EVENT_YEAR&&gate.active;
+}
 export function birthdayBetaFromSearch(search:string):boolean{
   return new URLSearchParams(search).get('birthday-beta')==='1';
 }
