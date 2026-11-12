@@ -16,7 +16,7 @@ The test flag unlocks the birthday event **only in the current browser**. It sto
 
 1. **The 99 Files: The Cake Caper.** Jake picked up the cake, then filed it where nobody would find it. Examine four original case-file exhibits. Pair receipt with camera still and sticky note with storage register to derive two deductions, then identify the evidence-room cold cabinet. Wrong links or locations produce hints; there is no punishing fail or timer.
 2. **Bazinga! Lab: Sheldon's Party Seating Protocol.** Molly owns the central chair. Place Sheldon, Leonard, Penny, Amy and Raj into the remaining five seats, satisfying **all six** meaningful conditions. Click a guest chip and then a chair. Exactly **one** solution exists (verified by exhaustive permutation test); missing or invalid arrangements do not advance. An extra hint appears after two incorrect inspections.
-3. **Who? What? Where? When? — the hometown cipher.** Three short sequential WHO / WHAT / WHEN questions reveal the final WHERE field note, which provides Jharkhand and West Singhbhum as geographical clues. Enter **Chaibasa**, Molly's place of birth, to unlock the decorative gift vault.
+3. **Who? What? Where? When? — the hometown cipher.** Three short sequential WHO / WHAT / WHEN questions reveal the final WHERE field note. The first message is Sheldon's playful, non-geographical description. Four hints are optional and reveal **one at a time**, in this order: (1) eastern India / forests, (2) eight letters / modest town, (3) Kolhan / Saranda, (4) Jharkhand / chai. No district name or answer is initially visible. Enter **Chaibasa**, Molly's place of birth, to unlock the decorative gift vault.
 
 Between stages, a celebratory interstitial appears and the next chapter unlocks. Progress is saved to localStorage under a key independent of the eight normal arcade games. The gift vault has no real content, activation, redemption, or wallet integration at beta stage.
 
@@ -27,7 +27,7 @@ Between stages, a celebratory interstitial appears and the next chapter unlocks.
 - [ ] Match both exhibit pairs, then locate the cake; see the chapter celebration.
 - [ ] Seat five guests; ensure incomplete and wrong layouts are rejected gently.
 - [ ] Complete the unique seating solution; see the chapter celebration.
-- [ ] Answer WHO / WHAT / WHEN; try a wrong town, then enter Chaibasa (case insensitive).
+- [ ] Answer WHO / WHAT / WHEN; verify that none of the four hints appears until requested, reveal them in order, try a wrong town, then enter Chaibasa (case insensitive).
 - [ ] Confirm the vault displays a birthday message **and an explicitly empty placeholder**, not an actual redeemable gift.
 - [ ] Refresh mid-run; verify stage progress resumes.
 - [ ] Click **Restart beta** and verify the rehearsal resets independently of main-arcade saves.

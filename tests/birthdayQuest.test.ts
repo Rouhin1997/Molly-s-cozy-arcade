@@ -3,7 +3,7 @@ import {
  birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,birthdayStorageKey,
  BIRTHDAY_PAIRS,pairForEvidence,submitEvidencePair,submitCakeLocation,
  birthdayGuests,allValidBirthdaySeatings,seatingIsValid,submitBirthdaySeating,
- birthdayQuestions,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
+ birthdayQuestions,birthdayWhereHints,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
 } from '../src/lib/birthdayQuest';
 
 describe('Molly’s birthday clock and preview isolation',()=>{
@@ -71,6 +71,16 @@ describe('Act two: Sheldon’s birthday seating inspection',()=>{
  });
 });
 describe('Act three: WWWW hometown cipher and placeholder gift vault',()=>{
+ it('offers four optional clues, starting with geography before letter count and saving the strong hint for last',()=>{
+  expect(birthdayWhereHints).toHaveLength(4);
+  expect(birthdayWhereHints.map(h=>h.id)).toEqual(['landscape','eight-letters','kolhan','chai']);
+  expect(birthdayWhereHints[0].text).toMatch(/eastern India/i);
+  expect(birthdayWhereHints[1].text).toMatch(/Eight letters/i);
+  expect(birthdayWhereHints[2].text).toMatch(/Kolhan/i);
+  expect(birthdayWhereHints[3].text).toMatch(/Jharkhand/i);
+  expect(birthdayWhereHints[0].text).not.toMatch(/Jharkhand|West Singhbhum|Chaibasa/i);
+ });
+
  it('requires the three notes before password attempts',()=>{
   let save={...initialBirthdaySave(),step:2 as const};
   expect(unlockBirthdayVault(save,'Chaibasa').correct).toBe(false);

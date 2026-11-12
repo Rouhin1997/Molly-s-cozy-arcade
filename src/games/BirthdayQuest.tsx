@@ -2,7 +2,7 @@ import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
 import {
  birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
- birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayGuests,chairs,
+ birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayWhereHints,birthdayGuests,chairs,
  submitEvidencePair,submitCakeLocation,submitBirthdaySeating,answerBirthdayQuestion,unlockBirthdayVault,
  type BirthdaySave,type QuestionId
 } from '../lib/birthdayQuest';
@@ -26,7 +26,7 @@ export default function BirthdayQuest({onHome}:Props){
  const [feedback,setFeedback]=useState('');
  const [transition,setTransition]=useState<SceneTransition|null>(null);
  const [password,setPassword]=useState('');
- const [showPlaceHint,setShowPlaceHint]=useState(false);
+ const [revealedPlaceHints,setRevealedPlaceHints]=useState(0);
  const gate=birthdayWindow(clock);
  const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&(gate.active||save.step===3));
  const allLinked=save.connected.length===BIRTHDAY_PAIRS.length;
@@ -87,7 +87,7 @@ export default function BirthdayQuest({onHome}:Props){
  function resetBeta(){
   if(!beta||!window.confirm('Restart just this birthday beta rehearsal? The real birthday game is stored separately.'))return;
   const fresh=initialBirthdaySave();
-  update(fresh);setSelected([]);setPicked('Sheldon');setFeedback('Beta rehearsal reset. Ready to begin again!');setTransition(null);setPassword('');setShowPlaceHint(false);
+  update(fresh);setSelected([]);setPicked('Sheldon');setFeedback('Beta rehearsal reset. Ready to begin again!');setTransition(null);setPassword('');setRevealedPlaceHints(0);
  }
  return <main className="birthday-quest">
   <button className="back-link birthday-back" onClick={onHome}>← Return to Molly's Arcade</button>
@@ -184,14 +184,19 @@ export default function BirthdayQuest({onHome}:Props){
     })}</div>
     {questionsDone&&<div className="birthday-where-dossier">
      <div className="birthday-where-title"><span aria-hidden="true">📍</span><div><span className="overline">FINAL FIELD NOTE · WHERE?</span><h3>Where did Molly's story begin?</h3></div></div>
-     <p>The password is a place name, not a date or a person. The clues lead to a town in <strong>Jharkhand</strong>, the headquarters of <strong>West Singhbhum district</strong>—and, most importantly, Molly's birthplace.</p>
-     {showPlaceHint&&<p className="birthday-where-hint">Extra hint: the town begins with <strong>CH</strong> and ends with <strong>SA</strong>.</p>}
+     <blockquote className="birthday-where-riddle">“The password is geographically specific, historically significant to the recipient, and emotionally meaningful. I find the third criterion scientifically questionable, but Amy insisted.” <span>— Sheldon</span></blockquote>
+     <p>One location. Four optional clues. You can try the password now, or reveal the hints one at a time.</p>
+     <div className="birthday-hint-trail" aria-live="polite">
+      {birthdayWhereHints.slice(0,revealedPlaceHints).map(hint=><div className="birthday-where-hint" key={hint.id}>
+       <span aria-hidden="true">{hint.icon}</span><div><strong>{hint.label}</strong><p>{hint.text}</p></div>
+      </div>)}
+     </div>
      <form onSubmit={unlock} className="birthday-code-form">
       <label htmlFor="birthday-code-input">Enter the hometown password</label>
       <div><input id="birthday-code-input" value={password} onChange={e=>setPassword(e.target.value)} autoComplete="off" placeholder="The town where it all began…" maxLength={42} required/>
       <button className="btn btn-primary" type="submit">Unlock the gift ↗</button></div>
      </form>
-     <button className="birthday-hint-action" type="button" onClick={()=>setShowPlaceHint(true)}>Need one more geographical hint?</button>
+     {revealedPlaceHints<birthdayWhereHints.length&&<button className="birthday-hint-action" type="button" onClick={()=>setRevealedPlaceHints(n=>Math.min(n+1,birthdayWhereHints.length))}>💡 Reveal hint {revealedPlaceHints+1} of {birthdayWhereHints.length}</button>}
     </div>}
     {feedback&&<p className="birthday-feedback" role="status">{feedback}</p>}
    </section>}

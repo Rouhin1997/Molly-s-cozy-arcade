@@ -73,6 +73,19 @@ export const birthdayQuestions=[
   choices:['31 October','13 November','24 December','1 January'],correct:'13 November',
   note:'The day the whole arcade puts on its party hat.'},
 ] as const;
+/** WHERE finale: optional, cumulative hints ordered from subtle to revealing.
+ * Present the next hint only when the player actively requests it. */
+export const birthdayWhereHints=[
+ {id:'landscape',icon:'🌳',label:'Hint 1 · Geographical',
+  text:'Look toward eastern India, where wooded hills, sal forests and old landscapes carry stories much older than ours.'},
+ {id:'eight-letters',icon:'🗺️',label:'Hint 2 · Gentle',
+  text:'Eight letters. Not a capital, not a bustling metropolis. A place that might seem ordinary on a map, but never to the person whose story it holds.'},
+ {id:'kolhan',icon:'📜',label:'Hint 3 · Historical',
+  text:'A town associated with the Kolhan region, not far from the forests of Saranda—the fabled land of seven hundred hills.'},
+ {id:'chai',icon:'☕',label:'Hint 4 · Strong',
+  text:'The place lies in Jharkhand. Its first four letters might remind you of something warm and comforting in an Indian teacup.'}
+] as const;
+
 export function initialBirthdaySave():BirthdaySave{
  return {version:1,step:0,connected:[],evidenceTries:0,cakeTries:0,
   seating:['','','Molly','','',''],seatingTries:0,answers:[],codeTries:0,openedAt:null};
