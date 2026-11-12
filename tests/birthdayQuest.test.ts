@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {
- birthdayWindow,birthdayBetaFromSearch,initialBirthdaySave,birthdayStorageKey,
+ birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,birthdayStorageKey,
  BIRTHDAY_PAIRS,pairForEvidence,submitEvidencePair,submitCakeLocation,
  birthdayGuests,allValidBirthdaySeatings,seatingIsValid,submitBirthdaySeating,
  birthdayQuestions,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
@@ -19,6 +19,7 @@ describe('Molly’s birthday clock and preview isolation',()=>{
   expect(birthdayWindow(opening).end.toISOString()).toBe(closing.toISOString());
  });
  it('only accepts the explicit rehearsal flag and keeps preview saves apart',()=>{
+  expect(BIRTHDAY_EVENT_PUBLISHED).toBe(false); // no empty gift may launch publicly
   expect(birthdayBetaFromSearch('?birthday-beta=1')).toBe(true);
   expect(birthdayBetaFromSearch('?birthday-beta=true')).toBe(false);
   expect(birthdayBetaFromSearch('?other=1')).toBe(false);
