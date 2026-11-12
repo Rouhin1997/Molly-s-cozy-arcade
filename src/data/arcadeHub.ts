@@ -23,6 +23,7 @@ export type ArcadeEvent={
 };
 export function upcomingArcadeEvents(now=new Date()):ArcadeEvent[]{
  const halloweenLive=isHalloweenLive(now);
+ const birthdayLive=BIRTHDAY_EVENT_PUBLISHED&&birthdayWindow(now).year===BIRTHDAY_EVENT_YEAR&&birthdayWindow(now).active;
  const events:ArcadeEvent[]=[
   {id:'halloween',label:'Halloween Heist · Beta',icon:'🎃',
    date:nextAnnualRomeDate(10,31,now),dateText:'31 October',
