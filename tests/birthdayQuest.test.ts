@@ -28,6 +28,8 @@ describe('Molly’s birthday clock and preview isolation',()=>{
   expect(birthdayCanPlay(false,fresh,live)).toBe(true);
   expect(birthdayCanPlay(false,fresh,after)).toBe(false);
   expect(birthdayCanPlay(false,started,after)).toBe(true);
+  expect(birthdayCanPlay(false,{...fresh,connected:['receipt-camera']},after)).toBe(true);
+  expect(birthdayCanPlay(false,{...fresh,evidenceTries:1},after)).toBe(true);
   expect(birthdayCanPlay(true,fresh,before)).toBe(true);
   expect(birthdayCanPlay(false,started,new Date('2027-11-13T12:00:00Z'))).toBe(false);
  });
