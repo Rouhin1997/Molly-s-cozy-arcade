@@ -33,7 +33,8 @@ export type BirthdaySave={
  * Preview access always uses separate save and coupon records. */
 export function birthdayCanPlay(beta:boolean,save:BirthdaySave,now=new Date()):boolean{
  const gate=birthdayWindow(now);
- return beta||(BIRTHDAY_EVENT_PUBLISHED&&gate.year===BIRTHDAY_EVENT_YEAR&&(gate.active||save.step>0));
+ const started=save.step>0||save.connected.length>0||save.evidenceTries>0||save.cakeTries>0;
+ return beta||(BIRTHDAY_EVENT_PUBLISHED&&gate.year===BIRTHDAY_EVENT_YEAR&&(gate.active||started));
 }
 export const birthdayGuests=['Leonard','Sheldon','Molly','Amy','Penny','Raj'] as const;
 export const BIRTHDAY_SOLUTION=['Leonard','Sheldon','Molly','Amy','Penny','Raj'];
