@@ -8,6 +8,7 @@ import PinkWallet from './games/PinkWallet';
 import BraveTrail from './games/BraveTrail';
 import NoodleShop from './games/NoodleShop';
 import IndiaQuest from './games/IndiaQuest';
+import BirthdayQuest from './games/BirthdayQuest';
 import ArcadeNavigation from './components/ArcadeNavigation';
 import AnswerAssistInput from './components/AnswerAssistInput';
 import {comingSoonGames,upcomingArcadeEvents} from './data/arcadeHub';
@@ -202,7 +203,7 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
           <h3>{event.label}</h3><p>{event.summary}</p></div>
           {event.id==='christmas'?<span className="arcade-event-plan-label">🎄 In planning</span>:
             <button className="btn btn-soft" onClick={()=>onNavigate(event.route)}>
-             {event.status==='live'?'Play Halloween Heist':event.id==='halloween'?'View Halloween dates':'See the preview'} ↗
+             {event.status==='live'?(event.id==='birthday'?'Play Birthday Quest':'Play Halloween Heist'):event.id==='halloween'?'View Halloween dates':'See the preview'} ↗
             </button>}
         </article>)}
       </div>
@@ -210,8 +211,8 @@ function Home({ onNavigate, onChooseGame, progress, connectionStats, toonStats, 
 
     <section className="birthday-banner">
       <div className="birthday-illustration" aria-hidden="true"><span>🎁</span><Sparkle/></div>
-      <div className="birthday-copy"><span className="overline">SOMETHING SPECIAL IS COMING</span><h2>There's a little magic in November.</h2><p>Every November 13, a birthday-only adventure will appear here—with mystery gifts you can redeem in real life. We're still building the surprise!</p></div>
-      <button className="btn btn-secondary" onClick={() => onNavigate('vault')}>Peek at the vault <span aria-hidden="true">↗</span></button>
+      <div className="birthday-copy"><span className="overline">13 NOVEMBER · THE BIRTHDAY EVENT</span><h2>The Great Birthday Caper awaits.</h2><p>Three little adventures: rescue Jake's lost cake, rearrange Sheldon's party and solve a hometown password to unlock a special birthday vault. The final gift is still a surprise!</p></div>
+      <button className="btn btn-secondary" onClick={() => onNavigate('vault')}>Open the birthday quest <span aria-hidden="true">↗</span></button>
     </section>
   </>;
 }
@@ -368,10 +369,6 @@ function GuessWho({ progress, setProgress, initialMode, today, onHome }: {
   </main>;
 }
 
-function Vault({ onHome }: { onHome: () => void }) {
-  const days = dateUntilBirthday();
-  return <main className="vault-page"><button className="back-link" onClick={onHome}>← Back to the arcade</button><div className="vault-inner"><div className="vault-gift" aria-hidden="true">🎁<Sparkle/></div><span className="overline">THE BIRTHDAY VAULT</span><h1>A little surprise is on its way...</h1><p>On November 13, a special birthday adventure will join the arcade. Complete its challenges to uncover sweet little real-life gifts and collect them in your coupon wallet.</p><div className="vault-countdown"><strong>{days === 0 ? 'November 13 is here! 🎂' : `${days} days until November 13`}</strong><span>Birthday Quest and coupon wallet are planned for a later milestone. Nothing to redeem just yet.</span></div><button className="btn btn-primary" onClick={onHome}>Back to play ↗</button></div></main>;
-}
 
 function App() {
   const [view, setView] = useState<View>('home');
@@ -413,7 +410,7 @@ function App() {
     <ArcadeNavigation active={view} onNavigate={(route)=>navigate(route)} onPreview={setSneakPeek} onComingSoon={comingSoonShelf}/>
     <button className="header-cta" onClick={() => navigate('guess', 'daily')}>Play now <span aria-hidden="true">↗</span></button>
    </div></header>
-    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <IndiaQuest key={mode} today={today} initialMode={mode} onHome={() => navigate('home')} onClassic={() => navigate('classic',mode)}/> : view === 'classic' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('guess',mode)}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : (view === 'nine' || view === 'heist') ? <NineNine key={view} initialMode={view==='heist'?'heist':'daily'} today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onWallet={() => navigate('wallet')}/> : view === 'wallet' ? <PinkWallet progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onPlay={() => navigate('pink')} onPassport={() => navigate('passport')}/> : view === 'brave' ? <BraveTrail onHome={() => navigate('home')} onPassport={() => navigate('passport')}/> : view === 'noodles' ? <NoodleShop onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onWallet={() => navigate('wallet')} onHome={() => navigate('home')}/> : <Vault onHome={() => navigate('home')}/>}</div>
+    <div className="page-content">{view === 'home' ? <Home today={today} progress={progress} connectionStats={connectionProgress.stats} toonStats={toonProgress.stats} bazingaStats={bazingaProgress.stats} nineStats={nineProgress.stats} pinkStats={pinkProgress.stats} onNavigate={navigate} onChooseGame={setSneakPeek}/> : view === 'guess' ? <IndiaQuest key={mode} today={today} initialMode={mode} onHome={() => navigate('home')} onClassic={() => navigate('classic',mode)}/> : view === 'classic' ? <GuessWho key={mode} today={today} initialMode={mode} progress={progress} setProgress={setProgress} onHome={() => navigate('guess',mode)}/> : view === 'connections' ? <Connections today={today} progress={connectionProgress} setProgress={setConnectionProgress} onHome={() => navigate('home')}/> : view === 'toon' ? <ToonRewind today={today} progress={toonProgress} setProgress={setToonProgress} onHome={() => navigate('home')}/> : view === 'bazinga' ? <BazingaLab today={today} progress={bazingaProgress} setProgress={setBazingaProgress} onHome={() => navigate('home')}/> : (view === 'nine' || view === 'heist') ? <NineNine key={view} initialMode={view==='heist'?'heist':'daily'} today={today} progress={nineProgress} setProgress={setNineProgress} onHome={() => navigate('home')}/> : view === 'pink' ? <PinkRush today={today} progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onWallet={() => navigate('wallet')}/> : view === 'wallet' ? <PinkWallet progress={pinkProgress} setProgress={setPinkProgress} onHome={() => navigate('home')} onPlay={() => navigate('pink')} onPassport={() => navigate('passport')}/> : view === 'brave' ? <BraveTrail onHome={() => navigate('home')} onPassport={() => navigate('passport')}/> : view === 'noodles' ? <NoodleShop onHome={() => navigate('home')}/> : view === 'passport' ? <Passport guess={progress} connections={connectionProgress} toon={toonProgress} bazinga={bazingaProgress} nine={nineProgress} pink={pinkProgress} setGuess={setProgress} setConnections={setConnectionProgress} setToon={setToonProgress} setBazinga={setBazingaProgress} setNine={setNineProgress} setPink={setPinkProgress} onWallet={() => navigate('wallet')} onHome={() => navigate('home')}/> : <BirthdayQuest onHome={() => navigate('home')}/>}</div>
     <footer className="site-footer"><span>Made with love, curiosity & a little bit of mischief. ♡</span><span>© {new Date().getFullYear()} Molly's Cozy Arcade</span></footer>
     {selectedGame && <div className="modal-scrim" role="presentation" onMouseDown={() => setSneakPeek(null)}><section className="peek-modal" role="dialog" aria-modal="true" aria-labelledby="peek-title" onMouseDown={event => event.stopPropagation()}><button className="modal-close" autoFocus onClick={() => setSneakPeek(null)} aria-label="Close preview">×</button><div className="peek-emoji" aria-hidden="true">{selectedGame.icon}</div><span className="overline">COMING TO THE ARCADE</span><h2 id="peek-title">{selectedGame.name}</h2><p>{selectedGame.detail}</p><p className="peek-fine">Still in the workshop! We'll add this in a future release.</p><button className="btn btn-primary" onClick={() => setSneakPeek(null)}>Sounds lovely ♡</button></section></div>}
   </div>;

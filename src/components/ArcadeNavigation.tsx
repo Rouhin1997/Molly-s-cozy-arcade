@@ -90,7 +90,7 @@ export default function ArcadeNavigation({active,onNavigate,onPreview,onComingSo
     <div className="hub-popover-heading"><strong>On the calendar</strong><small>Closest first · annual occasions</small></div>
     {calendar.map(event=><button className="hub-event-item" key={event.id} onClick={()=>nav(event.route)}>
      <div className="hub-event-date"><strong>{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',day:'numeric'})}</strong><small>{event.date.toLocaleDateString('en-GB',{timeZone:'Europe/Rome',month:'short',year:'numeric'})}</small></div>
-     <div><strong>{event.icon} {event.label}</strong><p>{event.summary}</p><span>{event.status==='live'?'LIVE · ends at midnight (Rome)':event.id==='halloween'?'Locked until Halloween · Rome time':event.id==='christmas'?'Planning milestone · not playable':'Birthday preview · not live'}</span></div>
+     <div><strong>{event.icon} {event.label}</strong><p>{event.summary}</p><span>{event.status==='live'?(event.id==='birthday'?'BIRTHDAY QUEST · LIVE TODAY':'LIVE · ends at midnight (Rome)'):event.id==='halloween'?'Locked until Halloween · Rome time':event.id==='christmas'?'Planning milestone · not playable':'Opens 13 November · Rome time'}</span></div>
     </button>)}
    </div>
   </details>

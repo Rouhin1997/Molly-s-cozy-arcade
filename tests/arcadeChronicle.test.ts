@@ -62,7 +62,7 @@ describe('Molly’s Chronicle and arcade directory',()=>{
   const october=upcomingArcadeEvents(new Date(2026,9,22));
   expect(october.map(e=>e.id)).toEqual(['halloween','birthday','christmas']);
   expect(october[0].date.getFullYear()).toBe(2026);
-  expect(october[1].status).toBe('planned');
+  expect(october[1].status).toBe('scheduled');
   const november=upcomingArcadeEvents(new Date(2026,10,1));
   expect(november.map(e=>e.id)).toEqual(['birthday','christmas','halloween']);
   expect(november[2].date.getFullYear()).toBe(2027);
