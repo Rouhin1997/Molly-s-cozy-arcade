@@ -1,41 +1,43 @@
-# Molly's Birthday 2026 — The Great Birthday Caper (creator beta)
+# Molly's Birthday 2026 — The Great Birthday Caper
 
-**Status:** Three-stage playable birthday event and purely decorative gift-vault placeholder. The actual gift is intentionally **not included** until the creator chooses it after beta playtesting.
+**Release:** Official birthday special, scheduled for **13 November 2026, 00:00–23:59 (Europe/Rome)**. Set `BIRTHDAY_EVENT_PUBLISHED=true` in `src/lib/birthdayQuest.ts`; only the 2026 public edition opens. A player who starts on the day may finish after midnight. The gift Wallet stays available afterward.
 
-## Creator playtest URL
+**Creator preview:** `https://rouhin1997.github.io/Molly-s-cozy-arcade/?birthday-beta=1`
 
-For an immediate test before 13 November, open the deployed arcade with `?birthday-beta=1` added to the end of the GitHub Pages URL, then navigate to **Events → Molly's Birthday** or the home birthday banner.
+The preview opens immediately with independently saved game progress and a **test-only birthday coupon**. The **Restart beta** control clears only the preview progress and preview coupon, never the real birthday gift. This URL is not private; anyone with it can rehearse the game. No actual coupon can be issued from preview mode.
 
-Example: `https://rouhin1997.github.io/Molly-s-cozy-arcade/?birthday-beta=1`
+## The three short chapters
 
-The test flag unlocks the birthday event **only in the current browser**. It stores a separate beta save and marks the rehearsal prominently; no real prize, promise, coupon, or redeemable benefit is issued. The beta reset button only deletes its own adventure progress. This is a friendly preview mode, not a private security measure: a person who knows the query parameter can access it.
+1. **The 99 Files · Cake Caper:** connect matching evidence from a receipt, corridor camera, sticky note and storage register; deduce which room holds Jake's misplaced birthday cake. Two matching pairs are required.
+2. **Bazinga! · Party Seating:** arrange Sheldon, Leonard, Penny, Amy and Raj around Molly using six stated constraints. The exhaustive logic checker confirms one correct arrangement.
+3. **Who? What? Where? When? · The Hometown Cipher:** complete three quick field notes and find the town password `Chaibasa`. Four optional hints are hidden until revealed, in order: eastern India and forests; eight letters; Kolhan/Saranda; Jharkhand/tea.
 
-**Public launch safety gate:** `BIRTHDAY_EVENT_PUBLISHED` remains `false` until the creator supplies and approves the actual gift. This prevents an empty vault reaching Molly on her birthday. Once the gift is installed and the flag is deliberately changed to `true`, the live event opens on 13 November from 00:00 to 23:59:59 **Europe/Rome** according to the browser's timezone-capable clock. A live player who has unlocked the vault can return to the finale after the event day, rather than lose their completed card. The creator's beta URL works regardless of this flag. All logic is client-side, not tamper-resistant.
+Each chapter has brief story copy, gentle error feedback, and a small celebration on completion. The event has a birthday-themed paper/confetti backdrop, bunting, balloons, and a gift reveal.
 
-## Story / mechanics
+## The official gift
 
-1. **The 99 Files: The Cake Caper.** Jake picked up the cake, then filed it where nobody would find it. Examine four original case-file exhibits. Pair receipt with camera still and sticky note with storage register to derive two deductions, then identify the evidence-room cold cabinet. Wrong links or locations produce hints; there is no punishing fail or timer.
-2. **Bazinga! Lab: Sheldon's Party Seating Protocol.** Molly owns the central chair. Place Sheldon, Leonard, Penny, Amy and Raj into the remaining five seats, satisfying **all six** meaningful conditions. Click a guest chip and then a chair. Exactly **one** solution exists (verified by exhaustive permutation test); missing or invalid arrangements do not advance. An extra hint appears after two incorrect inspections.
-3. **Who? What? Where? When? — the hometown cipher.** Three short sequential WHO / WHAT / WHEN questions reveal the final WHERE field note. The first message is Sheldon's playful, non-geographical description. Four hints are optional and reveal **one at a time**, in this order: (1) eastern India / forests, (2) eight letters / modest town, (3) Kolhan / Saranda, (4) Jharkhand / chai. No district name or answer is initially visible. Enter **Chaibasa**, Molly's place of birth, to unlock the decorative gift vault.
+At the unlocked vault, Molly sees **three visible coupons** and can select **exactly one**:
 
-Between stages, a celebratory interstitial appears and the next chapter unlocks. Progress is saved to localStorage under a key independent of the eight normal arcade games. The gift vault has no real content, activation, redemption, or wallet integration at beta stage.
+- **Holiday Snackbox:** a festive snack box prepared for her.
+- **Movie Experience of Your Choice:** she chooses the film and cinema outing.
+- **Fund My Makeover:** a makeover of her choice (hair colour/highlights, mani-pedi, laser appointment or another treatment), planned together.
 
-## Playtest checklist
+She selects a card, explicitly confirms her choice, and the coupon is saved in the arcade's existing **Wallet** under a separate birthday gift section. A saved coupon cannot be replaced or obtained again by replaying, even when marked received. She can later mark the gift as **received** in the Wallet; this action also requires confirmation. No expiration or monetary amount is imposed by the game.
 
-- [ ] Before 13 November, birthday page is locked without `?birthday-beta=1`; creator beta opens it.
-- [ ] Try a mismatched evidence pair and a wrong cake location; neither advances.
-- [ ] Match both exhibit pairs, then locate the cake; see the chapter celebration.
-- [ ] Seat five guests; ensure incomplete and wrong layouts are rejected gently.
-- [ ] Complete the unique seating solution; see the chapter celebration.
-- [ ] Answer WHO / WHAT / WHEN; verify that none of the four hints appears until requested, reveal them in order, try a wrong town, then enter Chaibasa (case insensitive).
-- [ ] Confirm the vault displays a birthday message **and an explicitly empty placeholder**, not an actual redeemable gift.
-- [ ] Refresh mid-run; verify stage progress resumes.
-- [ ] Click **Restart beta** and verify the rehearsal resets independently of main-arcade saves.
-- [ ] Test on a phone, keyboard-only navigation, and with reduced motion enabled.
-- [ ] On 13 November, verify the actual non-beta birthday gate and separate save.
+**Storage:** Browser `localStorage` only. Gift selections, voucher status and chapter progress belong to this browser, not an authenticated server account. Cross-device synchronisation or tamper-proof redemptions would require a backend; avoid clearing site data before preserving a backup.
 
-Automated rules and timezone checks: `tests/birthdayQuest.test.ts`.
+## Release QA
 
-## Gift follow-up
+- [ ] 12 November (Rome): public event remains locked; creator preview opens.
+- [ ] 13 November (Rome): public event opens, navigation displays *LIVE*.
+- [ ] Verify incorrect evidence pairs and cake locations do not advance.
+- [ ] Verify the six-seat puzzle rejects incomplete and invalid arrangements; accepts the single valid one.
+- [ ] Verify the hometown hints remain hidden until requested and unlock accepts `Chaibasa` case-insensitively.
+- [ ] At the finale, try all three choices **before** confirming; ensure final confirmation saves only the selected coupon.
+- [ ] Navigate to Wallet; confirm exactly the chosen birthday ticket is shown alongside existing rewards.
+- [ ] Refresh and return to Wallet: coupon is still present; reopening vault cannot award a second.
+- [ ] Mark the live coupon received and verify the Wallet retains the redeemed record.
+- [ ] Run through creator preview and reset; ensure preview never alters real birthday coupon.
+- [ ] Test desktop and small mobile widths; verify reduced-motion mode and keyboard navigation.
 
-The actual gift must be supplied and approved separately. Until then the unlocked card deliberately says the birthday gift is not yet installed; there is no dummy coupon, actual coupon or unannounced promise. Once the gift is chosen, add a dedicated reward display/redeem flow based on the gift's real terms, while retaining the story stages.
+Automated tests: `tests/birthdayQuest.test.ts` and `tests/birthdayCoupon.test.ts`.
