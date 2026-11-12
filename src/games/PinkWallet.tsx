@@ -39,6 +39,7 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
    <h1>🎟️ Molly’s Special Coupon Wallet</h1>
    <p>All your earned surprises, safe in one place.</p>
   </div>
+  <BirthdayCouponPanel/>
   {coupon.status==='ready'&&<section className="pink-wallet-draw">
    <h2>Choose one secret backstage gift</h2>
    <p>All three gifts are different. Pick ONE card to reveal your reward—and peek behind the others afterward!</p>
@@ -75,7 +76,6 @@ export default function PinkWallet({progress,setProgress,onHome,onPlay,onPasspor
      'Finish your first full Pink Rush show to unlock three hidden reward cards and choose one to keep.'}</p>
    <button className="btn btn-primary" onClick={replace}>🎤 Play Pink Rush! ↗</button>
   </section>}
-  <BirthdayCouponPanel/>
   <NoodleCouponPanel/>
   <HalloweenTestVoucherPanel/>
   {message&&<p className="pink-wallet-status" role="status">{message}</p>}
