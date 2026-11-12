@@ -10,7 +10,7 @@ Example: `https://rouhin1997.github.io/Molly-s-cozy-arcade/?birthday-beta=1`
 
 The test flag unlocks the birthday event **only in the current browser**. It stores a separate beta save and marks the rehearsal prominently; no real prize, promise, coupon, or redeemable benefit is issued. The beta reset button only deletes its own adventure progress. This is a friendly preview mode, not a private security measure: a person who knows the query parameter can access it.
 
-On 13 November the actual event automatically opens from 00:00 to 23:59:59 **Europe/Rome**, according to the browser's timezone-capable clock. A live player who already unlocked the vault can return to the finale after the event day, rather than lose their completed card. All logic is client-side, not tamper-resistant.
+**Public launch safety gate:** `BIRTHDAY_EVENT_PUBLISHED` remains `false` until the creator supplies and approves the actual gift. This prevents an empty vault reaching Molly on her birthday. Once the gift is installed and the flag is deliberately changed to `true`, the live event opens on 13 November from 00:00 to 23:59:59 **Europe/Rome** according to the browser's timezone-capable clock. A live player who has unlocked the vault can return to the finale after the event day, rather than lose their completed card. The creator's beta URL works regardless of this flag. All logic is client-side, not tamper-resistant.
 
 ## Story / mechanics
 
