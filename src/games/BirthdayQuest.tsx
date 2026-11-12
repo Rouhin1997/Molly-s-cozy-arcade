@@ -217,17 +217,39 @@ export default function BirthdayQuest({onHome,onWallet}:Props){
     {feedback&&<p className="birthday-feedback" role="status">{feedback}</p>}
    </section>}
    {save.step===3&&<section className="birthday-finale" aria-labelledby="birthday-finale-title">
-    <div className="birthday-finale-stars" aria-hidden="true">✦　☆　✧　★　✦</div>
-    <span className="overline">ALL THREE CHAPTERS COMPLETE</span>
-    <div className="birthday-finale-gift" aria-hidden="true"><span>🎁</span><b>✧</b></div>
-    <h2 id="birthday-finale-title">Happy Birthday, Molly! ♡</h2>
-    <p className="birthday-finale-lead">The 99 rescued your cake. Sheldon approved the seats. And you remembered exactly where your story began.</p>
-    <div className="birthday-finale-ceremony">
-     <span aria-hidden="true">🎂</span><div><strong>YOUR BIRTHDAY VAULT</strong><small>🔓 UNLOCKED</small><p>The surprise gift has not been placed inside yet. This is the beta's celebratory placeholder—not a coupon or redeemable reward.</p></div><span aria-hidden="true">🎀</span>
+   <div className="birthday-finale-stars" aria-hidden="true">✦　☆　✧　★　✦</div>
+   <span className="overline">THREE CHAPTERS COMPLETE · VAULT UNLOCKED</span>
+   <div className="birthday-finale-gift" aria-hidden="true">{coupon?'💝':'🎁'}</div>
+   <h2 id="birthday-finale-title">Happy Birthday, Molly! ♡</h2>
+   {coupon?<>
+    <p className="birthday-finale-lead">Your birthday gift is yours to keep.</p>
+    <div className="birthday-chosen-gift">
+     <span aria-hidden="true">{birthdayGiftOptions.find(g=>g.id===coupon.giftId)?.icon}</span>
+     <small>{beta?'CREATOR PREVIEW · TEST COUPON':coupon.redeemedAt?'GIFT RECEIVED':'SAVED TO YOUR WALLET'}</small>
+     <h3>{birthdayGiftOptions.find(g=>g.id===coupon.giftId)?.title}</h3>
+     <p>{birthdayGiftOptions.find(g=>g.id===coupon.giftId)?.description}</p>
     </div>
-    <p className="birthday-finale-note">From a little place called home to every lovely adventure still ahead. May there always be cake, laughter and people who are delighted you exist.</p>
-    <button className="btn btn-primary" onClick={onHome}>Back to your cozy arcade ♡</button>
-   </section>}
+    <button className="btn btn-primary birthday-wallet-link" onClick={onWallet}>Open my Wallet 🎟️</button>
+   </>:<>
+    <p className="birthday-finale-lead">You rescued the cake, saved the party and cracked the code. Now choose your birthday gift!</p>
+    <h3 className="birthday-gift-heading">Pick one birthday coupon</h3>
+    <div className="birthday-gift-grid">
+     {birthdayGiftOptions.map(gift=><article key={gift.id} className={'birthday-gift-card '+(pendingGift===gift.id?'is-chosen':'')}>
+      <span className="birthday-gift-card-icon" aria-hidden="true">{gift.icon}</span>
+      <small>{gift.eyebrow}</small><h4>{gift.title}</h4><p>{gift.description}</p>
+      <button className={pendingGift===gift.id?'btn btn-primary':'btn btn-outline'} type="button" onClick={()=>{setPendingGift(gift.id);setGiftError('')}} aria-pressed={pendingGift===gift.id}>
+       {pendingGift===gift.id?'✓ Selected':'Choose this coupon'}
+      </button>
+     </article>)}
+    </div>
+    {pendingGift&&<div className="birthday-gift-confirm" aria-live="polite">
+     <p><strong>{birthdayGiftOptions.find(g=>g.id===pendingGift)?.title}</strong> — is this your final choice?</p>
+     <div><button className="btn btn-primary" onClick={confirmGift}>Yes, add to my Wallet ♡</button><button className="btn btn-outline" onClick={()=>setPendingGift(null)}>Choose another</button></div>
+    </div>}
+    {giftError&&<p className="birthday-wallet-error" role="alert">{giftError}</p>}
+    <p className="birthday-coupon-fine">One choice, kept in your Wallet. {beta?'This creator preview only saves a test coupon.':'The gift can be marked received when you enjoy it.'}</p>
+   </>}
+  </section>}
   </>}
   {transition&&<div className="birthday-overlay" role="presentation"><section className="birthday-transition" role="dialog" aria-modal="true" aria-labelledby="birthday-transition-title">
    <div className="birthday-transition-stars" aria-hidden="true">✦ ✧ ✦ ✧ ✦</div><span className="birthday-transition-icon" aria-hidden="true">{transition.icon}</span>
