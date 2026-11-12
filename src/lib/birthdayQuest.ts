@@ -29,6 +29,12 @@ export type BirthdaySave={
   codeTries:number;
   openedAt:string|null;
 };
+/** The public game opens on the birthday, and an already-started run can be finished later.
+ * Preview access always uses separate save and coupon records. */
+export function birthdayCanPlay(beta:boolean,save:BirthdaySave,now=new Date()):boolean{
+ const gate=birthdayWindow(now);
+ return beta||(BIRTHDAY_EVENT_PUBLISHED&&gate.year===BIRTHDAY_EVENT_YEAR&&(gate.active||save.step>0));
+}
 export const birthdayGuests=['Leonard','Sheldon','Molly','Amy','Penny','Raj'] as const;
 export const BIRTHDAY_SOLUTION=['Leonard','Sheldon','Molly','Amy','Penny','Raj'];
 export const chairs=['A','B','C','D','E','F'] as const;
@@ -49,7 +55,7 @@ export const BIRTHDAY_PAIRS=[
 export const cakeLocations=[
  {id:'kitchen',label:'Break-room fridge',icon:'🧁',detail:'Food storage, near the briefing room.'},
  {id:'office',label:'Holt’s office',icon:'🗃️',detail:'Locked filing cabinets.'},
- {id:'evidence',label:'Evidence-room cold cabinet',icon:'🧊',detail:'Storage bay E-3.'},
+ {id:'evidence',label:'Evidence-room cold cabinet',icon:'🧊',detail:'Cold storage for exhibits.'},
  {id:'rooftop',label:'Precinct rooftop',icon:'🌆',detail:'Party decorations were delivered here.'},
 ] as const;
 export const seatRules=[
