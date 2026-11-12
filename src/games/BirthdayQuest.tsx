@@ -1,5 +1,6 @@
 import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
+import {birthdayGiftOptions,BIRTHDAY_GIFT_YEAR,clearPreviewBirthdayCoupon,issueBirthdayCoupon,readBirthdayCoupon,writeBirthdayCoupon,type BirthdayGiftId,type BirthdayCoupon} from '../lib/birthdayCoupon';
 import {
  birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
  birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayWhereHints,birthdayGuests,chairs,
@@ -7,7 +8,7 @@ import {
  type BirthdaySave,type QuestionId
 } from '../lib/birthdayQuest';
 
-type Props={onHome:()=>void};
+type Props={onHome:()=>void;onWallet:()=>void};
 type SceneTransition={icon:string;eyebrow:string;title:string;message:string;next:string};
 const intro=[
  {number:'01',icon:'🎂',name:'The cake caper',caption:'The 99 Files'},
@@ -16,7 +17,7 @@ const intro=[
 ];
 const fireworks=['✦','✧','★','✦','✧','★','✦','✧','★','✦','★','✧'];
 
-export default function BirthdayQuest({onHome}:Props){
+export default function BirthdayQuest({onHome,onWallet}:Props){
  const beta=birthdayBetaFromSearch(window.location.search);
  const [clock,setClock]=useState(()=>new Date());
  const year=birthdayWindow(clock).year;
@@ -27,8 +28,11 @@ export default function BirthdayQuest({onHome}:Props){
  const [transition,setTransition]=useState<SceneTransition|null>(null);
  const [password,setPassword]=useState('');
  const [revealedPlaceHints,setRevealedPlaceHints]=useState(0);
+ const [coupon,setCoupon]=useState<BirthdayCoupon|null>(()=>readBirthdayCoupon(beta,BIRTHDAY_GIFT_YEAR));
+ const [pendingGift,setPendingGift]=useState<BirthdayGiftId|null>(null);
+ const [giftError,setGiftError]=useState('');
  const gate=birthdayWindow(clock);
- const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&(gate.active||save.step===3));
+ const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&gate.year===BIRTHDAY_GIFT_YEAR&&(gate.active||save.step>0));
  const allLinked=save.connected.length===BIRTHDAY_PAIRS.length;
  const questionsDone=save.answers.length===birthdayQuestions.length;
  const activeQuestion=birthdayQuestions.find(q=>!save.answers.includes(q.id));
@@ -84,10 +88,22 @@ export default function BirthdayQuest({onHome}:Props){
   update(result.save);setFeedback(result.message);
   if(result.correct)setPassword('');
  }
+ function confirmGift(){
+  if(save.step!==3||!pendingGift||coupon)return;
+  const existing=readBirthdayCoupon(beta,BIRTHDAY_GIFT_YEAR);
+  const next=issueBirthdayCoupon(existing,pendingGift,new Date(),BIRTHDAY_GIFT_YEAR);
+  if(!writeBirthdayCoupon(next,beta)){
+   setGiftError('Your coupon could not be saved in this browser. Please enable site storage and try again.');
+   return;
+  }
+  setCoupon(next);setPendingGift(null);setGiftError('');
+ }
  function resetBeta(){
-  if(!beta||!window.confirm('Restart just this birthday beta rehearsal? The real birthday game is stored separately.'))return;
+  if(!beta||!window.confirm('Restart the creator preview, including its test coupon? The real birthday wallet will not change.'))return;
   const fresh=initialBirthdaySave();
-  update(fresh);setSelected([]);setPicked('Sheldon');setFeedback('Beta rehearsal reset. Ready to begin again!');setTransition(null);setPassword('');setRevealedPlaceHints(0);
+  clearPreviewBirthdayCoupon();
+  update(fresh);setCoupon(null);setPendingGift(null);setGiftError('');
+  setSelected([]);setPicked('Sheldon');setFeedback('Preview restarted.');setTransition(null);setPassword('');setRevealedPlaceHints(0);
  }
  return <main className="birthday-quest">
   <button className="back-link birthday-back" onClick={onHome}>← Return to Molly's Arcade</button>
