@@ -134,3 +134,80 @@
 .birthday-hint-trail .birthday-where-hint strong{display:block;font:900 11px 'DM Sans',sans-serif;letter-spacing:.5px;color:#42705a}
 .birthday-hint-trail .birthday-where-hint p{margin:5px 0 0;font:14px/1.7 Georgia,serif;color:#5d6651}
 @media(max-width:560px){.birthday-where-riddle{padding:15px 14px;font-size:14px}.birthday-hint-trail .birthday-where-hint{padding:11px;gap:8px}}
+
+/* Official birthday look: party-paper background, bunting, balloons and gift tickets. */
+.birthday-quest{
+ position:relative;isolation:isolate;
+ background-color:#fff6ef;
+ background-image:
+  radial-gradient(circle at 11% 4%,#f6b6c06e 0 1.5px,transparent 3px),
+  radial-gradient(circle at 79% 12%,#e1b65f7a 0 2px,transparent 3.5px),
+  radial-gradient(circle at 34% 31%,#a7d5c966 0 2.5px,transparent 4px),
+  radial-gradient(circle at 88% 69%,#efb0b966 0 1.5px,transparent 3px),
+  radial-gradient(ellipse at 6% 15%,#ffe5e4 0,transparent 48%),
+  radial-gradient(ellipse at 99% 74%,#fff0c7 0,transparent 48%);
+ background-size:93px 99px,153px 125px,175px 157px,108px 131px,100% 100%,100% 100%;
+ border:1px solid #eed9d1;border-radius:28px;box-shadow:0 12px 37px #885b5d16;
+}
+.birthday-quest-hero{
+ background:radial-gradient(circle at 50% 10%,#665574,#2b5266 58%,#243747 100%);
+ border-color:#f1b9b9;box-shadow:0 16px 35px #5e40543d;
+ padding-top:69px;
+}
+.birthday-quest-hero h1 em{color:#ffd2cb}
+.birthday-bunting{position:absolute;z-index:1;top:0;left:3%;right:3%;height:66px;display:flex;justify-content:center;gap:3px;border-top:3px solid #ffe0b5;transform:rotate(-1deg);pointer-events:none}
+.birthday-bunting span{flex:1;max-width:42px;height:37px;clip-path:polygon(0 0,100% 0,50% 100%);background:#f6bcaf;filter:drop-shadow(0 3px 2px #29292930)}
+.birthday-bunting span:nth-child(4n+2){background:#efce78}
+.birthday-bunting span:nth-child(4n+3){background:#a3d5c8}
+.birthday-bunting span:nth-child(4n+4){background:#c9b2dd}
+.birthday-hero-balloons{position:absolute;inset:0;pointer-events:none;z-index:0}
+.birthday-hero-balloons span{position:absolute;font-size:clamp(33px,5vw,64px);filter:drop-shadow(0 6px 7px #1e344455);animation:bday-float 3.8s ease-in-out infinite alternate}
+.birthday-hero-balloons span:first-child{left:3%;top:29%;transform:rotate(-13deg)}
+.birthday-hero-balloons span:nth-child(2){right:4%;top:32%;animation-delay:-1.4s}
+.birthday-hero-balloons span:nth-child(3){right:10%;bottom:8%;font-size:32px;animation-delay:-2s}
+.birthday-stage{background:linear-gradient(155deg,#fffefa,#fff7e9 100%);border-color:#ead1c4;box-shadow:0 13px 35px #946d6823}
+.birthday-step.is-active{border-color:#d88a9a;background:#fff0ed}
+.birthday-finale{background:radial-gradient(circle at 50% 2%,#fff9d2,#fff0e6 59%,#f9dfeb);border-color:#e2aeb3;box-shadow:0 16px 43px #915e7440}
+.birthday-finale-gift{line-height:1.3}
+.birthday-gift-heading{font:750 clamp(24px,3vw,33px) 'Fraunces',Georgia,serif;color:#775169;margin:19px auto 17px}
+.birthday-gift-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;text-align:left;margin:25px auto;max-width:990px}
+.birthday-gift-card{display:flex;flex-direction:column;align-items:flex-start;min-width:0;min-height:321px;padding:22px 20px;border:2px solid #edc8c5;border-radius:20px;background:linear-gradient(155deg,#fffcf8,#fff0e8);box-shadow:0 9px 16px #9b667519;transition:transform .17s ease,border-color .17s ease,box-shadow .17s ease}
+.birthday-gift-card:nth-child(2){background:linear-gradient(155deg,#fffcf1,#f4eef9);border-color:#d8c5e6}
+.birthday-gift-card:nth-child(3){background:linear-gradient(155deg,#fffbf8,#f9e5ed);border-color:#e7bacb}
+.birthday-gift-card:hover{transform:translateY(-3px)}
+.birthday-gift-card.is-chosen{border-color:#bd6386;box-shadow:0 8px 20px #9f527c40,0 0 0 3px #f9d9e4}
+.birthday-gift-card-icon{display:grid;place-items:center;width:70px;height:70px;border:2px solid #eac4b5;border-radius:50%;background:#fffdf9;font-size:39px;margin-bottom:16px}
+.birthday-gift-card small{font:900 10px 'DM Sans',sans-serif;letter-spacing:1.3px;color:#996c6e}
+.birthday-gift-card h4{font:750 24px/1.22 'Fraunces',Georgia,serif;color:#624759;margin:9px 0}
+.birthday-gift-card p{font:14px/1.63 Georgia,serif;color:#796675;margin:0 0 20px;flex:1}
+.birthday-gift-card .btn{width:100%;text-align:center;justify-content:center}
+.birthday-gift-confirm{max-width:670px;margin:21px auto 9px;background:#fffdf7;border:2px dashed #c58b9d;border-radius:17px;padding:19px 22px}
+.birthday-gift-confirm p{margin:0 0 17px;font:16px/1.55 Georgia,serif;color:#6e4d5d}
+.birthday-gift-confirm>div{display:flex;justify-content:center;flex-wrap:wrap;gap:11px}
+.birthday-coupon-fine{font:13px/1.65 Georgia,serif;color:#876d76;margin:16px auto 0}
+.birthday-chosen-gift{max-width:650px;margin:24px auto;border:3px dashed #cd869d;border-radius:19px;background:#fffbf4;padding:25px 22px;box-shadow:0 8px 22px #98718920}
+.birthday-chosen-gift>span{display:block;font-size:62px;margin-bottom:9px}
+.birthday-chosen-gift small{display:block;font:900 11px 'DM Sans',sans-serif;letter-spacing:1.2px;color:#a35c7b}
+.birthday-chosen-gift h3{font:750 clamp(27px,4vw,38px) 'Fraunces',Georgia,serif;color:#654760;margin:13px 0 10px}
+.birthday-chosen-gift p{font:15px/1.75 Georgia,serif;color:#675563;max-width:470px;margin:0 auto}
+.birthday-wallet-link{margin:7px auto 0}
+.birthday-wallet{margin:25px auto;padding:25px;border-radius:22px;border:3px solid #e0aebf;background:radial-gradient(ellipse at 15% 10%,#fff5d9,#fff0f4 60%,#f6e7ff);box-shadow:0 10px 32px #8e5f8026}
+.birthday-wallet-head{display:flex;align-items:center;gap:15px;margin:0 0 21px}
+.birthday-wallet-head>span{font-size:43px}
+.birthday-wallet-head small{font:900 11px 'DM Sans',sans-serif;letter-spacing:1.2px;color:#926375}
+.birthday-wallet-head h2{font:750 clamp(24px,3vw,34px) 'Fraunces',Georgia,serif;color:#694c60;margin:4px 0}
+.birthday-wallet-ticket{position:relative;text-align:center;max-width:700px;margin:15px auto;border:3px dashed #c47b9b;border-radius:18px;background:#fffdf9;padding:27px 30px;box-shadow:0 7px 20px #94587b1b;overflow:hidden}
+.birthday-wallet-ticket:before,.birthday-wallet-ticket:after{content:'✦';position:absolute;font-size:43px;color:#efcb99;opacity:.7;top:19px;left:17px}
+.birthday-wallet-ticket:after{left:auto;right:17px}
+.birthday-wallet-stamp{background:#785369;color:#fff5ed;padding:9px;border-radius:9px;font:900 11px 'DM Sans',sans-serif;letter-spacing:1px;max-width:430px;margin:0 auto 15px}
+.birthday-wallet-icon{display:block;font-size:58px;margin:6px auto}
+.birthday-wallet-ticket>small{display:block;font:900 10px 'DM Sans',sans-serif;letter-spacing:1px;color:#97657e}
+.birthday-wallet-ticket h3{font:750 clamp(27px,3.5vw,37px) 'Fraunces',Georgia,serif;color:#6e4a66;margin:12px 0}
+.birthday-wallet-ticket>p{font:15px/1.75 Georgia,serif;color:#675766;max-width:480px;margin:0 auto 17px}
+.birthday-wallet-bottom{display:flex;justify-content:space-between;align-items:center;gap:14px;border-top:1px dashed #dec4c7;padding-top:16px}
+.birthday-wallet-bottom span{font:italic 14px Georgia,serif;color:#986e78}
+.birthday-wallet-error{padding:13px 16px;border-radius:10px;border:1px solid #b25366;background:#fff0f2;color:#803b4a}
+.birthday-quest :is(button,input):focus-visible,.birthday-wallet :is(button,input):focus-visible{outline:3px solid #ba567e;outline-offset:3px}
+@media(max-width:800px){.birthday-gift-grid{grid-template-columns:1fr;max-width:530px}.birthday-gift-card{min-height:0}.birthday-gift-card p{flex:auto}}
+@media(max-width:560px){.birthday-quest{border-radius:15px}.birthday-quest-hero{padding-top:56px}.birthday-bunting{height:45px}.birthday-bunting span{height:25px}.birthday-hero-balloons span{font-size:27px!important;opacity:.7}.birthday-hero-balloons span:nth-child(3){display:none}.birthday-gift-card{padding:18px 16px}.birthday-finale{padding:29px 13px}.birthday-wallet{padding:16px}.birthday-wallet-ticket{padding:19px 13px}.birthday-wallet-bottom{flex-direction:column}.birthday-wallet-head>span{font-size:29px}}
+@media(prefers-reduced-motion:reduce){.birthday-hero-balloons span,.birthday-gift-card{animation:none;transition:none}}
