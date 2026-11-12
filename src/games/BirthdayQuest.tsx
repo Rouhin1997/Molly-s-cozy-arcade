@@ -2,7 +2,7 @@ import '../birthday.css';
 import {useEffect,useState,type FormEvent} from 'react';
 import {
  birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,readBirthdaySave,writeBirthdaySave,
- birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayGuests,chairs,
+ birthdayEvidence,BIRTHDAY_PAIRS,cakeLocations,seatRules,birthdayQuestions,birthdayWhereHints,birthdayGuests,chairs,
  submitEvidencePair,submitCakeLocation,submitBirthdaySeating,answerBirthdayQuestion,unlockBirthdayVault,
  type BirthdaySave,type QuestionId
 } from '../lib/birthdayQuest';
@@ -26,7 +26,7 @@ export default function BirthdayQuest({onHome}:Props){
  const [feedback,setFeedback]=useState('');
  const [transition,setTransition]=useState<SceneTransition|null>(null);
  const [password,setPassword]=useState('');
- const [showPlaceHint,setShowPlaceHint]=useState(false);
+ const [revealedPlaceHints,setRevealedPlaceHints]=useState(0);
  const gate=birthdayWindow(clock);
  const available=beta||(BIRTHDAY_EVENT_PUBLISHED&&(gate.active||save.step===3));
  const allLinked=save.connected.length===BIRTHDAY_PAIRS.length;
@@ -87,7 +87,7 @@ export default function BirthdayQuest({onHome}:Props){
  function resetBeta(){
   if(!beta||!window.confirm('Restart just this birthday beta rehearsal? The real birthday game is stored separately.'))return;
   const fresh=initialBirthdaySave();
-  update(fresh);setSelected([]);setPicked('Sheldon');setFeedback('Beta rehearsal reset. Ready to begin again!');setTransition(null);setPassword('');setShowPlaceHint(false);
+  update(fresh);setSelected([]);setPicked('Sheldon');setFeedback('Beta rehearsal reset. Ready to begin again!');setTransition(null);setPassword('');setRevealedPlaceHints(0);
  }
  return <main className="birthday-quest">
   <button className="back-link birthday-back" onClick={onHome}>← Return to Molly's Arcade</button>
