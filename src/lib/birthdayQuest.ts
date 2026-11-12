@@ -1,5 +1,8 @@
 import {romeMidnightUtc,romeParts} from './seasonalEvents';
 
+/** The public birthday release must stay CLOSED until the real gift is supplied and approved. */
+export const BIRTHDAY_EVENT_PUBLISHED=false;
+
 /** Birthday live gate is evaluated in Rome time. Beta access is an explicit preview URL
  * and uses a separate save so the creator's rehearsal cannot spoil Molly's actual run. */
 export function birthdayWindow(now=new Date()){
