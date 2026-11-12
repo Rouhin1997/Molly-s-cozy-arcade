@@ -1,6 +1,6 @@
 import {describe,it,expect} from 'vitest';
 import {
- birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,initialBirthdaySave,birthdayStorageKey,
+ birthdayWindow,birthdayBetaFromSearch,BIRTHDAY_EVENT_PUBLISHED,BIRTHDAY_EVENT_YEAR,initialBirthdaySave,birthdayStorageKey,
  BIRTHDAY_PAIRS,pairForEvidence,submitEvidencePair,submitCakeLocation,
  birthdayGuests,allValidBirthdaySeatings,seatingIsValid,submitBirthdaySeating,
  birthdayQuestions,birthdayWhereHints,answerBirthdayQuestion,isBirthdayPassword,unlockBirthdayVault,normalizeBirthdaySave
@@ -19,7 +19,8 @@ describe('Molly’s birthday clock and preview isolation',()=>{
   expect(birthdayWindow(opening).end.toISOString()).toBe(closing.toISOString());
  });
  it('only accepts the explicit rehearsal flag and keeps preview saves apart',()=>{
-  expect(BIRTHDAY_EVENT_PUBLISHED).toBe(false); // no empty gift may launch publicly
+  expect(BIRTHDAY_EVENT_PUBLISHED).toBe(true); // official event is configured for the 2026 birthday
+  expect(BIRTHDAY_EVENT_YEAR).toBe(2026);
   expect(birthdayBetaFromSearch('?birthday-beta=1')).toBe(true);
   expect(birthdayBetaFromSearch('?birthday-beta=true')).toBe(false);
   expect(birthdayBetaFromSearch('?other=1')).toBe(false);
@@ -70,7 +71,7 @@ describe('Act two: Sheldon’s birthday seating inspection',()=>{
   expect(passed.save.step).toBe(2);
  });
 });
-describe('Act three: WWWW hometown cipher and placeholder gift vault',()=>{
+describe('Act three: WWWW hometown cipher and gift vault',()=>{
  it('offers four optional clues, starting with geography before letter count and saving the strong hint for last',()=>{
   expect(birthdayWhereHints).toHaveLength(4);
   expect(birthdayWhereHints.map(h=>h.id)).toEqual(['landscape','eight-letters','kolhan','chai']);
